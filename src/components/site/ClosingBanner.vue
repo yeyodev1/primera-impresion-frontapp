@@ -1,34 +1,50 @@
 <script setup lang="ts">
 import type { RouteLocationRaw } from 'vue-router'
+import { fx } from '@/config/site'
+import RegisterTitle from '@/components/fx/RegisterTitle.vue'
+import SplitReveal from '@/components/fx/SplitReveal.vue'
+import MagneticButton from '@/components/fx/MagneticButton.vue'
+import RegMark from '@/components/fx/RegMark.vue'
 import HalftoneBg from './HalftoneBg.vue'
 import CropMarks from './CropMarks.vue'
-import { vReveal } from '@/composables/useReveal'
 
-// Banner oscuro de cierre. Si se pasa `cta` pinta un botón; el slot
-// `actions` permite poner varios.
-defineProps<{
-  title: string
-  text?: string
-  cta?: { label: string; to: RouteLocationRaw }
-}>()
+// Bloque de cierre a sangre completa: naranja de marca (default) o negro, con
+// titular enorme en registro y CTA magnético. Si se pasa `cta` pinta un
+// botón; el slot `actions` permite poner varios.
+withDefaults(
+  defineProps<{
+    title: string
+    text?: string
+    cta?: { label: string; to: RouteLocationRaw }
+    tone?: 'accent' | 'night'
+  }>(),
+  { tone: 'accent' },
+)
 </script>
 
 <template>
-  <section class="closing">
-    <div v-reveal class="closing__box">
-      <HalftoneBg fade="left" />
-      <CropMarks tone="light" />
-      <div class="closing__copy">
-        <h2 class="closing__title">{{ title }}</h2>
-        <p v-if="text" class="closing__text">{{ text }}</p>
-      </div>
-      <div class="closing__actions">
-        <slot name="actions">
-          <RouterLink v-if="cta" :to="cta.to" class="btn btn--primary">
-            {{ cta.label }}
-            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-          </RouterLink>
-        </slot>
+  <section class="closing" :class="`closing--${tone}`">
+    <HalftoneBg fade="left" :tone="tone === 'accent' ? 'paper' : 'night'" />
+    <RegMark class="closing__giant" size="min(62vw, 34rem)" spin />
+    <CropMarks :tone="tone === 'accent' ? 'dark' : 'light'" inset="1rem" />
+    <div class="closing__inner">
+      <p class="closing__meta" aria-hidden="true">
+        <span>{{ tone === 'accent' ? fx.inks : fx.coords }}</span>
+        <span>{{ fx.since }}</span>
+      </p>
+      <RegisterTitle :text="title" size="xl" :tone="tone === 'accent' ? 'accent' : 'night'" class="closing__title" />
+      <div class="closing__row">
+        <SplitReveal v-if="text" :text="text" by="lines" class="closing__text" />
+        <div class="closing__actions">
+          <slot name="actions">
+            <MagneticButton v-if="cta">
+              <RouterLink :to="cta.to" class="btn btn--press" :class="tone === 'accent' ? 'btn--ink' : 'btn--primary'">
+                {{ cta.label }}
+                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+              </RouterLink>
+            </MagneticButton>
+          </slot>
+        </div>
       </div>
     </div>
   </section>
@@ -36,53 +52,91 @@ defineProps<{
 
 <style scoped lang="scss">
 .closing {
-  @include container;
-  padding-block: $space-xl;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding-block: clamp(4.5rem, 10vw, 9rem);
 
-  &__box {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
+  &--accent {
+    background: $accent;
+    color: $night;
+  }
+
+  &--night {
     background: $night;
     color: $surface;
-    border-radius: $radius-md;
-    padding: 2.5rem 1.5rem;
-    @include flex(column, flex-start, flex-start, 1.5rem);
-
-    @include from('md') {
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      padding: 3.25rem 3.5rem;
-      gap: 2.5rem;
-    }
   }
 
-  &__copy,
-  &__actions {
+  &__giant {
+    position: absolute;
+    right: -12%;
+    top: 50%;
+    margin-top: calc(min(62vw, 34rem) / -2);
+    opacity: 0.16;
+    z-index: 0;
+  }
+
+  &--night &__giant {
+    color: $accent;
+    opacity: 0.2;
+  }
+
+  &__inner {
+    @include container(1320px);
     position: relative;
     z-index: 1;
+    @include flex(column, flex-start, flex-start, 1.75rem);
   }
 
-  &__copy {
-    @include flex(column, flex-start, flex-start, 0.6rem);
-    max-width: 38rem;
+  &__meta {
+    @include flex(row, center, flex-start, 1.5rem);
+    flex-wrap: wrap;
+    @include mono-label(0.66rem, 0.2em);
+    opacity: 0.75;
   }
 
   &__title {
-    @include display($display-sm, 800);
+    max-width: 15ch;
+  }
+
+  &__row {
+    @include flex(column, flex-start, space-between, 1.75rem);
+    width: 100%;
+
+    @include from('md') {
+      flex-direction: row;
+      align-items: flex-end;
+    }
   }
 
   &__text {
-    color: rgba($surface, 0.75);
+    max-width: 44ch;
     font-size: $text-lg;
     line-height: 1.5;
+    font-weight: 500;
+  }
+
+  &--night &__text {
+    color: rgba($surface, 0.75);
   }
 
   &__actions {
-    @include flex(row, center, flex-start, 0.75rem);
+    @include flex(row, center, flex-start, 0.9rem);
     flex-wrap: wrap;
     flex-shrink: 0;
+  }
+
+  // Botones que llegan por slot desde vistas sin rediseñar: sobre el naranja
+  // el primario pasa a tinta negra para no perderse.
+  &--accent &__actions :deep(.btn--primary) {
+    background: $night;
+    color: $surface;
+  }
+
+  &--accent &__actions :deep(.btn--ghost),
+  &--accent &__actions :deep(.btn--outline-light) {
+    border-color: $night;
+    color: $night;
   }
 }
 </style>
