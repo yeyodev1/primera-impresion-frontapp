@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { copy } from '@/components/site/copy'
+import { copy } from '@/config/site'
 import HalftoneBg from '@/components/site/HalftoneBg.vue'
 import CropMarks from '@/components/site/CropMarks.vue'
 import CmykDots from '@/components/site/CmykDots.vue'
