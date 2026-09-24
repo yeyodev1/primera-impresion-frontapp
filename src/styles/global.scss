@@ -47,8 +47,9 @@ h2,
 h3,
 h4 {
   font-family: $font-display;
-  font-weight: 500;
-  line-height: 1.1;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
   text-wrap: balance;
 }
 
@@ -121,11 +122,12 @@ label {
   justify-content: center;
   gap: 0.5rem;
   font-family: $font-principal;
-  font-size: 0.85rem;
+  font-size: 0.92rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
-  padding: 0.85rem 1.8rem;
-  border-radius: $radius-pill;
+  letter-spacing: 0.01em;
+  padding: 0.85rem 1.5rem;
+  min-height: 48px;
+  border-radius: $radius-sm;
   @include transition;
 
   &--primary {
@@ -156,6 +158,32 @@ label {
       background: $ink;
       color: $surface;
     }
+  }
+
+  // Sobre fondos oscuros ($night)
+  &--light {
+    background: $surface;
+    color: $ink;
+
+    &:hover {
+      background: $accent-soft;
+    }
+  }
+
+  &--outline-light {
+    border: 1px solid rgba($surface, 0.5);
+    color: $surface;
+
+    &:hover {
+      border-color: $surface;
+      background: rgba($surface, 0.08);
+    }
+  }
+
+  &--sm {
+    min-height: 40px;
+    padding: 0.55rem 1rem;
+    font-size: 0.85rem;
   }
 
   &--danger {
