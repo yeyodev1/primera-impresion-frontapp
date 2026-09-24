@@ -385,3 +385,98 @@ export const copy = {
     explore: 'Explorar soluciones',
   },
 } as const
+
+const pad = (n: number) => String(n).padStart(2, '0')
+
+/**
+ * Rótulos técnicos y decorativos del rediseño «La prensa»: numeración de
+ * pliegos, tintas, coordenadas y textos de apoyo de los efectos. Son textura
+ * gráfica, pero también copy: por eso viven acá y no en los componentes.
+ * Solo datos verdaderos (desde 2006, Guayaquil, envíos a todo Ecuador).
+ */
+export const fx = {
+  // Coordenadas de Guayaquil, como en el pie de una hoja de prueba.
+  coords: '2.1894° S · 79.8891° O',
+  city: 'Guayaquil · Ecuador',
+  since: 'Desde 2006',
+  // Fórmula aproximada del naranja de marca en cuatricromía.
+  inks: 'C 0 M 60 Y 85 K 0',
+  section: (n: number, total: number) => `${pad(n)} / ${pad(total)}`,
+  sheet: (n: number, total?: number) => (total ? `Pliego ${pad(n)} / ${pad(total)}` : `Pliego ${pad(n)}`),
+  index: (n: number) => pad(n),
+
+  hero: {
+    sheet: 'Pliego 01',
+    // Parte del titular que se pinta en naranja.
+    accent: 'Soluciones Gráficas.',
+    scroll: 'Desliza',
+    proofLabel: 'Prueba de color · A4',
+  },
+
+  marquee: {
+    label: 'Familias de productos',
+  },
+
+  modes: {
+    labels: ['Modo A · En línea', 'Modo B · Con asesor'],
+  },
+
+  solutions: {
+    listLabel: 'Índice de familias',
+    preview: 'Ver familia',
+    swipe: 'Desliza para ver más',
+  },
+
+  how: {
+    press: 'En prensa',
+    progress: 'Avance del pliego',
+  },
+
+  why: {
+    eyebrow: 'Primera Impresión en cifras',
+    yearsPrefix: '+',
+    yearsLabel: 'años imprimiendo',
+    yearsNote: 'Desde 2006',
+    familiesLabel: 'familias de productos',
+    familiesNote: 'De etiquetas a sellos',
+    // Respaldo si el API aún no respondió: las familias publicadas hoy.
+    familiesFallback: 13,
+    coverageValue: 'Todo Ecuador',
+    coverageLabel: 'envíos a nivel nacional',
+    coverageNote: 'Desde Guayaquil',
+  },
+
+  slot: {
+    photo: 'Foto',
+    pending: 'En preparación',
+  },
+
+  colorBar: ['C', 'M', 'Y', 'K', 'CM', 'MY', 'CY', '75', '50', '25', '10', '0'],
+
+  intro: {
+    home: 'Inicio',
+    breadcrumb: 'Ruta de navegación',
+    page: (n: number, total: number) => `Pág. ${pad(n)} / ${pad(total)}`,
+  },
+
+  menu: {
+    label: 'Menú',
+    contact: 'Contacto directo',
+  },
+
+  transition: {
+    label: 'Imprimiendo',
+  },
+
+  whatsapp: {
+    tooltip: '¿Tienes una consulta? Te respondemos por WhatsApp.',
+  },
+
+  footer: {
+    eyebrow: 'Siguiente pliego',
+    title: '¿Imprimimos algo juntos?',
+    text: 'Cuéntanos qué necesita tu empresa y un asesor te acompaña desde la idea hasta el producto terminado.',
+    cta: 'Hablemos de tu proyecto',
+    top: 'Volver arriba',
+  },
+} as const
