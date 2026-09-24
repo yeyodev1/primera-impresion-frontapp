@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
-import { site } from '@/config/site'
-import { copy } from '@/components/site/copy'
+import { site, copy } from '@/config/site'
 import { useCatalog } from '@/composables/useCatalog'
 import { useResource } from '@/composables/useResource'
 import { vReveal } from '@/composables/useReveal'
