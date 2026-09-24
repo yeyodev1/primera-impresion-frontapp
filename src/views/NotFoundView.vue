@@ -1,7 +1,6 @@
 <script setup lang="ts">
+import { copy, fx, fxPages } from '@/config/site'
 import { ref } from 'vue'
-import { copy, fx } from '@/config/site'
-import { fxPages } from '@/config/fx.pages'
 import { hasFinePointer, prefersReducedMotion } from '@/composables/motion/useGsap'
 import { useMisregister } from '@/composables/useMisregister'
 import HalftoneBg from '@/components/site/HalftoneBg.vue'
