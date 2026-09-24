@@ -44,3 +44,25 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   letter-spacing: -0.02em;
   text-wrap: balance;
 }
+
+// Escala editorial del rediseño «La prensa»: titulares enormes con clamp agresivo.
+$display-xl: clamp(2.6rem, 1rem + 6vw, 6.5rem);
+$display-hero: clamp(3.3rem, 0.4rem + 8.4vw, 9rem);
+$ease-press: cubic-bezier(0.76, 0, 0.24, 1);
+$header-h: 4.5rem;
+
+// Rótulo técnico en mono: numeración de pliegos, tintas, coordenadas.
+@mixin mono-label($size: 0.7rem, $tracking: 0.16em) {
+  font-family: $font-mono;
+  font-size: $size;
+  font-weight: 500;
+  letter-spacing: $tracking;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+// Texto hueco (números gigantes de fondo).
+@mixin outline-text($color: $ink, $width: 1.5px) {
+  color: transparent;
+  -webkit-text-stroke: $width $color;
+}
