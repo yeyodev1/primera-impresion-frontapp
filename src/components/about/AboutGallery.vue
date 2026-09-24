@@ -1,7 +1,6 @@
 <script setup lang="ts">
+import { site, copy, fx, fxPages } from '@/config/site'
 import { ref } from 'vue'
-import { site, copy, fx } from '@/config/site'
-import { fxPages } from '@/config/fx.pages'
 import { gsap, MQ, useGsapMedia } from '@/composables/motion/useGsap'
 import SectionHead from '@/components/site/SectionHead.vue'
 import ImageSlot from '@/components/site/ImageSlot.vue'
