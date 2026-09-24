@@ -1,7 +1,6 @@
 <script setup lang="ts">
+import { copy, fxCatalog } from '@/config/site'
 import { onMounted, ref, useId } from 'vue'
-import { copy } from '@/config/site'
-import { fxCatalog } from '@/config/fx.catalog'
 import { gsap, useGsapContext } from '@/composables/motion/useGsap'
 
 // Reemplaza al formulario tras un envío correcto: un sello de goma
