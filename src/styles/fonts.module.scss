@@ -1,7 +1,9 @@
 // Solo variables. Las fuentes se cargan con <link> en index.html: este archivo
 // se inyecta en cada SFC vía vite.config.ts, así que no debe emitir CSS.
 
-$font-display: 'Fraunces', Georgia, serif;
-$font-principal: 'Montserrat', system-ui, sans-serif;
+// League Spartan: geométrica y pesada, la pariente más cercana del logotipo.
+// Barlow: el aire técnico del "¡Es la que cuenta!" para textos largos.
+$font-display: 'League Spartan', 'Arial Black', system-ui, sans-serif;
+$font-principal: 'Barlow', system-ui, sans-serif;
 $font-secondary: $font-principal;
 $font-body: $font-principal;
