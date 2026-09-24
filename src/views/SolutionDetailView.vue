@@ -1,81 +1,109 @@
 <script setup lang="ts">
+import { computed, watch } from 'vue'
 import { site, copy } from '@/config/site'
+import { fxCatalog } from '@/config/fx.catalog'
 import { useSolutionDetail } from '@/composables/useSolutionDetail'
-import { vReveal } from '@/composables/useReveal'
+import { refreshAfterData } from '@/composables/motion/useGsap'
 import PageIntro from '@/components/site/PageIntro.vue'
-import ImageSlot from '@/components/site/ImageSlot.vue'
-import SectionHead from '@/components/site/SectionHead.vue'
-import SolutionCard from '@/components/site/SolutionCard.vue'
 import LoadState from '@/components/site/LoadState.vue'
-import CropMarks from '@/components/site/CropMarks.vue'
+import SplitReveal from '@/components/fx/SplitReveal.vue'
+import MagneticButton from '@/components/fx/MagneticButton.vue'
+import ProductPlate from '@/components/solutions/ProductPlate.vue'
+import ProductionSheet from '@/components/solutions/ProductionSheet.vue'
+import RecurrentNotice from '@/components/solutions/RecurrentNotice.vue'
+import RelatedRail from '@/components/solutions/RelatedRail.vue'
+import MisprintSheet from '@/components/solutions/MisprintSheet.vue'
 
 const { solution, related, category, icon, whatsapp } = useSolutionDetail()
 const { data, loading, error, notFound, retry } = solution
 const back = { label: site.solutions.detail.back, to: '/soluciones' }
+
+const familyLink = computed(() =>
+  category.value
+    ? {
+        name: category.value.name,
+        to: { path: '/soluciones', query: { categoria: category.value.slug } },
+      }
+    : null,
+)
+
+// La ficha cambia la altura de la página al llegar (y al llegar las relacionadas).
+watch([data, () => related.value.length], refreshAfterData)
 </script>
 
 <template>
   <div>
     <template v-if="data">
-      <PageIntro :title="data.name" :lead="data.summary" :back="back" />
+      <PageIntro :key="`intro-${data._id}`" :title="data.name" :lead="data.summary" :back="back">
+        <p class="tags">
+          <RouterLink v-if="familyLink" :to="familyLink.to" class="tags__family">
+            <i :class="icon" aria-hidden="true"></i>
+            {{ familyLink.name }}
+          </RouterLink>
+          <span class="tags__ref">{{ fxCatalog.detail.ref(data.slug) }}</span>
+        </p>
+      </PageIntro>
 
-      <section class="detail">
-        <div v-reveal class="detail__media">
-          <ImageSlot :image="data.image" :alt="data.name" :icon="icon" />
+      <section :key="data._id" class="detail">
+        <div class="detail__media">
+          <ProductPlate
+            :image="data.image"
+            :name="data.name"
+            :icon="icon"
+            :family="category?.name"
+          />
         </div>
 
         <div class="detail__body">
-          <RouterLink
-            v-if="category"
-            :to="{ path: '/soluciones', query: { categoria: category.slug } }"
-            class="detail__pill"
-          >
-            {{ category.name }}
-          </RouterLink>
-          <h2 class="detail__name">{{ data.name }}</h2>
-          <p v-if="data.description" class="detail__desc">{{ data.description }}</p>
-
-          <div class="detail__options">
-            <h3 class="detail__subtitle">{{ site.solutions.detail.optionsTitle }}</h3>
-            <ul v-if="data.options.length" class="detail__chips">
-              <li v-for="option in data.options" :key="option" class="detail__chip">{{ option }}</li>
-            </ul>
-            <p class="detail__note">{{ site.solutions.detail.optionsText }}</p>
+          <div v-if="data.description" class="detail__about">
+            <p class="detail__label">{{ fxCatalog.detail.about }}</p>
+            <SplitReveal :text="data.description" by="lines" class="detail__desc" />
           </div>
+
+          <ProductionSheet :slug="data.slug" :options="data.options" :family="familyLink" />
 
           <div class="detail__actions">
-            <a :href="whatsapp" target="_blank" rel="noopener" class="btn btn--primary">
-              <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
-              {{ site.solutions.detail.cta }}
-              <span class="visually-hidden">{{ copy.header.newTab }}</span>
-            </a>
-            <RouterLink to="/contacto#form-contacto" class="btn btn--ghost">{{ copy.solutions.contactCta }}</RouterLink>
+            <MagneticButton>
+              <a
+                :href="whatsapp"
+                target="_blank"
+                rel="noopener"
+                class="btn btn--primary btn--press"
+              >
+                <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                {{ site.solutions.detail.cta }}
+                <span class="visually-hidden">{{ copy.header.newTab }}</span>
+              </a>
+            </MagneticButton>
+            <RouterLink to="/contacto#form-contacto" class="detail__secondary">
+              {{ copy.solutions.contactCta }}
+              <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </RouterLink>
           </div>
 
-          <aside class="detail__notice">
-            <CropMarks tone="accent" />
-            <p class="detail__notice-title">{{ site.recurrentBanner.title }}</p>
-            <p>{{ site.recurrentBanner.text }}</p>
-            <RouterLink to="/autogestion" class="detail__notice-link">
-              {{ site.recurrentBanner.cta }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-            </RouterLink>
-          </aside>
+          <RecurrentNotice />
         </div>
       </section>
 
-      <section v-if="related.length" class="related">
-        <SectionHead :eyebrow="category?.name" :title="copy.solutions.relatedTitle" />
-        <div class="related__grid">
-          <SolutionCard v-for="(item, index) in related" :key="item._id" v-reveal="index" :solution="item" :icon="icon" />
-        </div>
-      </section>
+      <RelatedRail v-if="related.length" :items="related" :icon="icon" :family="familyLink" />
     </template>
 
     <template v-else-if="notFound">
-      <PageIntro :title="copy.solutions.notFoundTitle" :lead="copy.solutions.notFoundText" :back="back">
-        <RouterLink to="/soluciones" class="btn btn--primary">{{ site.home.ctas.explore }}</RouterLink>
-        <RouterLink to="/contacto" class="btn btn--outline-light">{{ site.home.ctas.advisor }}</RouterLink>
+      <PageIntro
+        :title="copy.solutions.notFoundTitle"
+        :lead="copy.solutions.notFoundText"
+        :back="back"
+      >
+        <MagneticButton>
+          <RouterLink to="/soluciones" class="btn btn--primary btn--press">
+            {{ site.home.ctas.explore }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </RouterLink>
+        </MagneticButton>
+        <RouterLink to="/contacto" class="btn btn--outline-light">{{
+          site.home.ctas.advisor
+        }}</RouterLink>
       </PageIntro>
+      <MisprintSheet />
     </template>
 
     <template v-else>
@@ -88,143 +116,132 @@ const back = { label: site.solutions.detail.back, to: '/soluciones' }
 </template>
 
 <style scoped lang="scss">
+.tags {
+  @include flex(row, center, flex-start, 0.6rem 1.25rem);
+  flex-wrap: wrap;
+
+  &__family {
+    @include flex(row, center, flex-start, 0.55rem);
+    padding: 0.5rem 0.85rem;
+    border-radius: 2px;
+    background: $accent;
+    color: $night;
+    @include mono-label(0.66rem, 0.14em);
+    @include transition(background-color);
+    @include focus-ring($surface);
+
+    &:hover {
+      background: $surface;
+    }
+  }
+
+  &__ref {
+    @include mono-label(0.64rem, 0.16em);
+    color: rgba($surface, 0.6);
+  }
+}
+
 .detail {
-  @include container;
+  @include container(1320px);
   @include flex(column, stretch, flex-start, 2.5rem);
-  padding-block: $space-xl;
+  padding-block: clamp(2.5rem, 6vw, 5rem) $space-section;
 
   @include from('lg') {
     flex-direction: row;
     align-items: flex-start;
-    gap: 4rem;
+    gap: clamp(2.5rem, 5vw, 5rem);
   }
 
   &__media {
+    margin-inline: -1.25rem;
+
+    @include from('md') {
+      margin-inline: -2rem;
+    }
+
     @include from('lg') {
-      flex: 1 1 50%;
+      flex: 1 1 56%;
+      min-width: 0;
+      margin-inline: -2rem 0;
       position: sticky;
-      top: 6rem;
+      top: calc(var(--header-h) + 1rem);
     }
   }
 
   &__body {
-    @include flex(column, flex-start, flex-start, 1.1rem);
+    @include flex(column, stretch, flex-start, 1.75rem);
 
     @include from('lg') {
-      flex: 1 1 50%;
+      flex: 1 1 44%;
+      min-width: 0;
+      padding-top: 2rem;
     }
   }
 
-  &__pill {
-    padding: 0.3rem 0.8rem;
-    border-radius: $radius-pill;
-    background: $accent-soft;
-    color: darken($accent-deep, 6%);
-    font-size: $text-xs;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    @include focus-ring;
+  &__about {
+    @include flex(column, flex-start, flex-start, 0.75rem);
   }
 
-  &__name {
-    @include display($display-sm, 800);
+  &__label {
+    @include mono-label(0.64rem, 0.18em);
+    color: darken($accent-deep, 4%);
+    @include flex(row, center, flex-start, 0.75rem);
+
+    &::before {
+      content: '';
+      width: 2rem;
+      height: 1px;
+      background: currentColor;
+    }
   }
 
   &__desc {
-    color: $ink-soft;
-    font-size: $text-lg;
-    line-height: 1.6;
+    font-size: clamp(1.15rem, 1rem + 0.6vw, 1.45rem);
+    line-height: 1.5;
+    color: $ink;
     white-space: pre-line;
   }
 
-  &__options {
-    width: 100%;
-    @include flex(column, flex-start, flex-start, 0.75rem);
-    padding-block: 1.25rem;
-    border-block: 1px solid $line;
-  }
-
-  &__subtitle {
-    font-size: $text-xl;
-  }
-
-  &__chips {
-    list-style: none;
-    @include flex(row, center, flex-start, 0.5rem);
-    flex-wrap: wrap;
-  }
-
-  &__chip {
-    padding: 0.4rem 0.85rem;
-    border: 1px solid $line;
-    border-radius: $radius-pill;
-    background: $surface;
-    font-size: $text-sm;
-    font-weight: 600;
-  }
-
-  &__note {
-    font-size: $text-sm;
-    color: $ink-soft;
-  }
-
   &__actions {
-    @include flex(row, center, flex-start, 0.75rem);
-    flex-wrap: wrap;
+    @include flex(column, stretch, flex-start, 1rem);
+
+    @include from('sm') {
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    :deep(.btn--press) {
+      width: 100%;
+
+      @include from('sm') {
+        width: auto;
+      }
+    }
   }
 
-  &__notice {
-    position: relative;
-    width: 100%;
-    margin-top: 0.75rem;
-    padding: 1.75rem 1.5rem;
-    background: $sand;
-    border-radius: $radius-sm;
-    color: $ink-soft;
-    @include flex(column, flex-start, flex-start, 0.4rem);
-  }
-
-  &__notice-title {
-    font-family: $font-display;
-    font-size: $text-lg;
+  &__secondary {
+    align-self: center;
+    @include flex(row, center, flex-start, 0.6rem);
+    padding-block: 0.4rem;
     font-weight: 700;
-    color: $ink;
-  }
-
-  &__notice-link {
-    margin-top: 0.35rem;
-    font-weight: 600;
-    color: darken($accent-deep, 6%);
+    border-bottom: 2px solid $ink;
+    border-radius: 1px;
     @include focus-ring;
 
-    &:hover {
-      text-decoration: underline;
+    i {
+      @include transition(transform);
+    }
+
+    &:hover i {
+      transform: translateX(4px);
     }
   }
 
   &__state {
     @include container;
     padding-block: $space-xl;
-  }
-}
-
-.related {
-  @include container;
-  padding-block: 0 $space-section;
-
-  &__grid {
-    @include flex-cards(260px, 1.25rem);
-
-    > * {
-      @include from('md') {
-        max-width: calc(50% - 0.625rem);
-      }
-
-      @include from('lg') {
-        max-width: calc(33.333% - 0.834rem);
-      }
-    }
   }
 }
 </style>
