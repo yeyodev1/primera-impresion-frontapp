@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { site } from '@/config/site'
-import { copy } from './copy'
+import { site, copy } from '@/config/site'
 import CropMarks from './CropMarks.vue'
 
 // "Visítanos en Guayaquil": dirección real, enlace a Google Maps y mapa
