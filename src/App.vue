@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
 import { useRoute } from 'vue-router'
 import TheHeader from '@/layout/TheHeader.vue'
 import TheFooter from '@/layout/TheFooter.vue'
-import AdminLayout from '@/layout/AdminLayout.vue'
 import ToastList from '@/components/ui/ToastList.vue'
+
+// Diferido: el panel no pesa en el sitio público y un error ahí no lo tumba.
+const AdminLayout = defineAsyncComponent(() => import('@/layout/AdminLayout.vue'))
 
 const route = useRoute()
 // El panel tiene su propio marco: sin header ni footer del sitio público.
