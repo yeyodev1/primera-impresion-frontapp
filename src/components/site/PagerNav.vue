@@ -1,7 +1,6 @@
 <script setup lang="ts">
+import { copy, fx, fxPages } from '@/config/site'
 import { computed } from 'vue'
-import { copy, fx } from '@/config/site'
-import { fxPages } from '@/config/fx.pages'
 
 // Paginación como la numeración de pliegos: flechas y números en mono sobre
 // un filete; la página actual va entintada. Con muchas páginas se muestran
