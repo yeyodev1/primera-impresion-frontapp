@@ -1,7 +1,6 @@
 <script setup lang="ts">
+import { site, fx, fxCatalog } from '@/config/site'
 import { ref } from 'vue'
-import { site, fx } from '@/config/site'
-import { fxCatalog } from '@/config/fx.catalog'
 import { gsap, useGsapContext } from '@/composables/motion/useGsap'
 import SectionHead from '@/components/site/SectionHead.vue'
 import AccessRequestForm from '@/components/site/AccessRequestForm.vue'
