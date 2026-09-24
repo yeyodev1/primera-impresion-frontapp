@@ -1,7 +1,6 @@
 <script setup lang="ts">
+import { copy, fxPages } from '@/config/site'
 import type { Post } from '@/types'
-import { copy } from '@/config/site'
-import { fxPages } from '@/config/fx.pages'
 import { formatDate } from '@/utils/format'
 import ImageSlot from '@/components/site/ImageSlot.vue'
 import CropMarks from '@/components/site/CropMarks.vue'
