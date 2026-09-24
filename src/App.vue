@@ -4,6 +4,8 @@ import { useRoute } from 'vue-router'
 import TheHeader from '@/layout/TheHeader.vue'
 import TheFooter from '@/layout/TheFooter.vue'
 import ToastList from '@/components/ui/ToastList.vue'
+import PageTransition from '@/components/fx/PageTransition.vue'
+import PaperGrain from '@/components/fx/PaperGrain.vue'
 
 // Diferido: el panel no pesa en el sitio público y un error ahí no lo tumba.
 const AdminLayout = defineAsyncComponent(() => import('@/layout/AdminLayout.vue'))
@@ -20,13 +22,13 @@ const isAdmin = computed(() => route.meta.layout === 'admin')
   <div v-else class="app">
     <TheHeader />
     <main class="app__main">
-      <RouterView v-slot="{ Component }">
-        <Transition name="page" mode="out-in">
-          <component :is="Component" />
-        </Transition>
-      </RouterView>
+      <!-- Sin <Transition> de Vue: la cortina de PageTransition tapa el cambio
+           y un fade out-in retrasaría el montaje de la vista nueva. -->
+      <RouterView />
     </main>
     <TheFooter />
+    <PageTransition />
+    <PaperGrain />
   </div>
   <ToastList />
 </template>
