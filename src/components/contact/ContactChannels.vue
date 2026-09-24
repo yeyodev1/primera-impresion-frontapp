@@ -1,7 +1,6 @@
 <script setup lang="ts">
+import { site, copy, whatsappLink, fx, fxPages } from '@/config/site'
 import { ref } from 'vue'
-import { site, copy, whatsappLink, fx } from '@/config/site'
-import { fxPages } from '@/config/fx.pages'
 import { gsap, useGsapContext } from '@/composables/motion/useGsap'
 import SectionHead from '@/components/site/SectionHead.vue'
 
