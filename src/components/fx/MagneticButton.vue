@@ -21,6 +21,15 @@ const props = withDefaults(defineProps<{ strength?: number; block?: boolean }>()
 
 const root = ref<HTMLElement | null>(null)
 
+// La zona de atracción es más grande que el botón y el botón la sigue con
+// retraso: un clic rápido cerca del borde cae en el envoltorio. Se reenvía
+// al botón para que ningún clic se pierda (p. ej. el envío de un formulario).
+function forwardClick(event: MouseEvent) {
+  if (event.target !== root.value) return
+  const target = root.value?.firstElementChild as HTMLElement | null
+  target?.click()
+}
+
 useGsapContext(root, ({ reduced, el }) => {
   if (reduced || !hasFinePointer()) return
   const target = el.firstElementChild as HTMLElement | null
@@ -53,7 +62,7 @@ useGsapContext(root, ({ reduced, el }) => {
 </script>
 
 <template>
-  <span ref="root" class="magnetic" :class="{ 'magnetic--block': block }">
+  <span ref="root" class="magnetic" :class="{ 'magnetic--block': block }" @click="forwardClick">
     <slot />
   </span>
 </template>
