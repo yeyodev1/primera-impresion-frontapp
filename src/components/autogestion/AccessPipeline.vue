@@ -1,7 +1,6 @@
 <script setup lang="ts">
+import { site, copy, fxCatalog } from '@/config/site'
 import { ref } from 'vue'
-import { site, copy } from '@/config/site'
-import { fxCatalog } from '@/config/fx.catalog'
 import { MQ, ScrollTrigger, useGsapMedia } from '@/composables/motion/useGsap'
 import SectionHead from '@/components/site/SectionHead.vue'
 import HalftoneBg from '@/components/site/HalftoneBg.vue'
