@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { site } from '@/config/site'
-import { copy } from '@/components/site/copy'
+import { site, copy } from '@/config/site'
 import { vReveal } from '@/composables/useReveal'
 import DarkHero from '@/components/site/DarkHero.vue'
 import ProofCard from '@/components/site/ProofCard.vue'
