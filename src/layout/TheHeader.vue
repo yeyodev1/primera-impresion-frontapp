@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { site } from '@/config/site'
-import { copy } from '@/components/site/copy'
+import { site, copy } from '@/config/site'
 import { useBodyScroll } from '@/composables/useBodyScroll'
 import BrandMark from '@/components/brand/BrandMark.vue'
 import CmykDots from '@/components/site/CmykDots.vue'
