@@ -92,3 +92,22 @@ $breakpoints: (
     outline-offset: 3px;
   }
 }
+
+// Solo para punteros finos con hover real: tilt, imán, seguidor de cursor.
+@mixin fine-pointer {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}
+
+// Bloque que sale del contenedor y ocupa todo el ancho de la ventana.
+@mixin full-bleed {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+}
+
+// Trama de semitono en CSS (fondos estáticos).
+@mixin halftone-pattern($color, $size: 12px, $dot: 1.2px) {
+  background-image: radial-gradient($color $dot, transparent $dot + 0.6px);
+  background-size: $size $size;
+}
