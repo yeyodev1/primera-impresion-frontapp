@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { fxCatalog } from '@/config/fx.catalog'
+import { fxCatalog } from '@/config/site'
 import CropMarks from '@/components/site/CropMarks.vue'
 import CmykDots from '@/components/site/CmykDots.vue'
 
