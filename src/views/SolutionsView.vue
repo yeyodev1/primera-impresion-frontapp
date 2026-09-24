@@ -1,7 +1,6 @@
 <script setup lang="ts">
+import { site, copy, fx, fxCatalog } from '@/config/site'
 import { onMounted, ref, watch } from 'vue'
-import { site, copy, fx } from '@/config/site'
-import { fxCatalog } from '@/config/fx.catalog'
 import { useSolutionsCatalog } from '@/composables/useSolutionsCatalog'
 import PageIntro from '@/components/site/PageIntro.vue'
 import SectionHead from '@/components/site/SectionHead.vue'
