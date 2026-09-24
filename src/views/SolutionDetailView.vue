@@ -12,6 +12,7 @@ import ProductionSheet from '@/components/solutions/ProductionSheet.vue'
 import RecurrentNotice from '@/components/solutions/RecurrentNotice.vue'
 import RelatedRail from '@/components/solutions/RelatedRail.vue'
 import MisprintSheet from '@/components/solutions/MisprintSheet.vue'
+import ClosingBanner from '@/components/site/ClosingBanner.vue'
 
 const { solution, related, category, icon, whatsapp } = useSolutionDetail()
 const { data, loading, error, notFound, retry } = solution
@@ -85,6 +86,13 @@ watch([data, () => related.value.length], refreshAfterData)
       </section>
 
       <RelatedRail v-if="related.length" :items="related" :icon="icon" :family="familyLink" />
+
+      <!-- Cierre naranja: el riel de relacionadas es negro y sin esto se fundía con el footer. -->
+      <ClosingBanner
+        :title="site.contact.closingTitle"
+        :text="site.contact.closingText"
+        :cta="{ label: site.contact.closingCta, to: '/contacto#form-contacto' }"
+      />
     </template>
 
     <template v-else-if="notFound">
