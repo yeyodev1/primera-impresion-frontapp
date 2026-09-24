@@ -1,7 +1,6 @@
 <script setup lang="ts">
+import { site, copy, fxCatalog } from '@/config/site'
 import { computed, watch } from 'vue'
-import { site, copy } from '@/config/site'
-import { fxCatalog } from '@/config/fx.catalog'
 import { useSolutionDetail } from '@/composables/useSolutionDetail'
 import { refreshAfterData } from '@/composables/motion/useGsap'
 import PageIntro from '@/components/site/PageIntro.vue'
