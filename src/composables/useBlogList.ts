@@ -2,7 +2,7 @@ import { computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { blogService } from '@/services/blog.service'
 import { POST_CATEGORIES, type PostCategory } from '@/types'
-import { copy } from '@/components/site/copy'
+import { copy } from '@/config/site'
 import { useResource } from './useResource'
 
 /**
