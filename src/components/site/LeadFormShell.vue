@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { site, copy } from '@/config/site'
-import { fxCatalog } from '@/config/fx.catalog'
+import { site, copy, fxCatalog } from '@/config/site'
 import MagneticButton from '@/components/fx/MagneticButton.vue'
 
 // Marco común de los formularios: campos numerados como una ficha técnica
