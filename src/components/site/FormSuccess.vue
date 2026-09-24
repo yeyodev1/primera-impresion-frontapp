@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import CropMarks from './CropMarks.vue'
-import { copy } from './copy'
+import { copy } from '@/config/site'
 
 // Reemplaza al formulario tras un envío correcto. Toma el foco para que el
 // lector de pantalla anuncie el mensaje.
