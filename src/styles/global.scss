@@ -130,12 +130,13 @@ label {
   border-radius: $radius-sm;
   @include transition;
 
+  // Blanco sobre el naranja puro no llega a AA: el botón usa el tono profundo.
   &--primary {
-    background: $accent;
+    background: $accent-deep;
     color: $surface;
 
     &:hover {
-      background: $accent-deep;
+      background: darken($accent-deep, 6%);
       transform: translateY(-1px);
     }
   }
