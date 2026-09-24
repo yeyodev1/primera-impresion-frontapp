@@ -36,12 +36,11 @@ $ease: cubic-bezier(0.22, 1, 0.36, 1);
   color: $accent-deep;
 }
 
-@mixin display($size: $display-md, $weight: 500) {
+@mixin display($size: $display-md, $weight: 700) {
   font-family: $font-display;
   font-size: $size;
   font-weight: $weight;
-  font-optical-sizing: auto;
-  line-height: 1.06;
+  line-height: 1.02;
   letter-spacing: -0.02em;
   text-wrap: balance;
 }
