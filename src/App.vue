@@ -1,11 +1,21 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import TheHeader from '@/layout/TheHeader.vue'
 import TheFooter from '@/layout/TheFooter.vue'
+import AdminLayout from '@/layout/AdminLayout.vue'
 import ToastList from '@/components/ui/ToastList.vue'
+
+const route = useRoute()
+// El panel tiene su propio marco: sin header ni footer del sitio público.
+const isAdmin = computed(() => route.meta.layout === 'admin')
 </script>
 
 <template>
-  <div class="app">
+  <AdminLayout v-if="isAdmin">
+    <RouterView />
+  </AdminLayout>
+  <div v-else class="app">
     <TheHeader />
     <main class="app__main">
       <RouterView v-slot="{ Component }">
@@ -15,8 +25,8 @@ import ToastList from '@/components/ui/ToastList.vue'
       </RouterView>
     </main>
     <TheFooter />
-    <ToastList />
   </div>
+  <ToastList />
 </template>
 
 <style scoped lang="scss">
