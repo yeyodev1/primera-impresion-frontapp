@@ -1,8 +1,7 @@
 <script setup lang="ts">
+import { site, fxCatalog } from '@/config/site'
 import { ref } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
-import { site } from '@/config/site'
-import { fxCatalog } from '@/config/fx.catalog'
 import { gsap, useGsapContext } from '@/composables/motion/useGsap'
 import ColorBar from '@/components/fx/ColorBar.vue'
 import CropMarks from '@/components/site/CropMarks.vue'
