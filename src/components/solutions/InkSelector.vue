@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { fxCatalog } from '@/config/fx.catalog'
+import { fxCatalog } from '@/config/site'
 import type { InkOption } from '@/composables/useSolutionsCatalog'
 import { gsap, prefersReducedMotion } from '@/composables/motion/useGsap'
 
