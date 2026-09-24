@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Category } from '@/types'
 import ImageSlot from './ImageSlot.vue'
-import { copy } from './copy'
+import { copy } from '@/config/site'
 
 // Familia de productos: lleva a Soluciones ya filtrado por su slug.
 defineProps<{ category: Category }>()
