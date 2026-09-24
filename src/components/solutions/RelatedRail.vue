@@ -1,9 +1,8 @@
 <script setup lang="ts">
+import { copy, fx, fxCatalog } from '@/config/site'
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 import type { Solution } from '@/types'
-import { copy, fx } from '@/config/site'
-import { fxCatalog } from '@/config/fx.catalog'
 import {
   gsap,
   prefersReducedMotion,
