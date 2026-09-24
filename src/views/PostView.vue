@@ -1,7 +1,6 @@
 <script setup lang="ts">
+import { site, copy, fxPages } from '@/config/site'
 import { computed, watch } from 'vue'
-import { site, copy } from '@/config/site'
-import { fxPages } from '@/config/fx.pages'
 import { formatDate } from '@/utils/format'
 import { usePost } from '@/composables/usePost'
 import { readingMinutes } from '@/composables/useReading'
