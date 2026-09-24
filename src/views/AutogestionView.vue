@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { site, copy, fx } from '@/config/site'
-import { fxCatalog } from '@/config/fx.catalog'
+import { site, copy, fx, fxCatalog } from '@/config/site'
 import DarkHero from '@/components/site/DarkHero.vue'
 import ClosingBanner from '@/components/site/ClosingBanner.vue'
 import MagneticButton from '@/components/fx/MagneticButton.vue'
