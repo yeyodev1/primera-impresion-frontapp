@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { site, whatsappLink } from '@/config/site'
-import { copy } from '@/components/site/copy'
+import { site, whatsappLink, copy } from '@/config/site'
 import BrandMark from '@/components/brand/BrandMark.vue'
 import CmykDots from '@/components/site/CmykDots.vue'
 import HalftoneBg from '@/components/site/HalftoneBg.vue'
