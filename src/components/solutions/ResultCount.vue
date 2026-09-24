@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref, watch } from 'vue'
-import { fxCatalog } from '@/config/fx.catalog'
+import { fxCatalog } from '@/config/site'
 import { gsap, prefersReducedMotion } from '@/composables/motion/useGsap'
 
 // Contador del pliego: número gigante en tinta hueca que rueda hasta el total
