@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { fxPages } from '@/config/fx.pages'
+import { fxPages } from '@/config/site'
 import { gsap, useGsapContext } from '@/composables/motion/useGsap'
 import RegMark from '@/components/fx/RegMark.vue'
 
