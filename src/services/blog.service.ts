@@ -19,7 +19,8 @@ class BlogService extends APIBase {
     return data
   }
 
-  async post(slug: string): Promise<Post> {
+  // No puede llamarse `post`: pisaría el método HTTP protegido de APIBase.
+  async getPost(slug: string): Promise<Post> {
     const { data } = await this.get<Post>(`posts/${encodeURIComponent(slug)}`)
     return data
   }
