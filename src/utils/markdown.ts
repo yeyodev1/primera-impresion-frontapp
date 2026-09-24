@@ -54,14 +54,15 @@ export function renderMarkdown(source: string): string {
     } else if (heading) {
       flushParagraph()
       flushList()
-      const tag = heading[1].length === 2 ? 'h2' : 'h3'
-      html.push(`<${tag}>${inline(heading[2])}</${tag}>`)
+      const [, hashes = '', text = ''] = heading
+      const tag = hashes.length === 2 ? 'h2' : 'h3'
+      html.push(`<${tag}>${inline(text)}</${tag}>`)
     } else if (bullet || ordered) {
       flushParagraph()
       const tag = bullet ? 'ul' : 'ol'
       if (list && list.tag !== tag) flushList()
       if (!list) list = { tag, items: [] }
-      list.items.push((bullet ?? ordered)![1])
+      list.items.push((bullet ?? ordered)?.[1] ?? '')
     } else {
       flushList()
       paragraph.push(line)
