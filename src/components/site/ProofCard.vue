@@ -2,7 +2,7 @@
 import CropMarks from './CropMarks.vue'
 import CmykDots from './CmykDots.vue'
 import ImageSlot from './ImageSlot.vue'
-import { copy } from './copy'
+import { copy } from '@/config/site'
 
 // Tarjeta del hero tratada como una prueba de impresión: pliego claro,
 // marcas de corte, tira de control CMYK y tres espacios para fotos.
