@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { site, whatsappLink } from '@/config/site'
-import { copy } from './copy'
+import { site, whatsappLink, copy } from '@/config/site'
 </script>
 
 <template>
