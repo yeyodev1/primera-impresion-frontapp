@@ -18,15 +18,14 @@
   --text-soft: #{$ink-soft};
   --accent: #{$accent};
   --border: #{$line};
+  --header-h: #{$header-h};
 }
 
+// Sin scroll-behavior: smooth global: ScrollTrigger mide y reposiciona el
+// scroll al refrescar los pines, y el cambio de página debe saltar arriba bajo
+// la cortina. Los anclajes con hash ya piden 'smooth' desde el router.
 html {
-  scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
-
-  @include reduced-motion {
-    scroll-behavior: auto;
-  }
 }
 
 body {
@@ -187,6 +186,56 @@ label {
     font-size: 0.85rem;
   }
 
+  // Botones grandes del rediseño: píldora, relleno que sube como tinta.
+  &--press {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    min-height: 3.5rem;
+    padding: 1rem 1.6rem 1rem 1.9rem;
+    white-space: nowrap;
+    border-radius: $radius-pill;
+    font-size: 0.98rem;
+
+    i {
+      @include transition(transform);
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: inherit;
+      background: var(--btn-fill, #{$night});
+      transform: translateY(101%);
+      transition: transform 0.45s $ease;
+    }
+
+    &:hover {
+      transform: none;
+
+      i {
+        transform: translateX(4px) rotate(-45deg);
+      }
+
+      &::before {
+        transform: translateY(0);
+      }
+    }
+  }
+
+  &--primary.btn--press:hover {
+    background: $accent-deep;
+  }
+
+  // Tinta sobre bloques naranja: el botón oscuro es el que tiene contraste.
+  &--ink {
+    background: $night;
+    color: $surface;
+    --btn-fill: #{$accent-deep};
+  }
+
   &--danger {
     background: $danger;
     color: $surface;
@@ -196,6 +245,38 @@ label {
     opacity: 0.45;
     pointer-events: none;
   }
+}
+
+// Desregistro leve en hover (CTAs grandes): la prensa descalibrada un instante.
+.fx-misreg:hover,
+.fx-misreg:focus-visible {
+  text-shadow:
+    -1.5px 0 rgba($cmyk-c, 0.75),
+    1.5px 0.5px rgba($cmyk-m, 0.7);
+}
+
+// Grano de papel para secciones concretas (el global lo pone PaperGrain).
+.grain {
+  position: relative;
+  isolation: isolate;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: var(--grain-url);
+    opacity: 0.06;
+  }
+}
+
+:root {
+  --grain-url: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.mono {
+  @include mono-label;
 }
 
 .visually-hidden {
