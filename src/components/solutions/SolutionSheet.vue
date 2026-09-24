@@ -1,8 +1,7 @@
 <script setup lang="ts">
+import { copy, fxCatalog } from '@/config/site'
 import { computed } from 'vue'
 import type { Solution } from '@/types'
-import { copy } from '@/config/site'
-import { fxCatalog } from '@/config/fx.catalog'
 import { categoryOf } from '@/composables/useCatalog'
 import TiltCard from '@/components/fx/TiltCard.vue'
 import ImageSlot from '@/components/site/ImageSlot.vue'
