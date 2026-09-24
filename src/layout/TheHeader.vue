@@ -1,60 +1,50 @@
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { site, copy } from '@/config/site'
 import { useBodyScroll } from '@/composables/useBodyScroll'
+import { useHeaderScroll } from '@/composables/motion/useHeaderScroll'
+import { useMenuFocus } from '@/composables/useMenuFocus'
 import BrandMark from '@/components/brand/BrandMark.vue'
-import CmykDots from '@/components/site/CmykDots.vue'
+import TheMenu from './TheMenu.vue'
 
 const route = useRoute()
 const open = ref(false)
+const root = ref<HTMLElement | null>(null)
 const burger = ref<HTMLButtonElement | null>(null)
-const panel = ref<HTMLElement | null>(null)
+const bar = ref<HTMLElement | null>(null)
 
 useBodyScroll(open)
+const { scrolled, hidden, onDark } = useHeaderScroll(root, bar, open)
+
+// Claro (texto blanco) sobre un bloque oscuro o con el menú abierto.
+const light = computed(() => open.value || onDark.value)
 
 // Al navegar se cierra el menú móvil.
 watch(() => route.fullPath, () => (open.value = false))
 
-watch(open, async (value) => {
-  await nextTick()
-  if (value) panel.value?.querySelector<HTMLElement>('a')?.focus()
-  else burger.value?.focus({ preventScroll: true })
-})
+useMenuFocus(open, root, burger, '#menu-movil')
 
 // "Inicio" solo se marca activo en la portada, no en cada ruta que empieza con "/".
 function isActive(to: string) {
   return to === '/' ? route.path === '/' : route.path.startsWith(to)
 }
-
-function onKey(event: KeyboardEvent) {
-  if (!open.value) return
-  if (event.key === 'Escape') open.value = false
-  // Mantiene el foco dentro del menú abierto.
-  if (event.key === 'Tab' && panel.value) {
-    const items = [burger.value, ...panel.value.querySelectorAll<HTMLElement>('a')].filter(Boolean) as HTMLElement[]
-    const first = items[0]
-    const last = items[items.length - 1]
-    if (!first || !last) return
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault()
-      last.focus()
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault()
-      first.focus()
-    }
-  }
-}
-
-onMounted(() => window.addEventListener('keydown', onKey))
-onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 </script>
 
 <template>
-  <header class="header" :class="{ 'header--open': open }">
+  <header
+    ref="root"
+    class="header"
+    :class="{
+      'header--open': open,
+      'header--solid': scrolled && !open,
+      'header--light': light,
+      'header--hidden': hidden && !open,
+    }"
+  >
     <div class="header__inner">
       <RouterLink to="/" class="header__logo" :aria-label="copy.header.home">
-        <BrandMark :tone="open ? 'light' : 'dark'" />
+        <BrandMark :tone="light ? 'light' : 'dark'" />
       </RouterLink>
 
       <nav class="header__nav" :aria-label="copy.header.navLabel">
@@ -70,9 +60,9 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
         </RouterLink>
       </nav>
 
-      <a :href="site.portalUrl" target="_blank" rel="noopener" class="btn btn--dark btn--sm header__portal">
+      <a :href="site.portalUrl" target="_blank" rel="noopener" class="header__portal">
         {{ site.portalCta }}
-        <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
         <span class="visually-hidden">{{ copy.header.newTab }}</span>
       </a>
 
@@ -85,63 +75,59 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
         aria-controls="menu-movil"
         @click="open = !open"
       >
-        <i :class="open ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'" aria-hidden="true"></i>
+        <span class="header__bun" aria-hidden="true"></span>
+        <span class="header__bun" aria-hidden="true"></span>
       </button>
     </div>
 
-    <Transition name="fade">
-      <div v-show="open" id="menu-movil" ref="panel" class="header__panel">
-        <nav class="header__mobile" :aria-label="copy.header.navLabel">
-          <RouterLink
-            v-for="(link, index) in site.nav"
-            :key="link.to"
-            :to="link.to"
-            class="header__mlink"
-            :class="{ 'header__mlink--active': isActive(link.to) }"
-            :aria-current="isActive(link.to) ? 'page' : undefined"
-          >
-            <span class="header__mnum" aria-hidden="true">{{ String(index + 1).padStart(2, '0') }}</span>
-            {{ link.label }}
-          </RouterLink>
-        </nav>
-        <a :href="site.portalUrl" target="_blank" rel="noopener" class="btn btn--primary header__mportal">
-          {{ site.portalCta }}
-          <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
-          <span class="visually-hidden">{{ copy.header.newTab }}</span>
-        </a>
-        <CmykDots size="md" />
-      </div>
-    </Transition>
+    <span ref="bar" class="header__progress" aria-hidden="true"></span>
+    <TheMenu :open="open" />
   </header>
 </template>
 
 <style scoped lang="scss">
 .header {
-  position: sticky;
-  top: 0;
+  position: fixed;
+  inset: 0 0 auto;
   z-index: 100;
-  background: rgba($paper, 0.92);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid $line;
+  color: $ink;
+  transition:
+    transform 0.45s $ease,
+    background-color 0.35s ease,
+    color 0.35s ease,
+    box-shadow 0.35s ease;
 
-  // backdrop-filter crea un bloque contenedor y el panel fijo quedaría
-  // atrapado dentro del header: se apaga mientras el menú está abierto.
-  &--open {
-    background: $night;
-    border-color: $night;
-    backdrop-filter: none;
+  &--light {
+    color: $surface;
+  }
+
+  // backdrop-filter y transform crean un bloque contenedor que atraparía al
+  // menú fijo: solo se usan cuando el menú está cerrado.
+  &--solid {
+    background: rgba($paper, 0.84);
+    backdrop-filter: blur(14px) saturate(1.4);
+    box-shadow: 0 1px 0 rgba($ink, 0.08);
+  }
+
+  &--solid.header--light {
+    background: rgba($night, 0.78);
+    box-shadow: 0 1px 0 rgba($surface, 0.08);
+  }
+
+  &--hidden {
+    transform: translateY(-100%);
   }
 
   &__inner {
-    @include container(1240px);
+    @include container(1320px);
     @include flex(row, center, space-between, 1rem);
-    min-height: 4.25rem;
+    height: var(--header-h);
     position: relative;
     z-index: 2;
   }
 
   &__logo {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     margin-right: auto;
     border-radius: 4px;
     @include focus-ring;
@@ -151,7 +137,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
     display: none;
 
     @include from('lg') {
-      @include flex(row, center, center, 0.25rem);
+      @include flex(row, center, center, 0.15rem);
     }
   }
 
@@ -160,9 +146,10 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
     padding: 0.55rem 0.7rem;
     font-size: $text-sm;
     font-weight: 600;
-    color: $ink-soft;
+    color: inherit;
+    opacity: 0.78;
     border-radius: 6px;
-    @include transition(color);
+    @include transition(opacity);
     @include focus-ring;
 
     &::after {
@@ -170,20 +157,25 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
       position: absolute;
       left: 0.7rem;
       right: 0.7rem;
-      bottom: 0.2rem;
+      bottom: 0.25rem;
       height: 2px;
       background: $accent;
       transform: scaleX(0);
-      transform-origin: left;
-      @include transition(transform);
+      transform-origin: right;
+      transition: transform 0.45s $ease;
     }
 
     &:hover {
-      color: $ink;
+      opacity: 1;
+
+      &::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
     }
 
     &--active {
-      color: $ink;
+      opacity: 1;
 
       &::after {
         transform: scaleX(1);
@@ -193,10 +185,39 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 
   &__portal {
     display: none;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.6rem;
+    padding: 0.5rem 1.1rem;
+    border-radius: $radius-pill;
+    background: $accent-deep;
+    color: $surface;
+    font-size: $text-sm;
+    font-weight: 600;
+    @include transition(background, transform);
+    @include focus-ring;
+
+    i {
+      transform: rotate(-45deg);
+      @include transition(transform);
+    }
+
+    &:hover {
+      background: $night;
+
+      i {
+        transform: rotate(0);
+      }
+    }
 
     @include from('sm') {
       display: inline-flex;
     }
+  }
+
+  &--light &__portal:hover {
+    background: $surface;
+    color: $ink;
   }
 
   &--open &__portal {
@@ -204,12 +225,12 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
   }
 
   &__burger {
-    @include flex(row, center, center);
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: $radius-sm;
-    font-size: 1.25rem;
-    color: $ink;
+    position: relative;
+    width: 2.9rem;
+    height: 2.9rem;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    color: inherit;
     @include focus-ring;
 
     @include from('lg') {
@@ -217,54 +238,47 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
     }
   }
 
-  &--open &__burger {
-    color: $surface;
-  }
+  &__bun {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 1.1rem;
+    height: 2px;
+    margin-left: -0.55rem;
+    background: currentColor;
+    transition: transform 0.4s $ease;
 
-  &__panel {
-    position: fixed;
-    inset: 0;
-    z-index: 1;
-    padding: 6rem 1.25rem 2rem;
-    background: $night;
-    @include flex(column, stretch, flex-start, 2rem);
-    overflow-y: auto;
+    &:first-child {
+      transform: translateY(-3.5px);
+    }
 
-    @include from('lg') {
-      display: none !important;
+    &:last-child {
+      transform: translateY(3.5px);
     }
   }
 
-  &__mobile {
-    @include flex(column, stretch, flex-start);
+  &--open &__bun:first-child {
+    transform: rotate(45deg);
   }
 
-  &__mlink {
-    @include flex(row, baseline, flex-start, 1rem);
-    padding: 0.85rem 0;
-    border-bottom: 1px solid rgba($surface, 0.1);
-    font-family: $font-display;
-    font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2rem);
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    color: $surface;
-    @include focus-ring;
-
-    &--active {
-      color: $accent;
-    }
+  &--open &__bun:last-child {
+    transform: rotate(-45deg);
   }
 
-  &__mnum {
-    font-family: $font-principal;
-    font-size: $text-xs;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    color: rgba($surface, 0.55);
+  &__progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: $accent;
+    transform: scaleX(0);
+    transform-origin: left;
+    z-index: 3;
   }
 
-  &__mportal {
-    align-self: flex-start;
+  &--open &__progress {
+    opacity: 0;
   }
 }
 </style>
