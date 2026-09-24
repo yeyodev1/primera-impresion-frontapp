@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { site } from '@/config/site'
-import { copy } from './copy'
+import { site, copy } from '@/config/site'
 
 // Marco común de los formularios: campos (slot), consentimiento, campo
 // trampa invisible y botón de envío. El estado vive en useLeadForm.
