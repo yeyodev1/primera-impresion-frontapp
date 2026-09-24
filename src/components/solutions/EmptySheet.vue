@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { fxCatalog } from '@/config/fx.catalog'
+import { fxCatalog } from '@/config/site'
 import RegMark from '@/components/fx/RegMark.vue'
 import CropMarks from '@/components/site/CropMarks.vue'
 
