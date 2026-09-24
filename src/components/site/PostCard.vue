@@ -2,7 +2,7 @@
 import type { Post } from '@/types'
 import { formatDate } from '@/utils/format'
 import ImageSlot from './ImageSlot.vue'
-import { copy } from './copy'
+import { copy } from '@/config/site'
 
 defineProps<{ post: Post }>()
 </script>
