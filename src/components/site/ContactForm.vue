@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { site } from '@/config/site'
+import { site, copy } from '@/config/site'
 import { useLeadForm } from '@/composables/useLeadForm'
 import LeadFormShell from './LeadFormShell.vue'
 import FormField from './FormField.vue'
 import FormSuccess from './FormSuccess.vue'
-import { copy } from './copy'
 
 const { form, errors, loading, sent, submit, reset } = useLeadForm('contact', site.contact.success)
 const f = copy.forms
