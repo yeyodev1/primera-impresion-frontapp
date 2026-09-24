@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { site } from '@/config/site'
-import { copy } from '@/components/site/copy'
+import { site, copy } from '@/config/site'
 import { formatDate } from '@/utils/format'
 import { usePost } from '@/composables/usePost'
 import PageIntro from '@/components/site/PageIntro.vue'
