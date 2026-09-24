@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { fxPages } from '@/config/fx.pages'
+import { fxPages } from '@/config/site'
 import RegMark from '@/components/fx/RegMark.vue'
 
 // Riel de lectura. En escritorio: columna fija con el avance en mono, una
