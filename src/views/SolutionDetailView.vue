@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { site } from '@/config/site'
-import { copy } from '@/components/site/copy'
+import { site, copy } from '@/config/site'
 import { useSolutionDetail } from '@/composables/useSolutionDetail'
 import { vReveal } from '@/composables/useReveal'
 import PageIntro from '@/components/site/PageIntro.vue'
