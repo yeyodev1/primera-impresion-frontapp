@@ -1,7 +1,6 @@
 <script setup lang="ts">
+import { site, fx, fxPages } from '@/config/site'
 import { ref } from 'vue'
-import { site, fx } from '@/config/site'
-import { fxPages } from '@/config/fx.pages'
 import { gsap, useGsapContext } from '@/composables/motion/useGsap'
 import RegisterTitle from '@/components/fx/RegisterTitle.vue'
 import SplitReveal from '@/components/fx/SplitReveal.vue'
