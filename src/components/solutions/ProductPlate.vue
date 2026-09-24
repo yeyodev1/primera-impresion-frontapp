@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { MediaImage } from '@/types'
-import { fxCatalog } from '@/config/fx.catalog'
+import { fxCatalog } from '@/config/site'
 import { gsap, MQ, useGsapMedia } from '@/composables/motion/useGsap'
 import ImageSlot from '@/components/site/ImageSlot.vue'
 import RegMark from '@/components/fx/RegMark.vue'
