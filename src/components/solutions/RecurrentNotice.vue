@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { site } from '@/config/site'
-import { fxCatalog } from '@/config/fx.catalog'
+import { site, fxCatalog } from '@/config/site'
 import CropMarks from '@/components/site/CropMarks.vue'
 import HalftoneBg from '@/components/site/HalftoneBg.vue'
 import RegMark from '@/components/fx/RegMark.vue'
