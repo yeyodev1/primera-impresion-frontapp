@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { copy } from './copy'
+import { copy } from '@/config/site'
 
 // Etiqueta + control + error, con los ids enlazados para lectores de pantalla.
 defineProps<{ id: string; label: string; required?: boolean; error?: string }>()
