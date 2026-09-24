@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { copy } from './copy'
+import { copy } from '@/config/site'
 
 // Estados de carga, error y vacío con la misma altura y tono, para que la
 // página no salte ni quede un hueco mudo.
