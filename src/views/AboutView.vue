@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { site, copy, fx } from '@/config/site'
-import { fxPages } from '@/config/fx.pages'
+import { site, copy, fx, fxPages } from '@/config/site'
 import PageIntro from '@/components/site/PageIntro.vue'
 import SectionHead from '@/components/site/SectionHead.vue'
 import PinnedSteps from '@/components/site/PinnedSteps.vue'
