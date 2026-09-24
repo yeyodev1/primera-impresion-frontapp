@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { copy } from './copy'
+import { copy } from '@/config/site'
 
 // Paginación simple: anterior / página actual / siguiente.
 defineProps<{ page: number; pages: number }>()
