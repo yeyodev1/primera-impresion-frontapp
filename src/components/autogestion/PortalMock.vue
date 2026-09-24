@@ -1,7 +1,6 @@
 <script setup lang="ts">
+import { site, fxCatalog } from '@/config/site'
 import { ref } from 'vue'
-import { site } from '@/config/site'
-import { fxCatalog } from '@/config/fx.catalog'
 import CropMarks from '@/components/site/CropMarks.vue'
 import RegMark from '@/components/fx/RegMark.vue'
 import PortalOrder from './PortalOrder.vue'
