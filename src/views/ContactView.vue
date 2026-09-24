@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { site, whatsappLink } from '@/config/site'
-import { copy } from '@/components/site/copy'
+import { site, whatsappLink, copy } from '@/config/site'
 import { vReveal } from '@/composables/useReveal'
 import PageIntro from '@/components/site/PageIntro.vue'
 import IconCard from '@/components/site/IconCard.vue'
