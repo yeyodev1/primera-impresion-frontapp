@@ -31,12 +31,22 @@ const icons: Record<string, string> = {
 
 <style scoped lang="scss">
 .toasts {
+  // En móvil arriba: abajo taparían el botón de WhatsApp y las barras de acciones fijas.
   position: fixed;
-  bottom: 1.4rem;
-  right: 1.4rem;
+  top: 1rem;
+  left: 1rem;
+  right: 1rem;
+
+  @include from('md') {
+    top: auto;
+    left: auto;
+    bottom: 1.4rem;
+    right: 1.4rem;
+  }
+
   @include flex(column, stretch, flex-start, 0.6rem);
   z-index: 300;
-  max-width: min(360px, calc(100vw - 2.8rem));
+  max-width: min(360px, calc(100vw - 2rem));
 
   &__item {
     @include flex(row, center, flex-start, 0.7rem);
