@@ -5,7 +5,8 @@
 
 // Acento de marca (naranja del isotipo "P")
 $accent: #ec6a2b;
-$accent-deep: #c9531a; // hover y texto naranja sobre blanco (mejor contraste)
+$accent-deep: #b8471a; // fondo de botones y texto naranja sobre papel (AA: 5:1)
+$accent-text: $accent-deep;
 $accent-soft: color.mix($accent, #ffffff, 12%);
 
 // Gris del logotipo "PRIMERA IMPRESIÓN"
@@ -22,7 +23,7 @@ $night-soft: #2c2c2b;
 // Texto
 $ink: #232322; // texto principal
 $ink-soft: #575756; // texto secundario (= gris de marca)
-$ink-muted: #85827d; // terciario / labels
+$ink-muted: #6f6c67; // terciario / labels (AA sobre papel)
 
 $overlay: rgba(#121211, 0.6);
 
