@@ -16,7 +16,8 @@ const userStore = useUserStore(pinia)
 // httpBase emite este evento al recibir un 401: la sesión caducó.
 window.addEventListener('auth:token-expired', () => {
   userStore.clear()
-  if (router.currentRoute.value.meta.requiresAuth) {
+  const { meta } = router.currentRoute.value
+  if (meta.requiresAuth || meta.requiresAdmin) {
     router.replace({ name: 'Login', query: { next: router.currentRoute.value.fullPath } })
   }
 })
