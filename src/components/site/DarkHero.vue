@@ -1,20 +1,25 @@
 <script setup lang="ts">
-import HalftoneBg from './HalftoneBg.vue'
+import { fx } from '@/config/site'
+import HalftoneCanvas from '@/components/fx/HalftoneCanvas.vue'
+import RegisterTitle from '@/components/fx/RegisterTitle.vue'
+import SplitReveal from '@/components/fx/SplitReveal.vue'
+import RegMark from '@/components/fx/RegMark.vue'
 import CmykDots from './CmykDots.vue'
 
-// Hero oscuro con trama de semitono: texto a la izquierda y, en escritorio,
-// la tarjeta de prueba (slot `aside`) a la derecha.
-defineProps<{ eyebrow: string; title: string; lead: string }>()
+// Hero oscuro con trama viva: titular en registro CMYK a la izquierda y, en
+// escritorio, la tarjeta de prueba (slot `aside`) a la derecha. El slot
+// `actions` recibe los CTAs. `accent` pinta en naranja parte del titular.
+defineProps<{ eyebrow: string; title: string; lead: string; accent?: string }>()
 </script>
 
 <template>
   <section class="hero">
-    <HalftoneBg />
+    <HalftoneCanvas focus="br" />
     <div class="hero__inner">
       <div class="hero__copy">
         <p class="hero__eyebrow"><CmykDots /> {{ eyebrow }}</p>
-        <h1 class="hero__title">{{ title }}</h1>
-        <p class="hero__lead">{{ lead }}</p>
+        <RegisterTitle as="h1" size="xl" tone="night" :text="title" :accent="accent" trigger="load" :delay="0.1" drift />
+        <SplitReveal :text="lead" by="lines" trigger="load" :delay="0.55" class="hero__lead" />
         <div class="hero__actions">
           <slot name="actions" />
         </div>
@@ -23,6 +28,11 @@ defineProps<{ eyebrow: string; title: string; lead: string }>()
         <slot name="aside" />
       </div>
     </div>
+    <p class="hero__foot" aria-hidden="true">
+      <RegMark size="1rem" tone="light" />
+      <span>{{ fx.coords }}</span>
+      <span class="hero__since">{{ fx.since }}</span>
+    </p>
   </section>
 </template>
 
@@ -35,44 +45,41 @@ defineProps<{ eyebrow: string; title: string; lead: string }>()
   color: $surface;
 
   &__inner {
-    @include container(1240px);
+    @include container(1320px);
     position: relative;
     z-index: 1;
     @include flex(column, stretch, flex-start, 3rem);
-    padding-block: 3.5rem 4rem;
+    padding-top: calc(var(--header-h) + 3rem);
+    padding-bottom: 4rem;
 
     @include from('lg') {
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
-      padding-block: 6rem 6.5rem;
+      min-height: min(100svh, 56rem);
+      padding-top: calc(var(--header-h) + 4rem);
+      padding-bottom: 6rem;
     }
   }
 
   &__copy {
-    @include flex(column, flex-start, flex-start, 1.25rem);
-    max-width: 44rem;
+    @include flex(column, flex-start, flex-start, 1.4rem);
+    max-width: 50rem;
 
     @include from('lg') {
-      flex: 1 1 58%;
+      flex: 1 1 60%;
     }
   }
 
   &__eyebrow {
-    @include eyebrow;
+    @include mono-label(0.7rem, 0.2em);
     @include flex(row, center, flex-start, 0.75rem);
     flex-wrap: wrap;
     color: $accent;
   }
 
-  &__title {
-    @include display($display-lg, 800);
-    letter-spacing: -0.035em;
-    line-height: 0.98;
-  }
-
   &__lead {
-    max-width: 54ch;
+    max-width: 52ch;
     font-size: $text-lg;
     line-height: 1.55;
     color: rgba($surface, 0.78);
@@ -95,8 +102,24 @@ defineProps<{ eyebrow: string; title: string; lead: string }>()
     @include flex(row, center, center);
 
     @include from('lg') {
-      flex: 0 1 26rem;
+      flex: 0 1 28rem;
     }
+  }
+
+  &__foot {
+    @include container(1320px);
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 1.25rem;
+    z-index: 1;
+    @include flex(row, center, flex-start, 0.75rem);
+    @include mono-label(0.6rem, 0.18em);
+    color: rgba($surface, 0.5);
+  }
+
+  &__since {
+    margin-left: auto;
   }
 }
 </style>
