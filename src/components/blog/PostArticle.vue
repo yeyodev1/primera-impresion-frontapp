@@ -1,8 +1,7 @@
 <script setup lang="ts">
+import { site, copy, fx, fxPages } from '@/config/site'
 import { computed, ref, toRef } from 'vue'
 import type { Post } from '@/types'
-import { site, copy, fx } from '@/config/site'
-import { fxPages } from '@/config/fx.pages'
 import { useReading } from '@/composables/useReading'
 import { gsap, useGsapContext } from '@/composables/motion/useGsap'
 import ImageSlot from '@/components/site/ImageSlot.vue'
