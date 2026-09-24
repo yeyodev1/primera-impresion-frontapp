@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import type { Solution } from '@/types'
 import { categoryOf } from '@/composables/useCatalog'
 import ImageSlot from './ImageSlot.vue'
-import { copy } from './copy'
+import { copy } from '@/config/site'
 
 const props = defineProps<{ solution: Solution; icon?: string }>()
 const category = computed(() => categoryOf(props.solution))
