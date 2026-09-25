@@ -54,7 +54,7 @@ const publicRoutes: Array<RouteRecordRaw> = [
 ]
 
 // Panel interno del equipo de Primera Impresión: blog, soluciones y solicitudes.
-// No es el Portal de Clientes (ese vive en tienda.primeraimpresion.com.ec).
+// No es el Portal de Clientes: ese ya existe aparte y se enlaza con site.portalUrl.
 const adminRoutes: Array<RouteRecordRaw> = [
   {
     path: '/admin/ingresar',
@@ -149,7 +149,7 @@ router.beforeEach(async (to) => {
 
 router.afterEach((to) => {
   const title = to.meta.title as string | undefined
-  document.title = title && title !== site.name ? `${title} | ${site.name}` : `${site.name} | ${site.tagline.replace(/\.$/, '')}`
+  document.title = title && title !== site.name ? `${title} | ${site.name}` : site.title
 })
 
 export default router
