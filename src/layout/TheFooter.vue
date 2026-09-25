@@ -1,20 +1,18 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { site, whatsappLink, copy, fx } from '@/config/site'
+import { site, whatsappLink, portalLink, contactForm, copy, fx } from '@/config/site'
 import { gsap, useGsapContext } from '@/composables/motion/useGsap'
 import BrandMark from '@/components/brand/BrandMark.vue'
 import ColorBar from '@/components/fx/ColorBar.vue'
 import FooterCta from '@/components/site/FooterCta.vue'
+import SmartLink from '@/components/site/SmartLink.vue'
 import WhatsAppFloat from '@/components/site/WhatsAppFloat.vue'
 
 const year = new Date().getFullYear()
 const root = ref<HTMLElement | null>(null)
 
-const socials = [
-  { key: 'instagram', href: site.social.instagram, icon: 'fa-brands fa-instagram', label: copy.social.instagram },
-  { key: 'messenger', href: site.social.messenger, icon: 'fa-brands fa-facebook-messenger', label: copy.social.messenger },
-  { key: 'telegram', href: site.social.telegram, icon: 'fa-brands fa-telegram', label: copy.social.telegram },
-].filter((item) => item.href)
+// Redes y datos directos aparecen solo cuando están confirmados en site.ts.
+const socials = site.social.filter((item) => item.href)
 
 // El wordmark gigante sube desde el borde inferior mientras se llega al final.
 useGsapContext(root, ({ reduced, el }) => {
@@ -42,9 +40,9 @@ function toTop() {
           <RouterLink to="/" class="footer__logo" :aria-label="copy.header.home">
             <BrandMark tone="light" tagline />
           </RouterLink>
-          <p class="footer__text">{{ site.description }}</p>
+          <p class="footer__text">{{ site.tagline }} {{ site.city }}.</p>
           <ul v-if="socials.length" class="footer__social" :aria-label="copy.footer.social">
-            <li v-for="item in socials" :key="item.key">
+            <li v-for="item in socials" :key="item.href">
               <a :href="item.href" target="_blank" rel="noopener" class="footer__social-link">
                 <i :class="item.icon" aria-hidden="true"></i>
                 <span class="visually-hidden">{{ item.label }} {{ copy.header.newTab }}</span>
@@ -60,25 +58,27 @@ function toTop() {
 
         <div class="footer__col">
           <h2 class="footer__heading">{{ site.footer.contact }}</h2>
-          <a :href="site.mapsUrl" target="_blank" rel="noopener" class="footer__link">
+          <SmartLink v-if="site.address" :to="site.mapsUrl || contactForm" class="footer__link">
             <span class="visually-hidden">{{ copy.footer.address }}: </span>{{ site.address }}
-          </a>
-          <a :href="site.phoneHref" class="footer__link">
+          </SmartLink>
+          <a v-if="site.phone" :href="site.phoneHref" class="footer__link">
             <span class="visually-hidden">{{ copy.footer.phone }}: </span>{{ site.phone }}
           </a>
-          <a :href="`mailto:${site.email}`" class="footer__link">
+          <a v-if="site.email" :href="`mailto:${site.email}`" class="footer__link">
             <span class="visually-hidden">{{ copy.footer.email }}: </span>{{ site.email }}
           </a>
-          <a v-if="site.whatsapp" :href="whatsappLink()" target="_blank" rel="noopener" class="footer__link">{{ copy.footer.whatsapp }}</a>
+          <SmartLink v-if="site.whatsapp" :to="whatsappLink()" class="footer__link">{{ copy.footer.whatsapp }}</SmartLink>
+          <RouterLink to="/contacto" class="footer__link">{{ copy.footer.advisor }}</RouterLink>
+          <RouterLink :to="contactForm" class="footer__link">{{ copy.footer.form }}</RouterLink>
         </div>
 
         <div class="footer__col">
           <h2 class="footer__heading">{{ site.footer.portal }}</h2>
           <p class="footer__small">{{ copy.footer.portalText }}</p>
-          <a :href="site.portalUrl" target="_blank" rel="noopener" class="footer__link footer__link--strong">
-            {{ copy.footer.portalCta }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-            <span class="visually-hidden">{{ copy.header.newTab }}</span>
-          </a>
+          <SmartLink :to="portalLink()" class="footer__link footer__link--strong">
+            {{ site.portalUrl ? copy.footer.portalCta : copy.footer.portalInfo }}
+            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </SmartLink>
           <RouterLink to="/autogestion#solicitud" class="footer__link">{{ copy.footer.portalRequest }}</RouterLink>
         </div>
       </div>
