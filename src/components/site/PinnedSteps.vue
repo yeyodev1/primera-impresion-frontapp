@@ -9,7 +9,7 @@ import ColorBar from '@/components/fx/ColorBar.vue'
 // Pasos como pliegos que pasan por la prensa. Desde lg la sección se fija y
 // los pliegos avanzan en horizontal con el scroll; en móvil es una línea de
 // tiempo vertical. El slot `head` va arriba (normalmente un SectionHead).
-// Uso: <PinnedSteps :steps="site.howItWorks"><template #head>…</template></PinnedSteps>
+// Uso: <PinnedSteps :steps="site.about.process"><template #head>…</template></PinnedSteps>
 defineProps<{ steps: ReadonlyArray<{ title: string; text: string }> }>()
 
 const root = ref<HTMLElement | null>(null)
