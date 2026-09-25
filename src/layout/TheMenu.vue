@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { site, copy, fx, whatsappLink } from '@/config/site'
+import { site, copy, fx, whatsappLink, portalLink, hasDirectContact } from '@/config/site'
 import { gsap, prefersReducedMotion } from '@/composables/motion/useGsap'
 import HalftoneBg from '@/components/site/HalftoneBg.vue'
 import RegMark from '@/components/fx/RegMark.vue'
 import ColorBar from '@/components/fx/ColorBar.vue'
+import SmartLink from '@/components/site/SmartLink.vue'
 
 // Menú móvil a pantalla completa. El header controla abrir/cerrar, el foco
 // y Escape; este componente solo pinta y anima la entrada.
@@ -21,7 +22,14 @@ function onEnter(el: Element, done: () => void) {
     .timeline({ onComplete: done })
     .fromTo(el, { clipPath: 'inset(0% 0% 100% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.6, ease: 'expo.inOut' })
     .from(el.querySelectorAll('.menu__word'), { yPercent: 110, duration: 0.8, ease: 'expo.out', stagger: 0.05 }, 0.3)
-    .from(el.querySelectorAll('.menu__foot > *'), { y: 16, opacity: 0, duration: 0.5, stagger: 0.06 }, 0.55)
+    // fromTo con destino explícito: el botón del portal (.btn con transición CSS)
+    // quedaba con opacidad 0 al leer su valor final a mitad de transición.
+    .fromTo(
+      el.querySelectorAll('.menu__foot > *'),
+      { y: 16, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, stagger: 0.06, clearProps: 'transform,opacity' },
+      0.55,
+    )
 }
 
 function onLeave(el: Element, done: () => void) {
@@ -54,19 +62,20 @@ function onLeave(el: Element, done: () => void) {
       </nav>
 
       <div class="menu__foot">
-        <p class="menu__label">{{ fx.menu.contact }}</p>
-        <a :href="site.phoneHref" class="menu__contact">{{ site.phone }}</a>
-        <a :href="`mailto:${site.email}`" class="menu__contact">{{ site.email }}</a>
-        <a :href="whatsappLink()" target="_blank" rel="noopener" class="menu__contact">
-          <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> {{ copy.footer.whatsapp }}
-          <span class="visually-hidden">{{ copy.header.newTab }}</span>
-        </a>
-        <p class="menu__address">{{ site.address }}</p>
-        <a :href="site.portalUrl" target="_blank" rel="noopener" class="btn btn--primary btn--press menu__portal">
+        <!-- Datos directos solo cuando Primera Impresión los confirme en site.ts. -->
+        <template v-if="hasDirectContact">
+          <p class="menu__label">{{ fx.menu.contact }}</p>
+          <a v-if="site.phone" :href="site.phoneHref" class="menu__contact">{{ site.phone }}</a>
+          <a v-if="site.email" :href="`mailto:${site.email}`" class="menu__contact">{{ site.email }}</a>
+          <SmartLink v-if="site.whatsapp" :to="whatsappLink()" class="menu__contact">
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> {{ copy.footer.whatsapp }}
+          </SmartLink>
+          <p v-if="site.address" class="menu__address">{{ site.address }}</p>
+        </template>
+        <SmartLink :to="portalLink()" class="btn btn--primary btn--press menu__portal">
           {{ site.footer.portal }}
           <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-          <span class="visually-hidden">{{ copy.header.newTab }}</span>
-        </a>
+        </SmartLink>
         <ColorBar tone="night" compact />
       </div>
     </div>
