@@ -13,7 +13,6 @@
 export const site = {
   name: 'Primera Impresión',
   tagline: 'Tu Ecosistema de Soluciones Gráficas.',
-  // Rótulo bajo el logotipo, como en el prototipo.
   // Del logo en el manual de marca (no de la web anterior).
   slogan: '¡Es la que cuenta!',
   // Título de la portada (pestaña y buscadores), tal cual el prototipo.
