@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { site, copy } from '@/config/site'
+import { site, copy, portalLink } from '@/config/site'
 import { useBodyScroll } from '@/composables/useBodyScroll'
 import { useHeaderScroll } from '@/composables/motion/useHeaderScroll'
 import { useMenuFocus } from '@/composables/useMenuFocus'
 import BrandMark from '@/components/brand/BrandMark.vue'
+import SmartLink from '@/components/site/SmartLink.vue'
 import TheMenu from './TheMenu.vue'
 
 const route = useRoute()
@@ -60,11 +61,11 @@ function isActive(to: string) {
         </RouterLink>
       </nav>
 
-      <a :href="site.portalUrl" target="_blank" rel="noopener" class="header__portal">
+      <!-- Sin URL del portal confirmada, «Ingresar» explica cómo pedir acceso. -->
+      <SmartLink v-slot="{ external }" :to="portalLink()" class="header__portal">
         {{ site.portalCta }}
-        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-        <span class="visually-hidden">{{ copy.header.newTab }}</span>
-      </a>
+        <i class="fa-solid fa-arrow-right" :class="{ 'header__ext': external }" aria-hidden="true"></i>
+      </SmartLink>
 
       <button
         ref="burger"
@@ -198,14 +199,22 @@ function isActive(to: string) {
     @include focus-ring;
 
     i {
-      transform: rotate(-45deg);
       @include transition(transform);
+    }
+
+    // Flecha diagonal solo cuando sale al portal externo.
+    .header__ext {
+      transform: rotate(-45deg);
     }
 
     &:hover {
       background: $night;
 
       i {
+        transform: translateX(2px);
+      }
+
+      .header__ext {
         transform: rotate(0);
       }
     }
