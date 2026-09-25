@@ -2,32 +2,37 @@
  * El copy es configuración: todos los textos y datos de la marca viven acá.
  * Los componentes solo consumen y pintan.
  *
- * Fuente: prototipo aprobado por Primera Impresión (guía para la agencia) y
- * datos de contacto publicados hoy en primeraimpresion.com.ec.
+ * Única fuente: el prototipo HTML aprobado por Primera Impresión y su guía para
+ * la agencia. Nada sale de la web anterior (primeraimpresion.com.ec).
+ *
+ * Datos de contacto, redes y portal: la guía pide no publicar datos
+ * ilustrativos y mostrar los canales solo cuando estén confirmados. Quedan
+ * vacíos; al llenarlos acá el sitio los muestra solo (footer, menú, contacto,
+ * WhatsApp, mapa y botón «Ingresar»).
  */
 export const site = {
   name: 'Primera Impresión',
   tagline: 'Tu Ecosistema de Soluciones Gráficas.',
-  slogan: '¡Es la que cuenta!',
-  description:
-    'Imprenta en Guayaquil desde 2006. Soluciones gráficas para empresas con asesor asignado y portal de compras para clientes recurrentes.',
+  // Rótulo bajo el logotipo, como en el prototipo.
+  slogan: 'Soluciones gráficas',
+  // Título de la portada (pestaña y buscadores), tal cual el prototipo.
+  title: 'Primera Impresión | Ecosistema de Soluciones Gráficas',
+  description: 'Primera Impresión: tu ecosistema de soluciones gráficas para empresas.',
   url: 'https://www.primeraimpresion.com.ec',
-  since: 2006,
   city: 'Guayaquil, Ecuador',
-  address: '6 de Marzo 3000 y General Gómez, Guayaquil',
-  mapsUrl: 'https://www.google.com/maps/search/?api=1&query=6+de+Marzo+3000+y+General+G%C3%B3mez+Guayaquil',
-  email: 'ventas@primeraimpresion.com.ec',
-  phone: '093 927 3993',
-  phoneHref: 'tel:+593939273993',
+  // Por confirmar con Primera Impresión (guía, punto 11.2).
+  address: '',
+  mapsUrl: '',
+  email: '',
+  phone: '',
+  phoneHref: '',
   // Solo dígitos con código de país
-  whatsapp: '593939273993',
-  // Portal de Clientes existente: se enlaza, no se reconstruye.
-  portalUrl: 'https://tienda.primeraimpresion.com.ec',
-  social: {
-    instagram: 'https://www.instagram.com/primeraimpresion.ec',
-    messenger: 'http://m.me/1972668786086965',
-    telegram: 'https://t.me/PrimeraImpresionBot',
-  },
+  whatsapp: '',
+  // URL del Portal de Clientes existente, suministrada y aprobada por
+  // Primera Impresión. Vacía, «Ingresar» lleva a /autogestion.
+  portalUrl: '',
+  // Redes confirmadas: { label: 'Nombre de la red', icon: 'fa-brands fa-…', href: 'https://…' }
+  social: [] as ReadonlyArray<{ label: string; icon: string; href: string }>,
   nav: [
     { label: 'Inicio', to: '/' },
     { label: 'Soluciones', to: '/soluciones' },
@@ -102,14 +107,6 @@ export const site = {
     },
   },
 
-  // Cómo funciona la autogestión, tal como lo explica hoy su web.
-  howItWorks: [
-    { title: 'Cotiza', text: 'Reúnete con tu asesor, experto en impresos y diseño, para analizar tus necesidades.' },
-    { title: 'Negocia', text: 'Tenemos excelentes precios; si crees que no es suficiente, conversemos.' },
-    { title: 'Normaliza', text: 'Tras el acuerdo, subimos tus productos al portal respetando los términos pactados.' },
-    { title: 'Compra en línea', text: 'Te damos acceso para comprar en línea. Si no tienes tiempo, tu asesor lo hace por ti.' },
-  ],
-
   solutions: {
     eyebrow: 'Soluciones gráficas',
     title: 'Explora nuestras soluciones.',
@@ -124,6 +121,8 @@ export const site = {
       optionsText: 'Materiales, formatos, acabados y cantidades según el requerimiento y la disponibilidad real.',
       cta: 'Consultar con un asesor',
       imagePending: 'Fotografía del producto en preparación',
+      recurrentText:
+        'Conoce cómo solicitar acceso a nuestro portal para realizar pedidos directamente y repetir tus productos exclusivos.',
     },
   },
 
@@ -171,7 +170,7 @@ export const site = {
     formTitle: 'Conversemos sobre las compras de tu empresa.',
     formText: 'Completa el formulario y nuestro equipo comercial se comunicará contigo para coordinar una reunión.',
     formNotice: 'Enviar el formulario no crea un usuario ni garantiza la aprobación: primero conversamos contigo.',
-    frequencies: ['Semanal', 'Mensual', 'Trimestral', 'Ocasional'],
+    frequencies: ['Semanal', 'Mensual', 'Ocasional', 'Otra'],
     submit: 'Solicitar reunión',
     success: '¡Gracias! Recibimos tu solicitud. Un asesor te contactará para coordinar la reunión.',
     closingTitle: '¿Prefieres atención personalizada?',
@@ -183,16 +182,16 @@ export const site = {
     title: 'Mucho más que una imprenta.',
     lead: 'Somos tu Ecosistema de Soluciones Gráficas. Combinamos experiencia, tecnología y atención personalizada para desarrollar soluciones que acompañan las necesidades de tu empresa.',
     historyEyebrow: 'Nuestra trayectoria',
-    historyTitle: 'Calidad impresa desde el 2006.',
+    historyTitle: 'Más de 20 años desarrollando soluciones gráficas.',
     historyText:
-      'Nuestra experiencia nos permite acompañar a empresas de Guayaquil y todo el Ecuador en sus necesidades de impresión y comunicación visual, con impresión digital, offset y gran formato.',
+      'Nuestra experiencia nos permite acompañar a empresas en sus necesidades de impresión y comunicación visual.',
     capacityTitle: 'Conoce nuestra capacidad de producción.',
-    capacityText: 'Instalaciones, equipos y colaboradores que hacen posible cada pedido.',
+    capacityText: 'Fotografías auténticas de nuestras instalaciones, equipos y colaboradores.',
     capacity: [
       { icon: 'fa-solid fa-print', title: 'Impresión digital' },
-      { icon: 'fa-solid fa-layer-group', title: 'Offset' },
       { icon: 'fa-solid fa-ruler-combined', title: 'Gran formato' },
       { icon: 'fa-solid fa-scissors', title: 'Acabados' },
+      { icon: 'fa-solid fa-users', title: 'Nuestro equipo' },
     ],
     processTitle: 'Así trabajamos contigo.',
     process: [
@@ -249,10 +248,22 @@ export const site = {
   portalCta: 'Ingresar',
 } as const
 
+/** Formulario de contacto: destino de todo canal que aún no está confirmado. */
+export const contactForm = '/contacto#form-contacto'
+
+/** Chat de WhatsApp; sin número confirmado, el formulario de contacto. */
 export function whatsappLink(message = 'Hola, quiero más información sobre sus soluciones gráficas'): string {
-  if (!site.whatsapp) return '#'
+  if (!site.whatsapp) return contactForm
   return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(message)}`
 }
+
+/** «Ingresar»: el portal real si ya hay URL; si no, cómo solicitar acceso. */
+export function portalLink(): string {
+  return site.portalUrl || '/autogestion'
+}
+
+/** Hay algún dato directo para mostrar (footer, menú móvil). */
+export const hasDirectContact = Boolean(site.address || site.phone || site.email || site.whatsapp)
 
 /** Rótulos de interfaz: formularios, estados, accesibilidad y textos auxiliares. */
 export const copy = {
@@ -271,15 +282,13 @@ export const copy = {
     whatsapp: 'WhatsApp',
     portalText: 'Compra en línea, repite pedidos y consulta el estado de tus órdenes.',
     portalCta: 'Ingresar al portal',
+    // Mientras no haya URL del portal confirmada.
+    portalInfo: 'Conocer cómo acceder',
     portalRequest: 'Solicitar acceso',
+    advisor: 'Hablar con un asesor',
+    form: 'Formulario de contacto',
     social: 'Síguenos',
     credit: 'Hecho por',
-  },
-
-  social: {
-    instagram: 'Instagram',
-    messenger: 'Messenger',
-    telegram: 'Telegram',
   },
 
   // Rótulo de los espacios de foto que no son de producto (instalaciones, galería).
@@ -294,8 +303,6 @@ export const copy = {
   },
 
   home: {
-    howEyebrow: 'Cómo funciona',
-    howTitle: 'De la primera reunión a tu compra en línea.',
     closingTitle: '¿Listo para desarrollar tu próximo proyecto?',
     closingText: 'Cuéntanos qué necesitas y te ayudaremos a encontrar una solución.',
     closingCta: 'Contactar a un asesor',
@@ -340,13 +347,16 @@ export const copy = {
   contact: {
     channels: [
       { key: 'whatsapp', icon: 'fa-brands fa-whatsapp', title: 'WhatsApp', text: 'Escríbenos para recibir atención.', cta: 'Chatear ahora' },
-      { key: 'email', icon: 'fa-solid fa-envelope', title: 'Correo electrónico', text: 'Envíanos tu consulta o requerimiento.', cta: 'Escribir un correo' },
-      { key: 'phone', icon: 'fa-solid fa-phone', title: 'Llámanos', text: 'Contacta a nuestro equipo.', cta: 'Llamar ahora' },
+      { key: 'email', icon: 'fa-solid fa-envelope', title: 'Correo electrónico', text: 'Envíanos tu consulta o requerimiento.', cta: 'Ver correo' },
+      { key: 'phone', icon: 'fa-solid fa-phone', title: 'Llámanos', text: 'Contacta a nuestro equipo.', cta: 'Ver teléfono' },
       { key: 'advisor', icon: 'fa-solid fa-headset', title: 'Habla con un asesor', text: 'Conversemos sobre tu proyecto.', cta: 'Enviar consulta' },
       { key: 'meeting', icon: 'fa-solid fa-calendar-check', title: 'Agenda una reunión', text: 'Coordinemos una visita o reunión virtual.', cta: 'Solicitar reunión' },
     ],
+    // Canal sin dato confirmado: su botón lleva al formulario.
+    formCta: 'Ir al formulario',
     mapTitle: 'Mapa con la ubicación de Primera Impresión en Guayaquil',
     mapCta: 'Abrir en Google Maps',
+    mapPending: 'Mapa con ubicación verificada · en preparación',
   },
 
   forms: {
@@ -373,7 +383,7 @@ export const copy = {
     requiredHint: 'Obligatorio',
     invalidEmail: 'Ingresa un correo válido.',
     consentRequired: 'Necesitamos tu autorización para contactarte.',
-    error: 'No pudimos enviar tu solicitud. Intenta de nuevo o escríbenos por WhatsApp.',
+    error: 'No pudimos enviar tu solicitud. Intenta de nuevo en unos minutos.',
     again: 'Enviar otra solicitud',
   },
 
@@ -392,13 +402,13 @@ const pad = (n: number) => String(n).padStart(2, '0')
  * Rótulos técnicos y decorativos del rediseño «La prensa»: numeración de
  * pliegos, tintas, coordenadas y textos de apoyo de los efectos. Son textura
  * gráfica, pero también copy: por eso viven acá y no en los componentes.
- * Solo datos verdaderos (desde 2006, Guayaquil, envíos a todo Ecuador).
+ * Solo datos del prototipo (más de 20 años, Guayaquil, envíos nacionales).
  */
 export const fx = {
   // Coordenadas de Guayaquil, como en el pie de una hoja de prueba.
   coords: '2.1894° S · 79.8891° O',
   city: 'Guayaquil · Ecuador',
-  since: 'Desde 2006',
+  since: '+20 años',
   // Fórmula aproximada del naranja de marca en cuatricromía.
   inks: 'C 0 M 60 Y 85 K 0',
   section: (n: number, total: number) => `${pad(n)} / ${pad(total)}`,
@@ -434,16 +444,16 @@ export const fx = {
 
   why: {
     eyebrow: 'Primera Impresión en cifras',
+    years: 20,
     yearsPrefix: '+',
-    yearsLabel: 'años imprimiendo',
-    yearsNote: 'Desde 2006',
+    yearsLabel: 'años desarrollando soluciones gráficas',
+    yearsNote: 'Guayaquil, Ecuador',
+    // La cifra de familias sale del API; sin respuesta, la cifra no se pinta.
     familiesLabel: 'familias de productos',
-    familiesNote: 'De etiquetas a sellos',
-    // Respaldo si el API aún no respondió: las familias publicadas hoy.
-    familiesFallback: 13,
-    coverageValue: 'Todo Ecuador',
-    coverageLabel: 'envíos a nivel nacional',
-    coverageNote: 'Desde Guayaquil',
+    familiesNote: 'Catálogo de soluciones',
+    coverageValue: 'Nacional',
+    coverageLabel: 'opciones de entrega para tus pedidos',
+    coverageNote: 'Envíos nacionales',
   },
 
   slot: {
@@ -493,7 +503,8 @@ export const fxCatalog = {
     live: (n: number, family: string) =>
       `${n === 1 ? '1 solución' : `${n} soluciones`} en ${family}.`,
     number: (n: number) => `N° ${pad(n)}`,
-    options: (n: number) => (n === 1 ? '1 opción' : `${n} opciones`),
+    // Sin opciones cargadas: el prototipo solo dice «según el requerimiento».
+    options: (n: number) => (n === 0 ? 'Según requerimiento' : n === 1 ? '1 opción' : `${n} opciones`),
     empty: {
       spec: 'Pliego en blanco · 0 soluciones',
       title: 'Esta familia aún no tiene soluciones publicadas.',
@@ -505,7 +516,8 @@ export const fxCatalog = {
     ref: (slug: string) => `Ref. ${slug.toUpperCase()}`,
     family: 'Familia',
     options: 'Opciones',
-    optionsCount: (n: number) => (n === 1 ? '1 opción disponible' : `${n} opciones disponibles`),
+    optionsCount: (n: number) =>
+      n === 0 ? 'Según requerimiento' : n === 1 ? '1 opción disponible' : `${n} opciones disponibles`,
     note: 'Nota',
     about: 'Descripción',
     recurrent: 'Clientes recurrentes',
@@ -526,7 +538,7 @@ export const fxCatalog = {
     portal: {
       label:
         'Ilustración del Portal de Clientes: catálogo privado, repetición de pedidos y seguimiento de estado.',
-      url: 'tienda.primeraimpresion.com.ec',
+      url: 'Portal de Clientes · Representación',
       tabs: ['Catálogo general', 'Mis productos'],
       exclusive: 'Exclusivo',
       // Productos del catálogo público, a modo de ejemplo.
@@ -534,7 +546,7 @@ export const fxCatalog = {
         { name: 'Etiquetas de polipropileno', icon: 'fa-solid fa-tags' },
         { name: 'Cajas personalizadas', icon: 'fa-solid fa-box-open' },
         { name: 'Tarjetas de presentación', icon: 'fa-solid fa-envelope-open-text' },
-        { name: 'Carpetas corporativas', icon: 'fa-solid fa-folder' },
+        { name: 'Folletos y catálogos', icon: 'fa-solid fa-book-open' },
       ],
       repeat: 'Repetir pedido',
       order: 'Pedido en curso',
@@ -569,16 +581,14 @@ export const fxCatalog = {
 export const fxPages = {
   about: {
     history: {
-      yearsPrefix: '+',
-      yearsLabel: 'años imprimiendo para empresas',
-      sinceLabel: 'Primera hoja',
-      today: 'Hoy',
-      ruler: 'Regla de trayectoria',
-      rulerHint: (from: number, to: number) => `De ${from} a ${to}`,
+      // El sello gigante: «+» aparte y la cifra que se entinta con el scroll.
+      stampPrefix: '+',
+      stamp: '20',
+      stampLabel: 'años desarrollando soluciones gráficas',
       facts: [
         { label: 'Taller', value: 'Guayaquil, Ecuador' },
-        { label: 'Procesos', value: 'Digital · Offset · Gran formato' },
-        { label: 'Entregas', value: 'Envíos a todo Ecuador' },
+        { label: 'Procesos', value: 'Impresión digital · Gran formato · Acabados' },
+        { label: 'Entregas', value: 'Envíos nacionales' },
       ],
     },
     capacity: {
@@ -590,7 +600,7 @@ export const fxPages = {
     },
     gallery: {
       eyebrow: 'Muestrario',
-      sheets: ['Pliego A · Etiquetas', 'Pliego B · Empaques', 'Pliego C · Rotulación'],
+      sheets: ['Pliego A · Etiquetas', 'Pliego B · Empaques', 'Pliego C · Señalética'],
     },
   },
 
