@@ -1,23 +1,30 @@
 <script setup lang="ts">
-import { site, copy, whatsappLink, fx, fxPages } from '@/config/site'
+import { site, copy, whatsappLink, contactForm, fx, fxPages } from '@/config/site'
 import { ref } from 'vue'
 import { gsap, useGsapContext } from '@/composables/motion/useGsap'
 import SectionHead from '@/components/site/SectionHead.vue'
+import SmartLink from '@/components/site/SmartLink.vue'
 
 // Los cinco canales como filas grandes: número mono, icono, canal y dato
-// real (teléfono, correo). Al pasar, la tinta naranja cubre la fila de
+// confirmado (teléfono, correo). Al pasar, la tinta naranja cubre la fila de
 // izquierda a derecha y el icono se desregistra. Toda la fila es el enlace.
+// Un canal sin dato confirmado en site.ts lleva al formulario, sin dato.
 defineProps<{ index: string }>()
 
-const targets: Record<string, { href: string; value?: string; external?: boolean }> = {
-  whatsapp: { href: whatsappLink(), value: site.phone, external: true },
-  email: { href: `mailto:${site.email}`, value: site.email },
-  phone: { href: site.phoneHref, value: site.phone },
-  advisor: { href: '#form-contacto' },
-  meeting: { href: '#form-contacto' },
+const targets: Record<string, { href: string; value?: string }> = {
+  whatsapp: site.whatsapp ? { href: whatsappLink(), value: site.phone } : { href: contactForm },
+  email: site.email ? { href: `mailto:${site.email}`, value: site.email } : { href: contactForm },
+  phone: site.phone ? { href: site.phoneHref, value: site.phone } : { href: contactForm },
+  advisor: { href: contactForm },
+  meeting: { href: contactForm },
 }
 
-const channels = copy.contact.channels.map((c) => ({ ...c, ...targets[c.key]! }))
+const channels = copy.contact.channels.map((c) => {
+  const target = targets[c.key]!
+  // El rótulo del canal («Llamar ahora») solo tiene sentido con el dato real.
+  const pending = target.href === contactForm && (c.key === 'whatsapp' || c.key === 'email' || c.key === 'phone')
+  return { ...c, ...target, cta: pending ? copy.contact.formCta : c.cta }
+})
 const root = ref<HTMLElement | null>(null)
 
 useGsapContext(root, ({ reduced }) => {
@@ -43,11 +50,10 @@ useGsapContext(root, ({ reduced }) => {
           <i :class="c.icon" class="chan__icon" aria-hidden="true"></i>
           <div class="chan__copy">
             <h3 class="chan__title">
-              <a :href="c.href" class="chan__link" :target="c.external ? '_blank' : undefined" :rel="c.external ? 'noopener' : undefined">
+              <SmartLink :to="c.href" class="chan__link">
                 {{ c.title }}
                 <span class="visually-hidden">— {{ c.cta }}</span>
-                <span v-if="c.external" class="visually-hidden">{{ copy.header.newTab }}</span>
-              </a>
+              </SmartLink>
             </h3>
             <p class="chan__text">{{ c.text }}</p>
           </div>
