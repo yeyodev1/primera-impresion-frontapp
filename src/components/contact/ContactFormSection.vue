@@ -12,8 +12,11 @@ import ContactForm from '@/components/site/ContactForm.vue'
 
 // El formulario como una orden de trabajo: sección oscura con el titular en
 // registro y los datos directos; el formulario va en una hoja de papel con
-// marcas de corte que entra inclinada y se asienta sobre la mesa.
+// marcas de corte que entra inclinada y se asienta sobre la mesa. Los datos
+// directos (correo, teléfono) solo aparecen cuando están confirmados.
 defineProps<{ index: string }>()
+
+const direct = Boolean(site.email || site.phone)
 
 const root = ref<HTMLElement | null>(null)
 
@@ -27,6 +30,7 @@ useGsapContext(root, ({ reduced }) => {
     ease: 'expo.out',
     scrollTrigger: { trigger: '.cform__sheet', start: 'top 90%', once: true },
   })
+  if (!direct) return
   gsap.from('.cform__direct > *', {
     y: 20,
     opacity: 0,
@@ -48,16 +52,17 @@ useGsapContext(root, ({ reduced }) => {
         <RegisterTitle :text="site.contact.formTitle" size="lg" tone="night" class="cform__title" />
         <SplitReveal :text="site.contact.formText" by="lines" class="cform__text" />
 
-        <div class="cform__direct">
+        <div v-if="direct" class="cform__direct">
           <p class="cform__label">{{ fxPages.contact.formDirect }}</p>
-          <a :href="`mailto:${site.email}`" class="cform__line">
+          <a v-if="site.email" :href="`mailto:${site.email}`" class="cform__line">
             <i class="fa-solid fa-envelope" aria-hidden="true"></i> {{ site.email }}
           </a>
-          <a :href="site.phoneHref" class="cform__line">
+          <a v-if="site.phone" :href="site.phoneHref" class="cform__line">
             <i class="fa-solid fa-phone" aria-hidden="true"></i> {{ site.phone }}
           </a>
           <ColorBar tone="night" compact class="cform__bar" />
         </div>
+        <ColorBar v-else tone="night" compact class="cform__bar" />
       </div>
 
       <div class="cform__sheet">
