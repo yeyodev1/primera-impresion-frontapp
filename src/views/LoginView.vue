@@ -4,7 +4,8 @@ import { useRoute, useRouter } from 'vue-router'
 import BrandMark from '@/components/brand/BrandMark.vue'
 import { useUserStore } from '@/stores/user'
 import { useToastStore } from '@/stores/toast'
-import { site } from '@/config/site'
+import { site, portalLink } from '@/config/site'
+import SmartLink from '@/components/site/SmartLink.vue'
 import type { ApiError } from '@/types'
 
 const route = useRoute()
@@ -93,7 +94,7 @@ async function submit() {
 
     <p class="login__note">
       Este acceso es solo para el equipo de {{ site.name }}. ¿Eres cliente?
-      <a :href="site.portalUrl" target="_blank" rel="noopener">Ingresa al Portal de Clientes</a>.
+      <SmartLink :to="portalLink()">Ingresa al Portal de Clientes</SmartLink>.
     </p>
     <RouterLink to="/" class="login__back"
       ><i class="fa-solid fa-arrow-left"></i> Volver al sitio</RouterLink
