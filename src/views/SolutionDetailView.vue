@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { site, copy, fxCatalog } from '@/config/site'
+import { site, copy, contactForm, fxCatalog } from '@/config/site'
 import { computed, watch } from 'vue'
 import { useSolutionDetail } from '@/composables/useSolutionDetail'
 import { refreshAfterData } from '@/composables/motion/useGsap'
@@ -13,6 +13,7 @@ import RecurrentNotice from '@/components/solutions/RecurrentNotice.vue'
 import RelatedRail from '@/components/solutions/RelatedRail.vue'
 import MisprintSheet from '@/components/solutions/MisprintSheet.vue'
 import ClosingBanner from '@/components/site/ClosingBanner.vue'
+import SmartLink from '@/components/site/SmartLink.vue'
 
 const { solution, related, category, icon, whatsapp } = useSolutionDetail()
 const { data, loading, error, notFound, retry } = solution
@@ -63,19 +64,15 @@ watch([data, () => related.value.length], refreshAfterData)
           <ProductionSheet :slug="data.slug" :options="data.options" :family="familyLink" />
 
           <div class="detail__actions">
+            <!-- Por WhatsApp si hay número confirmado; si no, al formulario. -->
             <MagneticButton>
-              <a
-                :href="whatsapp"
-                target="_blank"
-                rel="noopener"
-                class="btn btn--primary btn--press"
-              >
-                <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+              <SmartLink :to="whatsapp" class="btn btn--primary btn--press">
+                <i v-if="site.whatsapp" class="fa-brands fa-whatsapp" aria-hidden="true"></i>
                 {{ site.solutions.detail.cta }}
-                <span class="visually-hidden">{{ copy.header.newTab }}</span>
-              </a>
+                <i v-if="!site.whatsapp" class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+              </SmartLink>
             </MagneticButton>
-            <RouterLink to="/contacto#form-contacto" class="detail__secondary">
+            <RouterLink v-if="site.whatsapp" :to="contactForm" class="detail__secondary">
               {{ copy.solutions.contactCta }}
               <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
             </RouterLink>
@@ -91,7 +88,7 @@ watch([data, () => related.value.length], refreshAfterData)
       <ClosingBanner
         :title="site.contact.closingTitle"
         :text="site.contact.closingText"
-        :cta="{ label: site.contact.closingCta, to: '/contacto#form-contacto' }"
+        :cta="{ label: site.contact.closingCta, to: contactForm }"
       />
     </template>
 
