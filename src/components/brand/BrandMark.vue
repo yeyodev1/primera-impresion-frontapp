@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { site } from '@/config/site'
+
 // Logo de Primera Impresión redibujado del manual de marca: el isotipo "P" con
 // el pulgar arriba y el logotipo en dos líneas. En SVG + texto para que se vea
 // nítido en cualquier tamaño y tenga versión clara para fondos oscuros.
@@ -23,7 +25,7 @@ withDefaults(defineProps<{ tone?: 'dark' | 'light'; tagline?: boolean }>(), {
     <span class="brand__text">
       <span class="brand__word">Primera</span>
       <span class="brand__word">Impresión</span>
-      <span v-if="tagline" class="brand__tagline">¡Es la que cuenta!</span>
+      <span v-if="tagline" class="brand__tagline">{{ site.slogan }}</span>
     </span>
   </span>
 </template>
