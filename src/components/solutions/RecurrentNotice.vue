@@ -15,7 +15,7 @@ import RegMark from '@/components/fx/RegMark.vue'
     <RegMark class="notice__reg" size="3.5rem" tone="accent" spin />
     <p class="notice__eyebrow">{{ fxCatalog.detail.recurrent }}</p>
     <p class="notice__title">{{ site.recurrentBanner.title }}</p>
-    <p class="notice__text">{{ site.recurrentBanner.text }}</p>
+    <p class="notice__text">{{ site.solutions.detail.recurrentText }}</p>
     <RouterLink to="/autogestion" class="notice__link">
       {{ site.recurrentBanner.cta }}
       <span class="notice__arrow" aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></span>
