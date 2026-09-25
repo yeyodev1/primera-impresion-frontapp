@@ -3,6 +3,7 @@ import { site, whatsappLink, copy, fx } from '@/config/site'
 
 // Acceso fijo a WhatsApp: botón redondo con un pulso sutil (se apaga con
 // reduced motion) y un globo de ayuda que aparece en hover o con el foco.
+// Oculto mientras no haya número confirmado en site.ts.
 </script>
 
 <template>
