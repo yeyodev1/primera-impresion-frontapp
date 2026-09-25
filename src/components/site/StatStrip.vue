@@ -2,8 +2,8 @@
 import CountUp from '@/components/fx/CountUp.vue'
 
 // Tira de cifras grandes: cada una con su número (que cuenta al entrar) o un
-// texto, una etiqueta y una nota mono. Solo datos verdaderos.
-// Uso: <StatStrip tone="night" :stats="[{ value: 20, prefix: '+', label: 'años', note: 'Desde 2006' }]" />
+// texto, una etiqueta y una nota mono. Solo datos del prototipo o del API.
+// Uso: <StatStrip tone="night" :stats="[{ value: 20, prefix: '+', label: 'años', note: 'Guayaquil' }]" />
 interface Stat {
   value?: number
   prefix?: string
