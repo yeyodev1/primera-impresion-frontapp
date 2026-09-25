@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { fx, copy, whatsappLink } from '@/config/site'
+import { site, fx, copy, whatsappLink } from '@/config/site'
 import RegisterTitle from '@/components/fx/RegisterTitle.vue'
 import MagneticButton from '@/components/fx/MagneticButton.vue'
 import RegMark from '@/components/fx/RegMark.vue'
+import SmartLink from './SmartLink.vue'
 
 // Invitación final del footer: "¿Imprimimos algo juntos?" enorme, con CTA
-// magnético al contacto y acceso directo a WhatsApp.
+// magnético al contacto y, si hay número confirmado, acceso directo a WhatsApp.
 </script>
 
 <template>
@@ -24,11 +25,10 @@ import RegMark from '@/components/fx/RegMark.vue'
             <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
           </RouterLink>
         </MagneticButton>
-        <a :href="whatsappLink()" target="_blank" rel="noopener" class="fcta__wa">
+        <SmartLink v-if="site.whatsapp" :to="whatsappLink()" class="fcta__wa">
           <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
           {{ copy.footer.whatsapp }}
-          <span class="visually-hidden">{{ copy.header.newTab }}</span>
-        </a>
+        </SmartLink>
       </div>
     </div>
   </div>
