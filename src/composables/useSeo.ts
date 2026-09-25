@@ -37,7 +37,7 @@ function setCanonical(href: string) {
 }
 
 function apply(input: SeoInput, keepTitle = false) {
-  const fullTitle = input.title ? `${input.title} | ${site.name}` : `${site.name} | ${site.tagline.replace(/\.$/, '')}`
+  const fullTitle = input.title ? `${input.title} | ${site.name}` : site.title
   const description = input.description || site.description
   const url = `${site.url}${input.path ?? window.location.pathname}`
 
