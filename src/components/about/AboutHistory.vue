@@ -3,23 +3,20 @@ import { site, fxPages } from '@/config/site'
 import { ref } from 'vue'
 import { gsap, useGsapContext } from '@/composables/motion/useGsap'
 import SectionHead from '@/components/site/SectionHead.vue'
-import CountUp from '@/components/fx/CountUp.vue'
-import AboutRuler from './AboutRuler.vue'
+import ColorBar from '@/components/fx/ColorBar.vue'
 
-// Trayectoria: el "2006" gigante en contorno se entinta con el scroll como si
-// pasara el rodillo, y debajo una regla de imprenta con un tic por año desde
-// 2006 hasta hoy (AboutRuler) que el marcador recorre. Solo datos verdaderos.
+// Trayectoria: el "+20" gigante (más de 20 años, como dice el prototipo) en
+// contorno se entinta con el scroll como si pasara el rodillo. Sin fechas: el
+// prototipo no da un año de fundación.
 defineProps<{ index: string }>()
 
 const h = fxPages.about.history
-const now = new Date().getFullYear()
-const years = now - site.since
 
 const root = ref<HTMLElement | null>(null)
 
 useGsapContext(root, ({ reduced, el }) => {
   if (reduced) return
-  const year = el.querySelector('.ahist__year')
+  const year = el.querySelector('.ahist__fig')
   gsap.fromTo(
     '.ahist__ink',
     { clipPath: 'inset(0% 100% 0% 0%)' },
@@ -65,18 +62,20 @@ useGsapContext(root, ({ reduced, el }) => {
 
         <div class="ahist__stamp">
           <p class="ahist__year" aria-hidden="true">
-            <span class="ahist__outline">{{ site.since }}</span>
-            <span class="ahist__ink">{{ site.since }}</span>
-            <span class="ahist__roller"></span>
+            <span class="ahist__plus">{{ h.stampPrefix }}</span>
+            <span class="ahist__fig">
+              <span class="ahist__outline">{{ h.stamp }}</span>
+              <span class="ahist__ink">{{ h.stamp }}</span>
+              <span class="ahist__roller"></span>
+            </span>
           </p>
           <p class="ahist__count">
-            <CountUp :to="years" :prefix="h.yearsPrefix" class="ahist__num" />
-            <span class="ahist__label">{{ h.yearsLabel }}</span>
+            <span class="ahist__label">{{ h.stampLabel }}</span>
           </p>
         </div>
       </div>
 
-      <AboutRuler :from="site.since" :to="now" class="ahist__ruler" />
+      <ColorBar class="ahist__bar" />
     </div>
   </section>
 </template>
@@ -140,12 +139,25 @@ useGsapContext(root, ({ reduced, el }) => {
 
   &__year {
     position: relative;
+    @include flex(row, flex-start, flex-start, 0.04em);
     font-family: $font-display;
     font-weight: 800;
-    font-size: clamp(7rem, 1rem + 27vw, 21rem);
+    font-size: clamp(9rem, 1rem + 36vw, 22rem);
     line-height: 0.8;
     letter-spacing: -0.07em;
     margin-top: 0.08em;
+  }
+
+  // El «+» va aparte, más chico y ya entintado: la cifra es la que se imprime.
+  &__plus {
+    font-size: 0.45em;
+    line-height: 1;
+    margin-top: 0.1em;
+    color: $accent-deep;
+  }
+
+  &__fig {
+    position: relative;
   }
 
   &__outline {
@@ -176,27 +188,15 @@ useGsapContext(root, ({ reduced, el }) => {
   }
 
   &__count {
-    @include flex(row, baseline, flex-start, 0.9rem);
-    margin-top: -0.2rem;
-  }
-
-  &__num {
-    font-family: $font-display;
-    font-weight: 800;
-    font-size: clamp(3rem, 2rem + 4vw, 5.5rem);
-    line-height: 0.9;
-    letter-spacing: -0.05em;
-    color: $ink;
+    margin-top: 0.6rem;
   }
 
   &__label {
-    max-width: 14ch;
-    font-weight: 600;
-    line-height: 1.25;
+    @include mono-label(0.68rem, 0.16em);
     color: $ink-soft;
   }
 
-  &__ruler {
+  &__bar {
     margin-top: $space-xl;
   }
 }
