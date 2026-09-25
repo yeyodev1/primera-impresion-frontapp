@@ -7,16 +7,18 @@ import StatStrip from '@/components/site/StatStrip.vue'
 import TiltCard from '@/components/fx/TiltCard.vue'
 import HalftoneBg from '@/components/site/HalftoneBg.vue'
 
-// Por qué Primera Impresión: cifras verdaderas que cuentan al entrar (años
-// desde 2006, familias publicadas, cobertura nacional) y los tres argumentos.
+// Por qué Primera Impresión: cifras del prototipo que cuentan al entrar (más
+// de 20 años, envíos nacionales) y las familias publicadas según el API (sin
+// cifra inventada mientras no responde), más los tres argumentos.
 defineProps<{ index: string }>()
 
 const { categories } = useCatalog()
-const years = new Date().getFullYear() - site.since
 
 const stats = computed(() => [
-  { value: years, prefix: fx.why.yearsPrefix, label: fx.why.yearsLabel, note: fx.why.yearsNote },
-  { value: categories.value.length || fx.why.familiesFallback, label: fx.why.familiesLabel, note: fx.why.familiesNote },
+  { value: fx.why.years, prefix: fx.why.yearsPrefix, label: fx.why.yearsLabel, note: fx.why.yearsNote },
+  ...(categories.value.length
+    ? [{ value: categories.value.length, label: fx.why.familiesLabel, note: fx.why.familiesNote }]
+    : []),
   { text: fx.why.coverageValue, label: fx.why.coverageLabel, note: fx.why.coverageNote },
 ])
 </script>
