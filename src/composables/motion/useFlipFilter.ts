@@ -11,6 +11,11 @@ gsap.registerPlugin(Flip)
  * deslizan a su nuevo lugar, las que salen se encogen y las que entran suben
  * desde una máscara, como pliegos saliendo de la prensa.
  *
+ * Con `absolute: true` las hojas salen del flujo mientras se mueven y la lista
+ * se quedaría sin alto: lo de abajo (la banda naranja) subiría y taparía el
+ * catálogo. Por eso la lista conserva su alto anterior y lo anima hasta el
+ * nuevo durante el reacomodo.
+ *
  * Con reduced motion el filtro cambia en seco. `selector` apunta a los
  * elementos que se muestran/ocultan dentro de `root`.
  */
@@ -20,6 +25,7 @@ export function useFlipFilter(
   selector: string,
 ) {
   let state: Flip.FlipState | null = null
+  let heightBefore = 0
   let running: gsap.core.Timeline | null = null
   onBeforeUnmount(() => running?.kill())
 
@@ -28,6 +34,7 @@ export function useFlipFilter(
     () => {
       if (!root.value || prefersReducedMotion()) return
       state = Flip.getState(root.value.querySelectorAll(selector))
+      heightBefore = root.value.offsetHeight
     },
     { flush: 'pre' },
   )
@@ -39,6 +46,8 @@ export function useFlipFilter(
     const snapshot = state
     state = null
     running?.progress(1)
+    const heightAfter = el.offsetHeight
+    gsap.set(el, { height: heightBefore })
     running = Flip.from(snapshot, {
       targets: el.querySelectorAll(selector),
       duration: 0.7,
@@ -63,7 +72,11 @@ export function useFlipFilter(
         ),
       onLeave: (items) =>
         gsap.to(items, { autoAlpha: 0, scale: 0.9, duration: 0.35, ease: 'power2.in' }),
-      onComplete: refreshScroll,
+      onComplete: () => {
+        gsap.set(el, { clearProps: 'height' })
+        refreshScroll()
+      },
     })
+    running.to(el, { height: heightAfter, duration: 0.7, ease: 'power3.inOut' }, 0)
   })
 }
