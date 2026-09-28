@@ -123,10 +123,23 @@ const router = createRouter({
   routes,
   // Con "atrás" el navegador devuelve la posición guardada; con un hash se
   // baja a la sección; si no, arriba.
-  scrollBehavior(to, _from, savedPosition) {
+  scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition
-    if (to.hash) return { el: to.hash, behavior: 'smooth', top: 90 }
-    return { left: 0, top: 0 }
+    if (!to.hash) return { left: 0, top: 0 }
+    // Misma página: bajar ya. Otra página: esperar a que la transición pinte la
+    // sección (la vista es lazy y entra con animación), si no, se queda arriba.
+    if (to.path === from.path) return { el: to.hash, behavior: 'smooth', top: 90 }
+    return new Promise((resolve) => {
+      const started = Date.now()
+      const find = () => {
+        // Salto instantáneo: la cortina aún tapa y un scroll suave lo cortaría
+        // el recálculo de ScrollTrigger al retirarse.
+        if (document.querySelector(to.hash)) return resolve({ el: to.hash, top: 90 })
+        if (Date.now() - started > 4000) return resolve({ left: 0, top: 0 })
+        window.setTimeout(find, 60)
+      }
+      find()
+    })
   },
 })
 

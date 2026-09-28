@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { site, fx, portalLink, whatsappLink } from '@/config/site'
+import { site, fx, whatsappLink } from '@/config/site'
 import { gsap, MQ, useGsapContext } from '@/composables/motion/useGsap'
 import HalftoneCanvas from '@/components/fx/HalftoneCanvas.vue'
 import RegisterTitle from '@/components/fx/RegisterTitle.vue'
@@ -10,6 +10,9 @@ import RegMark from '@/components/fx/RegMark.vue'
 import CmykDots from '@/components/site/CmykDots.vue'
 import ProofCard from '@/components/site/ProofCard.vue'
 import SmartLink from '@/components/site/SmartLink.vue'
+
+// Formulario de solicitud de acceso al portal, en Autogestión.
+const accessForm = '/autogestion#solicitud'
 
 // Portada: pliego 01. Trama viva de fondo, titular gigante que entra
 // desregistrado y se alinea, rótulos técnicos de la hoja y la prueba de color
@@ -82,7 +85,7 @@ useGsapContext(root, ({ reduced, el }) => {
           <SplitReveal :text="site.home.lead" by="lines" trigger="load" :delay="0.7" class="hh__lead" />
           <div class="hh__actions">
             <MagneticButton>
-              <SmartLink :to="portalLink()" class="btn btn--primary btn--press">
+              <SmartLink :to="accessForm" class="btn btn--primary btn--press">
                 {{ site.home.ctas.platform }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
               </SmartLink>
             </MagneticButton>

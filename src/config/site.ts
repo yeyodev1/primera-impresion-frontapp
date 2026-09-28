@@ -48,7 +48,8 @@ export const site = {
     title: 'Tu Ecosistema de Soluciones Gráficas.',
     lead: 'Una amplia variedad de soluciones para las necesidades gráficas de tu empresa, con experiencia, tecnología y atención personalizada.',
     ctas: {
-      platform: 'Conoce nuestra plataforma',
+      // Botón principal: lleva directo al formulario de acceso de autogestión.
+      platform: 'Solicitar reunión de acceso',
       advisor: 'Hablar con un asesor',
       explore: 'Explorar soluciones',
     },
