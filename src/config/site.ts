@@ -483,10 +483,6 @@ export const fx = {
   },
 
   footer: {
-    eyebrow: 'Siguiente pliego',
-    title: '¿Imprimimos algo juntos?',
-    text: 'Cuéntanos qué necesita tu empresa y un asesor te acompaña desde la idea hasta el producto terminado.',
-    cta: 'Hablemos de tu proyecto',
     top: 'Volver arriba',
   },
 } as const

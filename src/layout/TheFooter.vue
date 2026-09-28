@@ -4,7 +4,6 @@ import { site, whatsappLink, portalLink, contactForm, copy, fx } from '@/config/
 import { gsap, useGsapContext } from '@/composables/motion/useGsap'
 import BrandMark from '@/components/brand/BrandMark.vue'
 import ColorBar from '@/components/fx/ColorBar.vue'
-import FooterCta from '@/components/site/FooterCta.vue'
 import SmartLink from '@/components/site/SmartLink.vue'
 import WhatsAppFloat from '@/components/site/WhatsAppFloat.vue'
 
@@ -33,8 +32,6 @@ function toTop() {
   <footer ref="root" class="footer">
     <ColorBar tone="night" :labels="false" class="footer__strip" />
     <div class="footer__wrap">
-      <FooterCta />
-
       <div class="footer__cols">
         <div class="footer__brand">
           <RouterLink to="/" class="footer__logo" :aria-label="copy.header.home">
