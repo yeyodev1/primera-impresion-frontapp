@@ -51,8 +51,8 @@ useGsapContext(root, ({ reduced, el }) => {
                 :src="photos[award.photo]"
                 :alt="award.photoAlt"
                 class="award__photo"
-                width="480"
-                height="228"
+                width="640"
+                height="864"
                 loading="lazy"
               />
             </div>

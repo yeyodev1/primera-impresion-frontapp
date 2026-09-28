@@ -199,9 +199,10 @@ export const site = {
       {
         icon: 'fa-solid fa-award',
         title: 'Reconocimiento Empresarial',
-        text: 'Otorgado por la Cámara de la Industria Gráfica del Guayas por nuestra trayectoria, el compromiso con la excelencia y el aporte al sector gráfico ecuatoriano.',
+        text: 'Otorgado por la Cámara de la Industria Gráfica del Guayas por nuestros 20 años de trayectoria, el compromiso con la excelencia y el aporte al sector gráfico ecuatoriano.',
         meta: 'XX Congreso Nacional de la Industria Gráfica · Cuenca, septiembre de 2026',
-        // Foto de la placa, recortada al encabezado (src/assets/about).
+        // Foto de la placa con la cifra corregida a 20 años, autorizada por el
+        // presidente de la CIGG (28/09/2026).
         photo: 'plaque',
         photoAlt: 'Placa de Reconocimiento Empresarial de la CIGG a Primera Impresión',
       },
