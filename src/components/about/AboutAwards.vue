@@ -5,6 +5,7 @@ import { gsap, useGsapContext } from '@/composables/motion/useGsap'
 import SectionHead from '@/components/site/SectionHead.vue'
 import SmartLink from '@/components/site/SmartLink.vue'
 import trophy from '@/assets/about/lo-mejor-del-impreso-2026.jpg'
+import plaque from '@/assets/about/reconocimiento-cigg-2026.jpg'
 
 // Reconocimientos: la foto real del trofeo, los premios del último congreso
 // gráfico y la calificación de Google Maps, que dan confianza al visitante.
@@ -12,6 +13,7 @@ defineProps<{ index: string }>()
 
 const ab = site.about
 const r = fxPages.about.awards
+const photos: Record<string, string> = { plaque }
 const root = ref<HTMLElement | null>(null)
 
 useGsapContext(root, ({ reduced, el }) => {
@@ -44,6 +46,15 @@ useGsapContext(root, ({ reduced, el }) => {
               <h3 class="award__title">{{ award.title }}</h3>
               <p class="award__text">{{ award.text }}</p>
               <p class="award__meta">{{ award.meta }}</p>
+              <img
+                v-if="'photo' in award && photos[award.photo]"
+                :src="photos[award.photo]"
+                :alt="award.photoAlt"
+                class="award__photo"
+                width="480"
+                height="228"
+                loading="lazy"
+              />
             </div>
           </article>
 
@@ -192,6 +203,16 @@ useGsapContext(root, ({ reduced, el }) => {
   &__text {
     color: $ink-soft;
     line-height: 1.6;
+  }
+
+  &__photo {
+    display: block;
+    width: 100%;
+    max-width: 22rem;
+    height: auto;
+    margin-top: 1rem;
+    border-radius: 4px;
+    box-shadow: inset 0 0 0 1px $line;
   }
 
   &__meta {
