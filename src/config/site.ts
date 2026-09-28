@@ -18,17 +18,18 @@ export const site = {
   description: 'Primera Impresión: tu ecosistema de soluciones gráficas para empresas.',
   url: 'https://www.primeraimpresion.com.ec',
   city: 'Guayaquil, Ecuador',
-  // Por confirmar con Primera Impresión (guía, punto 11.2).
-  address: '',
-  mapsUrl: '',
+  // Confirmados por Primera Impresión (28/09/2026). El correo sigue pendiente.
+  address: 'Bolivia 2200 y Tungurahua, Guayaquil',
+  mapsUrl: 'https://maps.app.goo.gl/nG1LRmr4NRixS3CF6',
   email: '',
-  phone: '',
-  phoneHref: '',
+  phone: '+593 93 927 3993',
+  phoneHref: 'tel:+593939273993',
   // Solo dígitos con código de país
-  whatsapp: '',
-  // URL del Portal de Clientes existente, suministrada y aprobada por
-  // Primera Impresión. Vacía, «Ingresar» lleva a /autogestion.
-  portalUrl: '',
+  whatsapp: '593939273993',
+  // Portal de Clientes existente (la tienda), confirmado por Primera Impresión.
+  portalUrl: 'https://tienda.primeraimpresion.com.ec',
+  // Calificación del perfil de Google Maps, confirmada por el cliente.
+  googleRating: 4.9,
   // Redes confirmadas: { label: 'Nombre de la red', icon: 'fa-brands fa-…', href: 'https://…' }
   social: [] as ReadonlyArray<{ label: string; icon: string; href: string }>,
   nav: [
@@ -68,7 +69,8 @@ export const site = {
           icon: 'fa-solid fa-handshake',
           title: 'Atención tradicional con asesor',
           text: 'Cuéntanos lo que necesitas. Tu asesor te orientará, preparará la propuesta y gestionará el pedido contigo.',
-          link: { label: 'Hablar con un asesor', to: '/contacto' },
+          // En Inicio, «Hablar con un asesor» abre el WhatsApp del asesor.
+          link: { label: 'Hablar con un asesor', to: '/contacto', whatsapp: true },
         },
       ],
     },
@@ -186,6 +188,7 @@ export const site = {
     capacityTitle: 'Conoce nuestra capacidad de producción.',
     capacityText: 'Fotografías auténticas de nuestras instalaciones, equipos y colaboradores.',
     capacity: [
+      { icon: 'fa-solid fa-layer-group', title: 'Impresión offset' },
       { icon: 'fa-solid fa-print', title: 'Impresión digital' },
       { icon: 'fa-solid fa-ruler-combined', title: 'Gran formato' },
       { icon: 'fa-solid fa-scissors', title: 'Acabados' },
@@ -568,9 +571,11 @@ export const fxPages = {
       stampPrefix: '+',
       stamp: '20',
       stampLabel: 'años desarrollando soluciones gráficas',
+      rating: (value: number) => `${value.toFixed(1)} en Google Maps`,
+      ratingLabel: (value: number) => `Calificación de ${value.toFixed(1)} de 5 estrellas en Google Maps`,
       facts: [
-        { label: 'Taller', value: 'Guayaquil, Ecuador' },
-        { label: 'Procesos', value: 'Impresión digital · Gran formato · Acabados' },
+        { label: 'Planta', value: 'Guayaquil, Ecuador' },
+        { label: 'Procesos', value: 'Offset · Impresión digital · Gran formato · Acabados' },
         { label: 'Entregas', value: 'Envíos nacionales' },
       ],
     },
@@ -619,7 +624,7 @@ export const fxPages = {
     formEyebrow: 'Orden de trabajo',
     formSheet: 'Formulario · Contacto',
     formDirect: 'O escríbenos directo',
-    visitEyebrow: 'Taller',
+    visitEyebrow: 'Planta',
     visitPin: 'Primera Impresión',
     mapSpec: 'Mapa · Guayaquil',
   },

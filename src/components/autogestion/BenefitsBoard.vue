@@ -123,6 +123,11 @@ useGsapContext(root, ({ reduced, el }) => {
 
   &__more {
     margin-bottom: 0.5rem;
+
+    @include until('md') {
+      text-align: center;
+    }
+
     @include mono-label(0.66rem, 0.18em);
     color: $ink-muted;
   }
@@ -138,6 +143,14 @@ useGsapContext(root, ({ reduced, el }) => {
   @include flex(row, flex-start, flex-start, 0.9rem 1.25rem);
   flex-wrap: wrap;
   padding: 1.5rem 0.25rem;
+
+  // En móvil cada beneficio va centrado: número, ícono, título y texto.
+  @include until('md') {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.75rem;
+  }
 
   @include from('md') {
     flex-wrap: nowrap;
@@ -172,6 +185,11 @@ useGsapContext(root, ({ reduced, el }) => {
     color: darken($accent-deep, 4%);
     padding-top: 0.2rem;
     min-width: 1.6rem;
+
+    @include until('md') {
+      padding-top: 0;
+      min-width: 0;
+    }
     transition: color 0.3s ease;
   }
 
@@ -195,6 +213,12 @@ useGsapContext(root, ({ reduced, el }) => {
     flex: 1 1 16rem;
     min-width: 0;
     @include flex(column, flex-start, flex-start, 0.3rem);
+
+    @include until('md') {
+      flex: 0 1 auto;
+      align-items: center;
+      max-width: 34ch;
+    }
 
     @include from('md') {
       flex-direction: row;
