@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { site, fxPages, contactForm } from '@/config/site'
+import { site, fxPages } from '@/config/site'
 import { gsap, useGsapContext } from '@/composables/motion/useGsap'
 import SectionHead from '@/components/site/SectionHead.vue'
-import SmartLink from '@/components/site/SmartLink.vue'
+import GoogleRating from '@/components/site/GoogleRating.vue'
 import CropMarks from '@/components/site/CropMarks.vue'
 import ColorBar from '@/components/fx/ColorBar.vue'
 import trophy from '@/assets/about/lo-mejor-del-impreso-2026.jpg'
@@ -73,22 +73,7 @@ useGsapContext(root, ({ reduced, el }) => {
         </li>
       </ul>
 
-      <SmartLink
-        v-if="site.googleRating"
-        :to="site.mapsUrl || contactForm"
-        class="awards__rating"
-        :aria-label="r.ratingLabel(site.googleRating)"
-      >
-        <span class="awards__score" aria-hidden="true">{{ r.rating(site.googleRating) }}</span>
-        <span class="awards__rating-copy" aria-hidden="true">
-          <span class="awards__stars"><i v-for="n in 5" :key="n" class="fa-solid fa-star"></i></span>
-          <strong>{{ ab.ratingTitle }}</strong>
-          <span>{{ ab.ratingText }}</span>
-        </span>
-        <span class="awards__cta" aria-hidden="true">
-          {{ ab.ratingCta }} <i class="fa-solid fa-arrow-right"></i>
-        </span>
-      </SmartLink>
+      <GoogleRating class="awards__rating" />
     </div>
   </section>
 </template>
@@ -108,52 +93,7 @@ useGsapContext(root, ({ reduced, el }) => {
   }
 
   &__rating {
-    @include flex(row, center, flex-start, 1rem 1.75rem);
-    flex-wrap: wrap;
     margin-top: 3.5rem;
-    padding: 1.6rem 1.9rem;
-    border-radius: 4px;
-    background: $night;
-    color: $surface;
-    @include transition(transform, box-shadow);
-    @include focus-ring;
-
-    &:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 24px 40px -24px rgba(#000, 0.6);
-    }
-  }
-
-  &__score {
-    font-family: $font-display;
-    font-weight: 800;
-    font-size: clamp(2.4rem, 1.8rem + 2vw, 3.4rem);
-    line-height: 1;
-    color: $accent;
-  }
-
-  &__rating-copy {
-    @include flex(column, flex-start, flex-start, 0.2rem);
-    flex: 1 1 12rem;
-    font-size: $text-sm;
-    color: rgba($surface, 0.75);
-
-    strong {
-      font-size: 1.05rem;
-      color: $surface;
-    }
-  }
-
-  &__stars {
-    @include flex(row, center, flex-start, 0.15rem);
-    color: $accent;
-    font-size: 0.85rem;
-  }
-
-  &__cta {
-    @include flex(row, center, flex-start, 0.45rem);
-    font-weight: 700;
-    font-size: $text-sm;
   }
 }
 

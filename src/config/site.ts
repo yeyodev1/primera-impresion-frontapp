@@ -209,7 +209,7 @@ export const site = {
         photoAlt: 'Placa de Reconocimiento Empresarial de la CIGG a Primera Impresión',
       },
     ],
-    ratingTitle: 'en Google Maps',
+    ratingTitle: 'Google Reviews',
     ratingText: 'La calificación que nos dan nuestros clientes.',
     ratingCta: 'Ver reseñas',
     capacityTitle: 'Conoce nuestra capacidad de producción.',
@@ -267,6 +267,9 @@ export const site = {
   },
 
   footer: {
+    // Texto bajo el logo, entregado por el cliente (28/09/2026).
+    about:
+      'Desde 2006 transformamos ideas en soluciones gráficas que generan impacto. Más de 20 años combinando experiencia, tecnología, calidad y atención personalizada en impresión digital, offset, gran formato, etiquetas, packaging y mucho más.',
     explore: 'Explora',
     contact: 'Contacto',
     portal: 'Portal de Clientes',

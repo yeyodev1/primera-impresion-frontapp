@@ -5,6 +5,7 @@ import { gsap, useGsapContext } from '@/composables/motion/useGsap'
 import BrandMark from '@/components/brand/BrandMark.vue'
 import ColorBar from '@/components/fx/ColorBar.vue'
 import SmartLink from '@/components/site/SmartLink.vue'
+import GoogleReviewsCard from '@/components/site/GoogleReviewsCard.vue'
 import WhatsAppFloat from '@/components/site/WhatsAppFloat.vue'
 
 const year = new Date().getFullYear()
@@ -37,7 +38,8 @@ function toTop() {
           <RouterLink to="/" class="footer__logo" :aria-label="copy.header.home">
             <BrandMark tone="light" />
           </RouterLink>
-          <p class="footer__text">{{ site.tagline }} {{ site.city }}.</p>
+          <p class="footer__text">{{ site.footer.about }}</p>
+          <p class="footer__text footer__text--city">{{ site.city }}</p>
           <ul v-if="socials.length" class="footer__social" :aria-label="copy.footer.social">
             <li v-for="item in socials" :key="item.href">
               <a :href="item.href" target="_blank" rel="noopener" class="footer__social-link">
@@ -77,6 +79,7 @@ function toTop() {
             <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
           </SmartLink>
           <RouterLink to="/autogestion#solicitud" class="footer__link">{{ copy.footer.portalRequest }}</RouterLink>
+          <GoogleReviewsCard class="footer__reviews" />
         </div>
       </div>
 
@@ -145,6 +148,11 @@ function toTop() {
     max-width: 40ch;
   }
 
+  &__text--city {
+    margin-top: -0.4rem;
+    color: rgba($surface, 0.5);
+  }
+
   &__social {
     list-style: none;
     @include flex(row, center, flex-start, 0.5rem);
@@ -170,6 +178,10 @@ function toTop() {
 
   &__col {
     @include flex(column, flex-start, flex-start, 0.6rem);
+  }
+
+  &__reviews {
+    margin-top: 1.25rem;
   }
 
   &__heading {
