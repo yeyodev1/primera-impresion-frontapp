@@ -28,10 +28,12 @@ useGsapContext(root, ({ reduced, el }) => {
       y: 0,
       rotation: 0,
       autoAlpha: 1,
-      duration: 1.2,
+      duration: 0.9,
       ease: 'expo.out',
       clearProps: 'transform,opacity,visibility',
-      scrollTrigger: { trigger: el, start: 'top 70%', once: true },
+      // Desde que la hoja asoma: bajando rápido al final, el formulario no
+      // debe quedar en blanco.
+      scrollTrigger: { trigger: el.querySelector('.req__sheet'), start: 'top 100%', once: true },
     },
   )
 })

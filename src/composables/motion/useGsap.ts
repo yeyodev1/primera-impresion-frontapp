@@ -60,7 +60,8 @@ function revealStragglers() {
     const anim = st.animation
     if (!st.vars.once || !anim || anim.progress() > 0 || anim.isActive()) continue
     const el = st.trigger
-    if (el instanceof Element && el.getBoundingClientRect().top < limit) anim.play()
+    // Al doble de velocidad: el visitante ya está mirando ese bloque.
+    if (el instanceof Element && el.getBoundingClientRect().top < limit) anim.timeScale(2).play()
   }
 }
 

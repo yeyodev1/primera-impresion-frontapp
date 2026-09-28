@@ -25,18 +25,20 @@ useGsapContext(root, ({ reduced, el }) => {
     {
       clipPath: 'inset(0% 0% 0% 0%)',
       y: 0,
-      duration: 1.2,
+      duration: 0.8,
       ease: 'expo.out',
       clearProps: 'clipPath,transform',
-      scrollTrigger: { trigger: el.querySelector('.feat'), start: 'top 85%', once: true },
+      scrollTrigger: { trigger: el.querySelector('.feat'), start: 'top 98%', once: true },
     },
   )
   el.querySelectorAll<HTMLElement>('.perk').forEach((row) => {
-    const tl = gsap.timeline({ scrollTrigger: { trigger: row, start: 'top 90%', once: true } })
+    // Arranca apenas la fila asoma y el texto entra junto con el filete:
+    // bajando rápido no debe quedar ninguna fila vacía esperando.
+    const tl = gsap.timeline({ scrollTrigger: { trigger: row, start: 'top 100%', once: true } })
     tl.fromTo(
       row.querySelector('.perk__rule'),
       { scaleX: 0 },
-      { scaleX: 1, duration: 0.9, ease: 'expo.inOut' },
+      { scaleX: 1, duration: 0.7, ease: 'expo.inOut' },
     )
     tl.fromTo(
       row.querySelectorAll('.perk__n, .perk__icon, .perk__title, .perk__text'),
@@ -44,12 +46,12 @@ useGsapContext(root, ({ reduced, el }) => {
       {
         autoAlpha: 1,
         y: 0,
-        duration: 0.7,
-        stagger: 0.06,
+        duration: 0.5,
+        stagger: 0.04,
         ease: 'expo.out',
         clearProps: 'opacity,visibility,transform',
       },
-      0.2,
+      0,
     )
   })
 })
