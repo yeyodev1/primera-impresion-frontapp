@@ -400,13 +400,15 @@ const pad = (n: number) => String(n).padStart(2, '0')
  * Rótulos técnicos y decorativos del rediseño «La prensa»: numeración de
  * pliegos, tintas, coordenadas y textos de apoyo de los efectos. Son textura
  * gráfica, pero también copy: por eso viven acá y no en los componentes.
- * Solo datos del prototipo (más de 20 años, Guayaquil, envíos nacionales).
+ * Solo datos del prototipo (más de 20 años, Guayaquil, líneas de producto).
  */
 export const fx = {
   // Coordenadas de Guayaquil, como en el pie de una hoja de prueba.
   coords: '2.1894° S · 79.8891° O',
   city: 'Guayaquil · Ecuador',
   since: '+20 años',
+  // Línea sobre el titular de los cierres: las líneas de producto del prototipo.
+  closingLine: site.home.heroCard.items,
   // Fórmula aproximada del naranja de marca en cuatricromía.
   inks: 'C 0 M 60 Y 85 K 0',
   section: (n: number, total: number) => `${pad(n)} / ${pad(total)}`,
@@ -440,19 +442,6 @@ export const fx = {
     progress: 'Avance del pliego',
   },
 
-  why: {
-    eyebrow: 'Primera Impresión en cifras',
-    years: 20,
-    yearsPrefix: '+',
-    yearsLabel: 'años desarrollando soluciones gráficas',
-    yearsNote: 'Guayaquil, Ecuador',
-    // La cifra de familias sale del API; sin respuesta, la cifra no se pinta.
-    familiesLabel: 'familias de productos',
-    familiesNote: 'Catálogo de soluciones',
-    coverageValue: 'Nacional',
-    coverageLabel: 'opciones de entrega para tus pedidos',
-    coverageNote: 'Envíos nacionales',
-  },
 
   slot: {
     photo: 'Foto',

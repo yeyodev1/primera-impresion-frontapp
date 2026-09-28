@@ -181,9 +181,7 @@ useGsapContext(root, ({ reduced }) => {
     background: $paper;
     color: $ink;
     border-radius: 3px;
-    box-shadow:
-      0 2px 0 rgba(#000, 0.2),
-      0 60px 90px -40px rgba(#000, 0.7);
+    @include floating-sheet;
 
     @include from('md') {
       padding: 3rem 2.5rem 2.25rem;

@@ -1,34 +1,19 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import { site, fx } from '@/config/site'
-import { useCatalog } from '@/composables/useCatalog'
 import SectionHead from '@/components/site/SectionHead.vue'
-import StatStrip from '@/components/site/StatStrip.vue'
 import TiltCard from '@/components/fx/TiltCard.vue'
 import HalftoneBg from '@/components/site/HalftoneBg.vue'
 
-// Por qué Primera Impresión: cifras del prototipo que cuentan al entrar (más
-// de 20 años, envíos nacionales) y las familias publicadas según el API (sin
-// cifra inventada mientras no responde), más los tres argumentos.
+// Por qué Primera Impresión: los tres argumentos del prototipo, sin cifras
+// aparte que los repitan.
 defineProps<{ index: string }>()
-
-const { categories } = useCatalog()
-
-const stats = computed(() => [
-  { value: fx.why.years, prefix: fx.why.yearsPrefix, label: fx.why.yearsLabel, note: fx.why.yearsNote },
-  ...(categories.value.length
-    ? [{ value: categories.value.length, label: fx.why.familiesLabel, note: fx.why.familiesNote }]
-    : []),
-  { text: fx.why.coverageValue, label: fx.why.coverageLabel, note: fx.why.coverageNote },
-])
 </script>
 
 <template>
   <section class="why">
     <HalftoneBg fade="left" />
     <div class="why__inner">
-      <SectionHead :index="index" tone="night" :eyebrow="fx.why.eyebrow" :title="site.home.why.title" />
-      <StatStrip tone="night" :stats="stats" />
+      <SectionHead :index="index" tone="night" :title="site.home.why.title" />
       <ul class="why__cards">
         <TiltCard v-for="(item, i) in site.home.why.items" :key="item.title" as="li" tone="night" class="why__card">
           <p class="why__meta">

@@ -28,9 +28,8 @@ withDefaults(
     <RegMark class="closing__giant" size="min(62vw, 34rem)" spin />
     <CropMarks :tone="tone === 'accent' ? 'dark' : 'light'" inset="1rem" />
     <div class="closing__inner">
-      <p class="closing__meta" aria-hidden="true">
-        <span>{{ tone === 'accent' ? fx.inks : fx.coords }}</span>
-        <span>{{ fx.since }}</span>
+      <p class="closing__meta">
+        <span v-for="item in fx.closingLine" :key="item">{{ item }}</span>
       </p>
       <RegisterTitle :text="title" size="xl" :tone="tone === 'accent' ? 'accent' : 'night'" class="closing__title" />
       <div class="closing__row">

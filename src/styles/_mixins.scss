@@ -1,6 +1,7 @@
 @use 'sass:map';
 @use 'sass:list';
 @use 'colorVariables.module.scss' as *;
+@use 'typography' as t;
 
 // Breakpoints mobile-first. Uso: @include from('md') { ... }
 $breakpoints: (
@@ -110,4 +111,44 @@ $breakpoints: (
 @mixin halftone-pattern($color, $size: 12px, $dot: 1.2px) {
   background-image: radial-gradient($color $dot, transparent $dot + 0.6px);
   background-size: $size $size;
+}
+
+// Hoja que flota sobre la página para destacar (formularios): filo naranja,
+// sombra de elevación en capas y un pliego naranja desplazado detrás.
+// El pliego es una sombra sólida y no un pseudo-elemento, para no pelear con
+// los transforms de las animaciones de entrada.
+@mixin floating-sheet($under: $accent) {
+  border-top: 4px solid $accent;
+  box-shadow:
+    10px 10px 0 0 $under,
+    0 1px 2px rgba(#000, 0.08),
+    0 18px 30px -10px rgba(#000, 0.22),
+    0 50px 90px -30px rgba(#000, 0.45);
+  transition:
+    translate 0.5s t.$ease,
+    box-shadow 0.5s t.$ease;
+
+  @include from('md') {
+    box-shadow:
+      16px 16px 0 0 $under,
+      0 1px 2px rgba(#000, 0.08),
+      0 18px 30px -10px rgba(#000, 0.22),
+      0 50px 90px -30px rgba(#000, 0.45);
+  }
+
+  @include fine-pointer {
+    &:focus-within,
+    &:hover {
+      translate: 0 -6px;
+      box-shadow:
+        20px 22px 0 0 $under,
+        0 1px 2px rgba(#000, 0.08),
+        0 24px 40px -10px rgba(#000, 0.25),
+        0 70px 110px -30px rgba(#000, 0.5);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
