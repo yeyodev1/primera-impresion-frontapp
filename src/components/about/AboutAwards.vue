@@ -4,27 +4,41 @@ import { site, fxPages, contactForm } from '@/config/site'
 import { gsap, useGsapContext } from '@/composables/motion/useGsap'
 import SectionHead from '@/components/site/SectionHead.vue'
 import SmartLink from '@/components/site/SmartLink.vue'
+import CropMarks from '@/components/site/CropMarks.vue'
+import ColorBar from '@/components/fx/ColorBar.vue'
 import trophy from '@/assets/about/lo-mejor-del-impreso-2026.jpg'
 import plaque from '@/assets/about/reconocimiento-cigg-2026.jpg'
 
-// Reconocimientos: la foto real del trofeo, los premios del último congreso
-// gráfico y la calificación de Google Maps, que dan confianza al visitante.
+// Reconocimientos como dos láminas de prueba: cada foto real va montada en su
+// paspartú con marcas de corte y tira de color, y debajo el pie con el premio.
+// Cierra la calificación de Google Maps, que da confianza al visitante.
 defineProps<{ index: string }>()
 
 const ab = site.about
 const r = fxPages.about.awards
-const photos: Record<string, string> = { plaque }
+const photos: Record<string, string> = { trophy, plaque }
 const root = ref<HTMLElement | null>(null)
 
 useGsapContext(root, ({ reduced, el }) => {
   if (reduced) return
-  gsap.from(el.querySelectorAll('.awards__photo, .award, .awards__rating'), {
-    y: 50,
-    opacity: 0,
-    duration: 1,
-    stagger: 0.1,
+  el.querySelectorAll<HTMLElement>('.frame').forEach((frame, i) => {
+    const tl = gsap.timeline({ scrollTrigger: { trigger: frame, start: 'top 95%', once: true } })
+    tl.from(frame.querySelector('.frame__print'), {
+      y: 70,
+      rotation: i % 2 ? 3 : -3,
+      autoAlpha: 0,
+      duration: 0.9,
+      ease: 'expo.out',
+      clearProps: 'transform,opacity,visibility',
+    })
+    tl.from(frame.querySelector('.frame__caption'), { y: 20, autoAlpha: 0, duration: 0.6, ease: 'expo.out' }, 0.15)
+  })
+  gsap.from(el.querySelector('.awards__rating'), {
+    y: 40,
+    autoAlpha: 0,
+    duration: 0.8,
     ease: 'expo.out',
-    scrollTrigger: { trigger: el, start: 'top 75%', once: true },
+    scrollTrigger: { trigger: el.querySelector('.awards__rating'), start: 'top 98%', once: true },
   })
 })
 </script>
@@ -34,48 +48,47 @@ useGsapContext(root, ({ reduced, el }) => {
     <div class="awards__inner">
       <SectionHead :index="index" :eyebrow="ab.awardsEyebrow" :title="ab.awardsTitle" />
 
-      <div class="awards__row">
-        <figure class="awards__photo">
-          <img :src="trophy" :alt="ab.awardPhotoAlt" width="800" height="1422" loading="lazy" />
-        </figure>
-
-        <div class="awards__list">
-          <article v-for="award in ab.awards" :key="award.title" class="award">
-            <i :class="award.icon" class="award__icon" aria-hidden="true"></i>
-            <div>
-              <h3 class="award__title">{{ award.title }}</h3>
-              <p class="award__text">{{ award.text }}</p>
-              <p class="award__meta">{{ award.meta }}</p>
-              <img
-                v-if="'photo' in award && photos[award.photo]"
-                :src="photos[award.photo]"
-                :alt="award.photoAlt"
-                class="award__photo"
-                width="640"
-                height="864"
-                loading="lazy"
-              />
+      <ul class="awards__frames">
+        <li v-for="(award, i) in ab.awards" :key="award.title" class="frame">
+          <figure class="frame__print">
+            <CropMarks inset="0.3rem" />
+            <p class="frame__label" aria-hidden="true">
+              <span>{{ r.plate(i + 1) }}</span>
+              <span>{{ r.place }}</span>
+            </p>
+            <div class="frame__photo">
+              <img :src="photos[award.photo]" :alt="award.photoAlt" width="640" height="800" loading="lazy" />
             </div>
-          </article>
+            <ColorBar compact class="frame__bar" />
+          </figure>
 
-          <SmartLink
-            v-if="site.googleRating"
-            :to="site.mapsUrl || contactForm"
-            class="awards__rating"
-            :aria-label="r.ratingLabel(site.googleRating)"
-          >
-            <span class="awards__score" aria-hidden="true">{{ r.rating(site.googleRating) }}</span>
-            <span class="awards__rating-copy" aria-hidden="true">
-              <span class="awards__stars"><i v-for="n in 5" :key="n" class="fa-solid fa-star"></i></span>
-              <strong>{{ ab.ratingTitle }}</strong>
-              <span>{{ ab.ratingText }}</span>
-            </span>
-            <span class="awards__cta" aria-hidden="true">
-              {{ ab.ratingCta }} <i class="fa-solid fa-arrow-right"></i>
-            </span>
-          </SmartLink>
-        </div>
-      </div>
+          <div class="frame__caption">
+            <i :class="award.icon" class="frame__icon" aria-hidden="true"></i>
+            <div>
+              <h3 class="frame__title">{{ award.title }}</h3>
+              <p class="frame__text">{{ award.text }}</p>
+              <p class="frame__meta">{{ award.meta }}</p>
+            </div>
+          </div>
+        </li>
+      </ul>
+
+      <SmartLink
+        v-if="site.googleRating"
+        :to="site.mapsUrl || contactForm"
+        class="awards__rating"
+        :aria-label="r.ratingLabel(site.googleRating)"
+      >
+        <span class="awards__score" aria-hidden="true">{{ r.rating(site.googleRating) }}</span>
+        <span class="awards__rating-copy" aria-hidden="true">
+          <span class="awards__stars"><i v-for="n in 5" :key="n" class="fa-solid fa-star"></i></span>
+          <strong>{{ ab.ratingTitle }}</strong>
+          <span>{{ ab.ratingText }}</span>
+        </span>
+        <span class="awards__cta" aria-hidden="true">
+          {{ ab.ratingCta }} <i class="fa-solid fa-arrow-right"></i>
+        </span>
+      </SmartLink>
     </div>
   </section>
 </template>
@@ -86,54 +99,19 @@ useGsapContext(root, ({ reduced, el }) => {
   background: $sand;
 
   &__inner {
-    @include container(1320px);
+    @include container(1120px);
   }
 
-  &__row {
-    @include flex(column, stretch, flex-start, 2rem);
-
-    @include from('lg') {
-      flex-direction: row;
-      align-items: center;
-      gap: clamp(2.5rem, 5vw, 5rem);
-    }
-  }
-
-  &__photo {
-    margin: 0;
-    border-radius: 4px;
-    overflow: hidden;
-    box-shadow: 0 40px 70px -35px rgba(#000, 0.45);
-    max-width: 26rem;
-    align-self: center;
-
-    @include from('lg') {
-      flex: 0 0 34%;
-    }
-
-    img {
-      display: block;
-      width: 100%;
-      height: auto;
-      aspect-ratio: 4 / 5;
-      object-fit: cover;
-      object-position: 50% 45%;
-    }
-  }
-
-  &__list {
-    @include flex(column, stretch, flex-start, 1rem);
-
-    @include from('lg') {
-      flex: 1 1 auto;
-      min-width: 0;
-    }
+  &__frames {
+    list-style: none;
+    @include flex-cards(300px, 3rem 2.5rem);
   }
 
   &__rating {
-    @include flex(row, center, flex-start, 1rem 1.5rem);
+    @include flex(row, center, flex-start, 1rem 1.75rem);
     flex-wrap: wrap;
-    padding: 1.5rem 1.6rem;
+    margin-top: 3.5rem;
+    padding: 1.6rem 1.9rem;
     border-radius: 4px;
     background: $night;
     color: $surface;
@@ -179,18 +157,78 @@ useGsapContext(root, ({ reduced, el }) => {
   }
 }
 
-.award {
-  @include flex(row, flex-start, flex-start, 1.1rem);
-  padding: 1.5rem 1.6rem;
-  border-radius: 4px;
-  background: $surface;
-  box-shadow: inset 0 0 0 1px $line;
+// Lámina: foto montada en paspartú blanco, como una prueba sobre la mesa.
+.frame {
+  @include flex(column, stretch, flex-start, 1.5rem);
+
+  &__print {
+    position: relative;
+    margin: 0;
+    padding: 0.9rem 1rem 1rem;
+    border-radius: 3px;
+    background: $surface;
+    box-shadow:
+      0 1px 2px rgba(#000, 0.06),
+      0 30px 60px -30px rgba(#000, 0.4);
+    transition:
+      transform 0.6s $ease,
+      box-shadow 0.6s $ease;
+  }
+
+  @include fine-pointer {
+    &:hover &__print {
+      transform: translateY(-6px) rotate(-0.8deg);
+      box-shadow:
+        0 1px 2px rgba(#000, 0.06),
+        0 44px 70px -30px rgba(#000, 0.45);
+    }
+
+    &:nth-child(even):hover &__print {
+      transform: translateY(-6px) rotate(0.8deg);
+    }
+
+    &:hover &__photo img {
+      transform: scale(1.04);
+    }
+  }
+
+  &__label {
+    @include flex(row, center, space-between, 1rem);
+    padding: 0.15rem 0.2rem 0.75rem;
+    @include mono-label(0.6rem, 0.18em);
+    color: $ink-muted;
+  }
+
+  &__photo {
+    overflow: hidden;
+    border-radius: 2px;
+    background: $sand;
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      object-position: 50% 45%;
+      transition: transform 0.8s $ease;
+    }
+  }
+
+  &__bar {
+    margin-top: 0.85rem;
+  }
+
+  &__caption {
+    @include flex(row, flex-start, flex-start, 1rem);
+    padding-inline: 0.25rem;
+  }
 
   &__icon {
     flex-shrink: 0;
-    font-size: 1.6rem;
+    margin-top: 0.2rem;
+    font-size: 1.5rem;
     color: $accent-deep;
-    margin-top: 0.15rem;
   }
 
   &__title {
@@ -203,16 +241,6 @@ useGsapContext(root, ({ reduced, el }) => {
   &__text {
     color: $ink-soft;
     line-height: 1.6;
-  }
-
-  &__photo {
-    display: block;
-    width: 100%;
-    max-width: 22rem;
-    height: auto;
-    margin-top: 1rem;
-    border-radius: 4px;
-    box-shadow: inset 0 0 0 1px $line;
   }
 
   &__meta {

@@ -195,6 +195,8 @@ export const site = {
         title: 'Primer lugar · Lo Mejor del Impreso 2026',
         text: '18.° Concurso de la Cámara de la Industria Gráfica del Guayas. Categoría Agendas y cuadernos: agendas ejecutivas, temáticas o escolares.',
         meta: 'CIGG · Cuenca, septiembre de 2026',
+        photo: 'trophy',
+        photoAlt: 'Trofeo del primer lugar del 18.° Concurso Lo Mejor del Impreso 2026 de la CIGG',
       },
       {
         icon: 'fa-solid fa-award',
@@ -207,7 +209,6 @@ export const site = {
         photoAlt: 'Placa de Reconocimiento Empresarial de la CIGG a Primera Impresión',
       },
     ],
-    awardPhotoAlt: 'Trofeo del primer lugar del 18.° Concurso Lo Mejor del Impreso 2026 de la CIGG',
     ratingTitle: 'en Google Maps',
     ratingText: 'La calificación que nos dan nuestros clientes.',
     ratingCta: 'Ver reseñas',
@@ -592,6 +593,8 @@ export const fxCatalog = {
 export const fxPages = {
   about: {
     awards: {
+      plate: (n: number) => `Lámina ${String(n).padStart(2, '0')}`,
+      place: 'Cuenca · 2026',
       rating: (value: number) => `${value.toFixed(1)} / 5`,
       ratingLabel: (value: number) => `Calificación de ${value.toFixed(1)} de 5 estrellas en Google Maps`,
     },
