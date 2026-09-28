@@ -38,7 +38,47 @@ function register() {
   ScrollTrigger.config({ ignoreMobileResize: true })
   // Las fuentes web cambian la altura de los titulares: recalcular al tenerlas.
   document.fonts?.ready.then(() => ScrollTrigger.refresh())
+  watchPageHeight()
   registered = true
+}
+
+/**
+ * Si la página cambia de alto después de calcular los disparadores (llegan
+ * datos del API, cargan imágenes, termina una transición de página), sus
+ * posiciones quedan viejas y hay secciones que no aparecen hasta seguir
+ * bajando, o nunca si el disparador quedó más allá del final. Se vigila el
+ * alto del documento y se recalcula cuando cambia de verdad.
+ */
+/**
+ * Red de seguridad: una entrada de una sola vez (`once`) cuyo elemento ya está
+ * en pantalla (o quedó arriba) y no arrancó, arranca ya. Así ningún titular
+ * queda escondido bajo su máscara aunque un disparador llegue desfasado.
+ */
+function revealStragglers() {
+  const limit = window.innerHeight * 0.9
+  for (const st of ScrollTrigger.getAll()) {
+    const anim = st.animation
+    if (!st.vars.once || !anim || anim.progress() > 0 || anim.isActive()) continue
+    const el = st.trigger
+    if (el instanceof Element && el.getBoundingClientRect().top < limit) anim.play()
+  }
+}
+
+function watchPageHeight() {
+  if (typeof ResizeObserver === 'undefined') return
+  const docHeight = () => document.documentElement.scrollHeight
+  let lastHeight = docHeight()
+  let timer = 0
+  ScrollTrigger.addEventListener('refresh', () => {
+    lastHeight = docHeight()
+    revealStragglers()
+  })
+  ScrollTrigger.addEventListener('scrollEnd', revealStragglers)
+  new ResizeObserver(() => {
+    if (Math.abs(docHeight() - lastHeight) < 2) return
+    window.clearTimeout(timer)
+    timer = window.setTimeout(() => ScrollTrigger.refresh(), 150)
+  }).observe(document.body)
 }
 
 register()
