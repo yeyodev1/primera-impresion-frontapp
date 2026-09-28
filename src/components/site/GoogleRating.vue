@@ -5,7 +5,7 @@ import GoogleG from '@/components/brand/GoogleG.vue'
 
 // Calificación de Google Reviews con su isotipo: la «G» de Google en su
 // burbuja, la nota grande y las estrellas doradas. Toda la tira lleva al
-// perfil de Google Maps.
+// enlace de reseñas de Google.
 const ab = site.about
 const r = fxPages.about.awards
 </script>
@@ -13,7 +13,7 @@ const r = fxPages.about.awards
 <template>
   <SmartLink
     v-if="site.googleRating"
-    :to="site.mapsUrl || contactForm"
+    :to="site.reviewsUrl || site.mapsUrl || contactForm"
     class="grating"
     :aria-label="r.ratingLabel(site.googleRating)"
   >

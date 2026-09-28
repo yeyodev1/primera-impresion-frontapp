@@ -30,6 +30,8 @@ export const site = {
   portalUrl: 'https://tienda.primeraimpresion.com.ec',
   // Calificación del perfil de Google Maps, confirmada por el cliente.
   googleRating: 4.9,
+  // Enlace de reseñas de Google, entregado por el cliente.
+  reviewsUrl: 'https://g.page/r/CYZh9xfqtr83EAE/review',
   // Redes confirmadas: { label: 'Nombre de la red', icon: 'fa-brands fa-…', href: 'https://…' }
   social: [] as ReadonlyArray<{ label: string; icon: string; href: string }>,
   nav: [

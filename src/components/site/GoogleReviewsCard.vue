@@ -4,14 +4,14 @@ import SmartLink from '@/components/site/SmartLink.vue'
 import GoogleG from '@/components/brand/GoogleG.vue'
 
 // Sello vertical de Google Reviews para el pie: la «G» en su burbuja, la nota
-// y cinco estrellas doradas. Lleva al perfil de Google Maps.
+// y cinco estrellas doradas. Lleva a las reseñas de Google.
 const r = fxPages.about.awards
 </script>
 
 <template>
   <SmartLink
     v-if="site.googleRating"
-    :to="site.mapsUrl || contactForm"
+    :to="site.reviewsUrl || site.mapsUrl || contactForm"
     class="greview"
     :aria-label="r.ratingLabel(site.googleRating)"
   >
