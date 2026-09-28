@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { site, fx } from '@/config/site'
+import { site, fx, portalLink, whatsappLink } from '@/config/site'
 import { gsap, MQ, useGsapContext } from '@/composables/motion/useGsap'
 import HalftoneCanvas from '@/components/fx/HalftoneCanvas.vue'
 import RegisterTitle from '@/components/fx/RegisterTitle.vue'
@@ -9,6 +9,7 @@ import MagneticButton from '@/components/fx/MagneticButton.vue'
 import RegMark from '@/components/fx/RegMark.vue'
 import CmykDots from '@/components/site/CmykDots.vue'
 import ProofCard from '@/components/site/ProofCard.vue'
+import SmartLink from '@/components/site/SmartLink.vue'
 
 // Portada: pliego 01. Trama viva de fondo, titular gigante que entra
 // desregistrado y se alinea, rótulos técnicos de la hoja y la prueba de color
@@ -81,11 +82,11 @@ useGsapContext(root, ({ reduced, el }) => {
           <SplitReveal :text="site.home.lead" by="lines" trigger="load" :delay="0.7" class="hh__lead" />
           <div class="hh__actions">
             <MagneticButton>
-              <RouterLink to="/autogestion" class="btn btn--primary btn--press">
+              <SmartLink :to="portalLink()" class="btn btn--primary btn--press">
                 {{ site.home.ctas.platform }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-              </RouterLink>
+              </SmartLink>
             </MagneticButton>
-            <RouterLink to="/contacto" class="btn btn--light btn--press hh__alt">{{ site.home.ctas.advisor }}</RouterLink>
+            <SmartLink :to="whatsappLink()" class="btn btn--light btn--press hh__alt">{{ site.home.ctas.advisor }}</SmartLink>
             <RouterLink to="/soluciones" class="hh__link">
               {{ site.home.ctas.explore }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
             </RouterLink>

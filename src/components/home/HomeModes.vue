@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { site, fx } from '@/config/site'
+import { site, fx, whatsappLink } from '@/config/site'
+import SmartLink from '@/components/site/SmartLink.vue'
 import { gsap, useGsapContext } from '@/composables/motion/useGsap'
 import SectionHead from '@/components/site/SectionHead.vue'
 import CropMarks from '@/components/site/CropMarks.vue'
@@ -43,10 +44,10 @@ useGsapContext(root, ({ reduced }) => {
           <i class="mode__icon" :class="mode.icon" aria-hidden="true"></i>
           <h3 class="mode__title">{{ mode.title }}</h3>
           <p class="mode__text">{{ mode.text }}</p>
-          <RouterLink :to="mode.link.to" class="mode__link">
+          <SmartLink :to="'whatsapp' in mode.link ? whatsappLink() : mode.link.to" class="mode__link">
             {{ mode.link.label }}
             <span class="mode__arrow" aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></span>
-          </RouterLink>
+          </SmartLink>
         </article>
       </div>
     </div>

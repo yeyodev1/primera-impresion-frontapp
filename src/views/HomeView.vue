@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
-import { copy, fx } from '@/config/site'
+import { copy, fx, whatsappLink } from '@/config/site'
 import { useCatalog } from '@/composables/useCatalog'
 import { useResource } from '@/composables/useResource'
 import { blogService } from '@/services/blog.service'
@@ -42,7 +42,7 @@ onMounted(() => {
     <ClosingBanner
       :title="copy.home.closingTitle"
       :text="copy.home.closingText"
-      :cta="{ label: copy.home.closingCta, to: '/contacto' }"
+      :cta="{ label: copy.home.closingCta, to: whatsappLink() }"
     />
   </div>
 </template>

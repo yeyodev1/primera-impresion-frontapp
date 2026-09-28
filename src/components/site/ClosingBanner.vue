@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { RouteLocationRaw } from 'vue-router'
 import { fx } from '@/config/site'
 import RegisterTitle from '@/components/fx/RegisterTitle.vue'
 import SplitReveal from '@/components/fx/SplitReveal.vue'
@@ -7,15 +6,16 @@ import MagneticButton from '@/components/fx/MagneticButton.vue'
 import RegMark from '@/components/fx/RegMark.vue'
 import HalftoneBg from './HalftoneBg.vue'
 import CropMarks from './CropMarks.vue'
+import SmartLink from './SmartLink.vue'
 
 // Bloque de cierre a sangre completa: naranja de marca (default) o negro, con
 // titular enorme en registro y CTA magnético. Si se pasa `cta` pinta un
-// botón; el slot `actions` permite poner varios.
+// botón (interno o externo, p. ej. WhatsApp); el slot `actions` permite poner varios.
 withDefaults(
   defineProps<{
     title: string
     text?: string
-    cta?: { label: string; to: RouteLocationRaw }
+    cta?: { label: string; to: string }
     tone?: 'accent' | 'night'
   }>(),
   { tone: 'accent' },
@@ -37,10 +37,10 @@ withDefaults(
         <div class="closing__actions">
           <slot name="actions">
             <MagneticButton v-if="cta">
-              <RouterLink :to="cta.to" class="btn btn--press" :class="tone === 'accent' ? 'btn--ink' : 'btn--primary'">
+              <SmartLink :to="cta.to" class="btn btn--press" :class="tone === 'accent' ? 'btn--ink' : 'btn--primary'">
                 {{ cta.label }}
                 <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-              </RouterLink>
+              </SmartLink>
             </MagneticButton>
           </slot>
         </div>
