@@ -128,7 +128,12 @@ function isActive(to: string) {
   }
 
   &__logo {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
+
+    @include from('md') {
+      font-size: 1rem;
+    }
+
     margin-right: auto;
     border-radius: 4px;
     @include focus-ring;

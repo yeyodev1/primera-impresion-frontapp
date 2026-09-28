@@ -35,7 +35,7 @@ function toTop() {
       <div class="footer__cols">
         <div class="footer__brand">
           <RouterLink to="/" class="footer__logo" :aria-label="copy.header.home">
-            <BrandMark tone="light" tagline />
+            <BrandMark tone="light" />
           </RouterLink>
           <p class="footer__text">{{ site.tagline }} {{ site.city }}.</p>
           <ul v-if="socials.length" class="footer__social" :aria-label="copy.footer.social">
@@ -133,7 +133,7 @@ function toTop() {
   }
 
   &__logo {
-    font-size: 0.95rem;
+    font-size: 1.25rem;
     border-radius: 4px;
     @include focus-ring;
   }
