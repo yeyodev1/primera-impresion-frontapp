@@ -185,6 +185,28 @@ export const site = {
     historyTitle: 'Más de 20 años desarrollando soluciones gráficas.',
     historyText:
       'Nuestra experiencia nos permite acompañar a empresas en sus necesidades de impresión y comunicación visual.',
+    // Reconocimientos del XX Congreso Nacional de la Industria Gráfica (CIGG),
+    // con el texto fiel a cada placa.
+    awardsEyebrow: 'Reconocimientos',
+    awardsTitle: 'Respaldo del sector gráfico y de nuestros clientes.',
+    awards: [
+      {
+        icon: 'fa-solid fa-trophy',
+        title: 'Primer lugar · Lo Mejor del Impreso 2026',
+        text: '18.° Concurso de la Cámara de la Industria Gráfica del Guayas. Categoría Agendas y cuadernos: agendas ejecutivas, temáticas o escolares.',
+        meta: 'CIGG · Cuenca, septiembre de 2026',
+      },
+      {
+        icon: 'fa-solid fa-award',
+        title: 'Reconocimiento Empresarial',
+        text: 'Otorgado por la Cámara de la Industria Gráfica del Guayas por nuestra trayectoria, el compromiso con la excelencia y el aporte al sector gráfico ecuatoriano.',
+        meta: 'XX Congreso Nacional de la Industria Gráfica · Cuenca, septiembre de 2026',
+      },
+    ],
+    awardPhotoAlt: 'Trofeo del primer lugar del 18.° Concurso Lo Mejor del Impreso 2026 de la CIGG',
+    ratingTitle: 'en Google Maps',
+    ratingText: 'La calificación que nos dan nuestros clientes.',
+    ratingCta: 'Ver reseñas',
     capacityTitle: 'Conoce nuestra capacidad de producción.',
     capacityText: 'Fotografías auténticas de nuestras instalaciones, equipos y colaboradores.',
     capacity: [
@@ -346,12 +368,11 @@ export const copy = {
   },
 
   contact: {
+    // Solo los canales directos que pidió el cliente: WhatsApp, llamada y correo.
     channels: [
       { key: 'whatsapp', icon: 'fa-brands fa-whatsapp', title: 'WhatsApp', text: 'Escríbenos para recibir atención.', cta: 'Chatear ahora' },
-      { key: 'email', icon: 'fa-solid fa-envelope', title: 'Correo electrónico', text: 'Envíanos tu consulta o requerimiento.', cta: 'Ver correo' },
-      { key: 'phone', icon: 'fa-solid fa-phone', title: 'Llámanos', text: 'Contacta a nuestro equipo.', cta: 'Ver teléfono' },
-      { key: 'advisor', icon: 'fa-solid fa-headset', title: 'Habla con un asesor', text: 'Conversemos sobre tu proyecto.', cta: 'Enviar consulta' },
-      { key: 'meeting', icon: 'fa-solid fa-calendar-check', title: 'Agenda una reunión', text: 'Coordinemos una visita o reunión virtual.', cta: 'Solicitar reunión' },
+      { key: 'phone', icon: 'fa-solid fa-phone', title: 'Llámanos', text: 'Contacta a nuestro equipo.', cta: 'Llamar ahora' },
+      { key: 'email', icon: 'fa-solid fa-envelope', title: 'Correo electrónico', text: 'Envíanos tu consulta o requerimiento.', cta: 'Escribir correo' },
     ],
     // Canal sin dato confirmado: su botón lleva al formulario.
     formCta: 'Ir al formulario',
@@ -566,13 +587,15 @@ export const fxCatalog = {
 
 export const fxPages = {
   about: {
+    awards: {
+      rating: (value: number) => `${value.toFixed(1)} / 5`,
+      ratingLabel: (value: number) => `Calificación de ${value.toFixed(1)} de 5 estrellas en Google Maps`,
+    },
     history: {
       // El sello gigante: «+» aparte y la cifra que se entinta con el scroll.
       stampPrefix: '+',
       stamp: '20',
       stampLabel: 'años desarrollando soluciones gráficas',
-      rating: (value: number) => `${value.toFixed(1)} en Google Maps`,
-      ratingLabel: (value: number) => `Calificación de ${value.toFixed(1)} de 5 estrellas en Google Maps`,
       facts: [
         { label: 'Planta', value: 'Guayaquil, Ecuador' },
         { label: 'Procesos', value: 'Offset · Impresión digital · Gran formato · Acabados' },

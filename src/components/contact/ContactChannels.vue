@@ -5,7 +5,7 @@ import { gsap, useGsapContext } from '@/composables/motion/useGsap'
 import SectionHead from '@/components/site/SectionHead.vue'
 import SmartLink from '@/components/site/SmartLink.vue'
 
-// Los cinco canales como filas grandes: número mono, icono, canal y dato
+// Los canales directos como filas grandes: número mono, icono, canal y dato
 // confirmado (teléfono, correo). Al pasar, la tinta naranja cubre la fila de
 // izquierda a derecha y el icono se desregistra. Toda la fila es el enlace.
 // Un canal sin dato confirmado en site.ts lleva al formulario, sin dato.
@@ -15,14 +15,12 @@ const targets: Record<string, { href: string; value?: string }> = {
   whatsapp: site.whatsapp ? { href: whatsappLink(), value: site.phone } : { href: contactForm },
   email: site.email ? { href: `mailto:${site.email}`, value: site.email } : { href: contactForm },
   phone: site.phone ? { href: site.phoneHref, value: site.phone } : { href: contactForm },
-  advisor: { href: contactForm },
-  meeting: { href: contactForm },
 }
 
 const channels = copy.contact.channels.map((c) => {
   const target = targets[c.key]!
   // El rótulo del canal («Llamar ahora») solo tiene sentido con el dato real.
-  const pending = target.href === contactForm && (c.key === 'whatsapp' || c.key === 'email' || c.key === 'phone')
+  const pending = target.href === contactForm
   return { ...c, ...target, cta: pending ? copy.contact.formCta : c.cta }
 })
 const root = ref<HTMLElement | null>(null)

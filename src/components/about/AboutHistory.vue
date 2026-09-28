@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { site, fxPages, contactForm } from '@/config/site'
-import SmartLink from '@/components/site/SmartLink.vue'
+import { site, fxPages } from '@/config/site'
 import { ref } from 'vue'
 import { gsap, useGsapContext } from '@/composables/motion/useGsap'
 import SectionHead from '@/components/site/SectionHead.vue'
@@ -73,17 +72,6 @@ useGsapContext(root, ({ reduced, el }) => {
           <p class="ahist__count">
             <span class="ahist__label">{{ h.stampLabel }}</span>
           </p>
-          <SmartLink
-            v-if="site.googleRating"
-            :to="site.mapsUrl || contactForm"
-            class="ahist__rating"
-            :aria-label="h.ratingLabel(site.googleRating)"
-          >
-            <span class="ahist__stars" aria-hidden="true">
-              <i v-for="n in 5" :key="n" class="fa-solid fa-star"></i>
-            </span>
-            <span aria-hidden="true">{{ h.rating(site.googleRating) }}</span>
-          </SmartLink>
         </div>
       </div>
 
@@ -94,29 +82,6 @@ useGsapContext(root, ({ reduced, el }) => {
 
 <style scoped lang="scss">
 .ahist {
-  &__rating {
-    @include flex(row, center, flex-start, 0.6rem);
-    margin-top: 1.25rem;
-    padding: 0.55rem 1rem;
-    border: 1px solid $line;
-    border-radius: 999px;
-    background: $surface;
-    font-weight: 700;
-    font-size: $text-sm;
-    color: $ink;
-    @include transition(border-color, transform);
-    @include focus-ring;
-
-    &:hover {
-      border-color: $accent;
-    }
-  }
-
-  &__stars {
-    @include flex(row, center, flex-start, 0.15rem);
-    color: $accent;
-    font-size: 0.85rem;
-  }
 
   padding-block: $space-section;
   background: $paper;
