@@ -89,16 +89,22 @@ export function useHalftone(canvasRef: Ref<HTMLCanvasElement | null>, options: H
     const t = time * 0.001
     ctx.clearRect(0, 0, width, height)
 
+    // En móvil el texto ocupa todo el ancho: la lupa va más chica, más tenue
+    // y pegada al borde inferior derecho para no tapar las letras.
+    const small = width < 768
     // En táctil (o sin puntero) la lupa recorre una curva de Lissajous.
     if (!fine || !pointer.active) {
       // Recorre sobre todo la mitad derecha: a la izquierda va el texto.
-      pointer.tx = width * (0.76 + 0.17 * Math.sin(t * 0.35))
-      pointer.ty = height * (0.55 + 0.3 * Math.sin(t * 0.52 + 1.2))
+      pointer.tx = small ? width * (0.84 + 0.12 * Math.sin(t * 0.35)) : width * (0.76 + 0.17 * Math.sin(t * 0.35))
+      pointer.ty = small
+        ? height * (0.74 + 0.18 * Math.sin(t * 0.52 + 1.2))
+        : height * (0.55 + 0.3 * Math.sin(t * 0.52 + 1.2))
     }
     pointer.x += (pointer.tx - pointer.x) * 0.12
     pointer.y += (pointer.ty - pointer.y) * 0.12
     const breathe = reduced ? 1 : 1 + 0.18 * Math.sin(t * 1.6)
-    const lensR = (width < 768 ? lens * 0.65 : lens) * breathe
+    const lensR = (small ? lens * 0.4 : lens) * breathe
+    const boost = small ? intensity * 0.55 : intensity
     const maxR = spacing * 0.46
 
     const paths = [new Path2D(), new Path2D(), new Path2D()]
@@ -111,7 +117,7 @@ export function useHalftone(canvasRef: Ref<HTMLCanvasElement | null>, options: H
         const base = focusWeight(x, y) * wave
         const d = Math.hypot(x - pointer.x, y - pointer.y)
         const bump = d < lensR * 1.6 ? Math.exp(-(d * d) / (2 * lensR * lensR * 0.45)) : 0
-        const r = maxR * Math.min(1, base * 0.85 + bump * intensity)
+        const r = maxR * Math.min(1, base * 0.85 + bump * boost)
         if (r < 0.45) continue
         const bucket = bump > 0.45 ? 2 : bump > 0.12 ? 1 : 0
         paths[bucket]!.moveTo(x + r, y)
@@ -120,10 +126,10 @@ export function useHalftone(canvasRef: Ref<HTMLCanvasElement | null>, options: H
     }
     ctx.fillStyle = ink
     ctx.fill(paths[0]!)
-    ctx.globalAlpha = 0.55
+    ctx.globalAlpha = small ? 0.3 : 0.55
     ctx.fillStyle = accent
     ctx.fill(paths[1]!)
-    ctx.globalAlpha = 0.85
+    ctx.globalAlpha = small ? 0.45 : 0.85
     ctx.fill(paths[2]!)
     ctx.globalAlpha = 1
   }
