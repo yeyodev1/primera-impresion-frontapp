@@ -12,33 +12,33 @@ const root = ref<HTMLElement | null>(null)
 useGsapContext(root, ({ reduced }) => {
   if (reduced) return
   gsap.fromTo(
-    '.visit__frame',
+    '.vmap__frame',
     { clipPath: 'inset(10% 10% 10% 10%)' },
     {
       clipPath: 'inset(0% 0% 0% 0%)',
       duration: 1.3,
       ease: 'expo.out',
-      scrollTrigger: { trigger: '.visit__frame', start: 'top 85%', once: true },
+      scrollTrigger: { trigger: '.vmap__frame', start: 'top 85%', once: true },
     },
   )
-  gsap.from('.visit__pin i', {
+  gsap.from('.vmap__pin i', {
     y: -60,
     opacity: 0,
     duration: 0.9,
     delay: 0.5,
     ease: 'bounce.out',
-    scrollTrigger: { trigger: '.visit__frame', start: 'top 85%', once: true },
+    scrollTrigger: { trigger: '.vmap__frame', start: 'top 85%', once: true },
   })
 })
 </script>
 
 <template>
-  <div ref="root" class="visit">
-    <p class="visit__spec" aria-hidden="true">
+  <div ref="root" class="vmap">
+    <p class="vmap__spec" aria-hidden="true">
       <span>{{ fxPages.contact.mapSpec }}</span>
       <span>{{ fx.inks }}</span>
     </p>
-    <div class="visit__frame">
+    <div class="vmap__frame">
       <iframe
         :src="mapSrc"
         :title="copy.contact.mapTitle"
@@ -46,18 +46,19 @@ useGsapContext(root, ({ reduced }) => {
         referrerpolicy="no-referrer-when-downgrade"
         allowfullscreen
       ></iframe>
-      <span class="visit__tint" aria-hidden="true"></span>
-      <span class="visit__pin" aria-hidden="true">
-        <span class="visit__pulse"></span>
+      <span class="vmap__tint" aria-hidden="true"></span>
+      <span class="vmap__pin" aria-hidden="true">
+        <span class="vmap__pulse"></span>
         <i class="fa-solid fa-location-dot"></i>
-        <span class="visit__pinlabel">{{ fxPages.contact.visitPin }}</span>
+        <span class="vmap__pinlabel">{{ fxPages.contact.visitPin }}</span>
       </span>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.visit {
+// Clase propia (no «visit»): la raíz hereda el scope de VisitCard, que ya usa .visit.
+.vmap {
   &__spec {
     @include flex(row, center, space-between, 1rem);
     margin-bottom: 0.7rem;
@@ -75,13 +76,15 @@ useGsapContext(root, ({ reduced }) => {
     iframe {
       display: block;
       width: 100%;
-      aspect-ratio: 4 / 3;
+      aspect-ratio: 1 / 1;
+      min-height: 22rem;
       border: 0;
       filter: grayscale(1) contrast(1.15) brightness(1.02);
       transition: filter 0.6s $ease;
 
       @include from('md') {
-        aspect-ratio: 16 / 11;
+        aspect-ratio: 4 / 3;
+        min-height: 26rem;
       }
     }
 

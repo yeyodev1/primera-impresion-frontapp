@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { site, copy, whatsappLink, contactForm, fx, fxPages } from '@/config/site'
 import { ref } from 'vue'
+import { hasFinePointer } from '@/composables/motion/useGsap'
 import { gsap, useGsapContext } from '@/composables/motion/useGsap'
 import SectionHead from '@/components/site/SectionHead.vue'
 import SmartLink from '@/components/site/SmartLink.vue'
 
-// Los canales directos como filas grandes: número mono, icono, canal y dato
-// confirmado (teléfono, correo). Al pasar, la tinta naranja cubre la fila de
-// izquierda a derecha y el icono se desregistra. Toda la fila es el enlace.
-// Un canal sin dato confirmado en site.ts lleva al formulario, sin dato.
+// Los canales directos como filas grandes: número mono, icono y canal. Al
+// pasar, la tinta naranja cubre la fila y el icono se desregistra. El botón
+// de cada fila es un enlace real: WhatsApp abre el chat, «Llamar ahora»
+// muestra el número al primer clic (en táctil además marca) y un canal sin
+// dato confirmado en site.ts lleva al formulario.
 defineProps<{ index: string }>()
 
 const targets: Record<string, { href: string; value?: string }> = {
@@ -24,6 +26,15 @@ const channels = copy.contact.channels.map((c) => {
   return { ...c, ...target, cta: pending ? copy.contact.formCta : c.cta }
 })
 const root = ref<HTMLElement | null>(null)
+
+// El número se descubre en el propio botón. En escritorio el primer clic solo
+// lo muestra (un tel: ahí no suele abrir nada); con él visible, llama.
+const revealed = ref<Record<string, boolean>>({})
+function onCta(event: MouseEvent, key: string, value?: string) {
+  if (!value || revealed.value[key]) return
+  revealed.value = { ...revealed.value, [key]: true }
+  if (key !== 'whatsapp' && hasFinePointer()) event.preventDefault()
+}
 
 useGsapContext(root, ({ reduced }) => {
   if (reduced) return
@@ -47,19 +58,14 @@ useGsapContext(root, ({ reduced }) => {
           <span class="chan__num" aria-hidden="true">{{ fx.index(i + 1) }}</span>
           <i :class="c.icon" class="chan__icon" aria-hidden="true"></i>
           <div class="chan__copy">
-            <h3 class="chan__title">
-              <SmartLink :to="c.href" class="chan__link">
-                {{ c.title }}
-                <span class="visually-hidden">— {{ c.cta }}</span>
-              </SmartLink>
-            </h3>
+            <h3 class="chan__title">{{ c.title }}</h3>
             <p class="chan__text">{{ c.text }}</p>
           </div>
-          <span v-if="c.value" class="chan__value">{{ c.value }}</span>
-          <span class="chan__cta" aria-hidden="true">
-            {{ c.cta }}
-            <i class="fa-solid fa-arrow-right"></i>
-          </span>
+          <SmartLink :to="c.href" class="chan__cta" @click="onCta($event, c.key, c.value)">
+            <span v-if="revealed[c.key] && c.value" class="chan__revealed">{{ c.value }}</span>
+            <template v-else>{{ c.cta }}</template>
+            <i :class="revealed[c.key] ? 'fa-solid fa-check' : 'fa-solid fa-arrow-right'" aria-hidden="true"></i>
+          </SmartLink>
         </li>
       </ul>
     </div>
@@ -158,34 +164,16 @@ useGsapContext(root, ({ reduced }) => {
     letter-spacing: -0.035em;
   }
 
-  &__link {
-    @include focus-ring($night);
-
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-    }
-  }
-
   &__text {
     color: $ink-soft;
   }
 
-  &__value {
-    @include mono-label(0.72rem, 0.08em);
-    text-transform: none;
-    word-break: break-all;
-
-    @include from('md') {
-      flex: 0 0 auto;
-      word-break: normal;
-    }
-  }
-
   &__cta {
     @include flex(row, center, center, 0.55rem);
+    position: relative;
+    z-index: 1;
     margin-left: auto;
+    @include focus-ring($night);
     padding: 0.6rem 1rem;
     border: 1px solid currentColor;
     border-radius: $radius-pill;
@@ -200,6 +188,11 @@ useGsapContext(root, ({ reduced }) => {
     i {
       transition: transform 0.4s $ease;
     }
+  }
+
+  &__revealed {
+    font-family: $font-mono;
+    letter-spacing: 0.04em;
   }
 
   // Estado entintado: todo pasa a negro sobre naranja (AA).
