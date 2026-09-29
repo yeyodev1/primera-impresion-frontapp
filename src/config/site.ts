@@ -233,7 +233,7 @@ export const site = {
     ],
     galleryTitle: 'Algunos de nuestros trabajos.',
     galleryText: 'Una muestra breve de proyectos realizados para nuestros clientes.',
-    closingTitle: '¿Tienes un proyecto en mente?',
+    closingTitle: '¿Tienes un proyecto gráfico en mente?',
     closingText: 'Conversemos sobre la solución gráfica que necesita tu empresa.',
   },
 
@@ -244,7 +244,7 @@ export const site = {
     listTitle: 'Explora nuestros artículos.',
     empty: 'Estamos preparando nuestros primeros artículos. Vuelve pronto.',
     back: 'Volver al blog',
-    ctaTitle: '¿Necesitas una solución para tu empresa?',
+    ctaTitle: '¿Necesitas una solución impresa para tu empresa?',
     ctaText: 'Explora nuestras opciones o consulta con un asesor.',
   },
 
@@ -337,7 +337,7 @@ export const copy = {
   },
 
   home: {
-    closingTitle: '¿Listo para desarrollar tu próximo proyecto?',
+    closingTitle: '¿Listo para desarrollar tu próximo proyecto de impresión?',
     closingText: 'Cuéntanos qué necesitas y te ayudaremos a encontrar una solución.',
     closingCta: 'Contactar a un asesor',
   },
