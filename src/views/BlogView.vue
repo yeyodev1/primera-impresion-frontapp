@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { site, copy, fxPages } from '@/config/site'
-import { computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useBlogList } from '@/composables/useBlogList'
 import { refreshAfterData } from '@/composables/motion/useGsap'
 import PageIntro from '@/components/site/PageIntro.vue'
@@ -27,6 +27,16 @@ const rest = computed(() => (featured.value ? items.value.slice(1) : items.value
 const start = computed(() => (page.value - 1) * PER_PAGE + (featured.value ? 2 : 1))
 
 watch(data, () => refreshAfterData())
+
+// Al cambiar de tema o de página con la lista ya recorrida, se vuelve con
+// suavidad al inicio de los artículos (bajo los temas), nunca de golpe arriba.
+const topics = ref<{ $el: HTMLElement } | null>(null)
+watch([category, page], () => {
+  const el = topics.value?.$el
+  if (!el || el.getBoundingClientRect().top > 0) return
+  const header = document.querySelector<HTMLElement>('.header')?.offsetHeight ?? 72
+  window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - header - 16, behavior: 'smooth' })
+})
 </script>
 
 <template>
@@ -39,15 +49,17 @@ watch(data, () => refreshAfterData())
           <SectionHead :eyebrow="fxPages.blog.listEyebrow" :title="site.blog.listTitle" />
           <p v-if="data?.total" class="blog__count">{{ fxPages.blog.count(data.total) }}</p>
         </div>
-        <BlogTopics v-model="category" :options="options" :label="copy.blog.filterLabel" class="blog__topics" />
+        <BlogTopics ref="topics" v-model="category" :options="options" :label="copy.blog.filterLabel" class="blog__topics" />
 
-        <LoadState v-if="loading || error" :loading="loading" :error="error" @retry="retry" />
+        <!-- Mientras llega otro tema se deja la lista anterior atenuada: si se
+             cambiara por «Cargando…» la página se encogería y saltaría. -->
+        <LoadState v-if="(loading && !items.length) || error" :loading="loading" :error="error" @retry="retry" />
         <BlogEmpty v-else-if="!items.length" :text="site.blog.empty" />
-        <template v-else>
+        <div v-else class="blog__results" :class="{ 'blog__results--loading': loading }">
           <BlogFeatured v-if="featured" :post="featured" class="blog__featured" />
           <BlogList v-if="rest.length" :key="`${category}-${page}`" :posts="rest" :start="start" />
           <PagerNav :page="page" :pages="data?.pages ?? 1" @go="goTo" />
-        </template>
+        </div>
       </div>
     </section>
 
@@ -65,6 +77,17 @@ watch(data, () => refreshAfterData())
 </template>
 
 <style scoped lang="scss">
+.blog__results {
+  // Sin anclaje de scroll: al cambiar de tema la página no debe saltar.
+  overflow-anchor: none;
+  transition: opacity 0.3s ease;
+
+  &--loading {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+}
+
 .blog {
   padding-block: $space-section;
   background: $paper;

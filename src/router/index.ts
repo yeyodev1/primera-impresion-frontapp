@@ -125,6 +125,9 @@ const router = createRouter({
   // baja a la sección; si no, arriba.
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition
+    // Misma página con otro filtro o paginación (?tema=, ?categoria=,
+    // ?pagina=): no se mueve el scroll; la vista decide si acomodarlo.
+    if (!to.hash && to.path === from.path) return false
     if (!to.hash) return { left: 0, top: 0 }
     // Misma página: bajar ya. Otra página: esperar a que la transición pinte la
     // sección (la vista es lazy y entra con animación), si no, se queda arriba.

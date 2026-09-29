@@ -98,6 +98,9 @@ useFlipFilter(root, () => props.filterKey, '.grid__item')
 .grid {
   list-style: none;
   position: relative;
+  // Durante el reacomodo FLIP las láminas se mueven y el anclaje de scroll
+  // del navegador arrastraba la página con ellas (saltos al filtrar).
+  overflow-anchor: none;
   @include flex(row, stretch, flex-start, 2.25rem 1rem);
   flex-wrap: wrap;
 
