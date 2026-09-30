@@ -657,6 +657,14 @@ export const fxPages = {
     end: 'Fin del pliego',
     topic: 'Tema',
     ctaEyebrow: 'Siguiente paso',
+    share: {
+      label: 'Compartir',
+      on: (network: string) => `Compartir en ${network} (se abre en una pestaña nueva)`,
+      more: 'Compartir en otras apps',
+      copy: 'Copiar enlace',
+      copied: 'Enlace copiado',
+      copyError: 'No se pudo copiar el enlace',
+    },
   },
 
   contact: {

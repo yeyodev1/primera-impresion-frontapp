@@ -9,6 +9,7 @@ import RegMark from '@/components/fx/RegMark.vue'
 import ColorBar from '@/components/fx/ColorBar.vue'
 import PostProse from './PostProse.vue'
 import PostRail from './PostRail.vue'
+import PostShare from './PostShare.vue'
 
 // Cuerpo del artículo: portada en su hoja (entra con un recorte de abajo
 // hacia arriba), riel de lectura y texto de revista; cierra con el colofón.
@@ -48,6 +49,7 @@ useGsapContext(root, ({ reduced }) => {
               <span class="part__coords">{{ fx.coords }}</span>
             </p>
             <ColorBar compact />
+            <PostShare :title="post.title" />
             <div class="part__links">
               <RouterLink :to="{ path: '/blog', query: { tema: post.category } }" class="part__topic">
                 <span>{{ fxPages.post.topic }}</span> {{ post.category }}
