@@ -56,8 +56,10 @@ $wa: #1f7a4d;
     font-size: 1.7rem;
   }
 
+  // Gira a favor del reloj: el globo (hijo del botón) se inclina hacia arriba.
+  // Al revés caía hacia el borde inferior y se cortaban las palabras.
   &:hover {
-    transform: scale(1.06) rotate(-6deg);
+    transform: scale(1.06) rotate(6deg);
   }
 
   &__pulse {
@@ -76,7 +78,8 @@ $wa: #1f7a4d;
   &__tip {
     position: absolute;
     right: calc(100% + 0.85rem);
-    bottom: 50%;
+    // Alineado con la base del botón: crece hacia arriba, lejos del borde.
+    bottom: 0;
     width: max-content;
     max-width: 15rem;
     padding: 0.8rem 1rem;
@@ -88,7 +91,7 @@ $wa: #1f7a4d;
     text-align: left;
     box-shadow: 0 18px 40px -16px rgba(#000, 0.5);
     opacity: 0;
-    transform: translate(8px, 50%);
+    transform: translateX(8px);
     pointer-events: none;
     transition:
       opacity 0.3s ease,
@@ -105,7 +108,7 @@ $wa: #1f7a4d;
   &:hover &__tip,
   &:focus-visible &__tip {
     opacity: 1;
-    transform: translate(0, 50%);
+    transform: none;
   }
 
   @include until('md') {
