@@ -11,12 +11,11 @@ import CropMarks from '@/components/site/CropMarks.vue'
 import ContactForm from '@/components/site/ContactForm.vue'
 
 // El formulario como una orden de trabajo: sección oscura con el titular en
-// registro y los datos directos; el formulario va en una hoja de papel con
-// marcas de corte que entra inclinada y se asienta sobre la mesa. Los datos
-// directos (correo, teléfono) solo aparecen cuando están confirmados.
+// registro; el formulario va en una hoja de papel con marcas de corte que
+// entra inclinada y se asienta sobre la mesa. Sin datos directos acá: ya
+// están en los canales de arriba y en el botón de WhatsApp (el cliente lo
+// pidió así, era redundante).
 defineProps<{ index: string }>()
-
-const direct = Boolean(site.email || site.phone)
 
 const root = ref<HTMLElement | null>(null)
 
@@ -29,13 +28,6 @@ useGsapContext(root, ({ reduced }) => {
     duration: 1.4,
     ease: 'expo.out',
     scrollTrigger: { trigger: '.cform__sheet', start: 'top 90%', once: true },
-  })
-  if (!direct) return
-  gsap.from('.cform__direct > *', {
-    y: 20,
-    opacity: 0,
-    stagger: 0.08,
-    scrollTrigger: { trigger: '.cform__direct', start: 'top 90%', once: true },
   })
 })
 </script>
@@ -52,17 +44,7 @@ useGsapContext(root, ({ reduced }) => {
         <RegisterTitle :text="site.contact.formTitle" size="lg" tone="night" class="cform__title" />
         <SplitReveal :text="site.contact.formText" by="lines" class="cform__text" />
 
-        <div v-if="direct" class="cform__direct">
-          <p class="cform__label">{{ fxPages.contact.formDirect }}</p>
-          <a v-if="site.email" :href="`mailto:${site.email}`" class="cform__line">
-            <i class="fa-solid fa-envelope" aria-hidden="true"></i> {{ site.email }}
-          </a>
-          <a v-if="site.phone" :href="site.phoneHref" class="cform__line">
-            <i class="fa-solid fa-phone" aria-hidden="true"></i> {{ site.phone }}
-          </a>
-          <ColorBar tone="night" compact class="cform__bar" />
-        </div>
-        <ColorBar v-else tone="night" compact class="cform__bar" />
+        <ColorBar tone="night" compact class="cform__bar" />
       </div>
 
       <div class="cform__sheet">
@@ -132,41 +114,6 @@ useGsapContext(root, ({ reduced }) => {
     font-size: $text-lg;
     line-height: 1.55;
     color: rgba($surface, 0.75);
-  }
-
-  &__direct {
-    @include flex(column, flex-start, flex-start, 0.4rem);
-    width: 100%;
-    margin-top: 1rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid rgba($surface, 0.15);
-  }
-
-  &__label {
-    @include mono-label(0.62rem, 0.18em);
-    color: rgba($surface, 0.6);
-    margin-bottom: 0.3rem;
-  }
-
-  &__line {
-    @include flex(row, center, flex-start, 0.7rem);
-    min-height: 44px;
-    font-size: $text-lg;
-    font-weight: 600;
-    word-break: break-all;
-    color: $surface;
-    background: linear-gradient($accent, $accent) no-repeat 0 85% / 0% 1px;
-    transition: background-size 0.45s $ease;
-    @include focus-ring;
-
-    i {
-      color: $accent;
-      font-size: 0.9em;
-    }
-
-    &:hover {
-      background-size: 100% 1px;
-    }
   }
 
   &__bar {

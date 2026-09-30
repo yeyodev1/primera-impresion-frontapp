@@ -1,22 +1,21 @@
 <script setup lang="ts">
 import { site, copy, whatsappLink, contactForm, fx, fxPages } from '@/config/site'
 import { ref } from 'vue'
-import { hasFinePointer } from '@/composables/motion/useGsap'
 import { gsap, useGsapContext } from '@/composables/motion/useGsap'
 import SectionHead from '@/components/site/SectionHead.vue'
 import SmartLink from '@/components/site/SmartLink.vue'
 
 // Los canales directos como filas grandes: número mono, icono y canal. Al
 // pasar, la tinta naranja cubre la fila y el icono se desregistra. El botón
-// de cada fila es un enlace real: WhatsApp abre el chat, «Llamar ahora»
-// muestra el número al primer clic (en táctil además marca) y un canal sin
-// dato confirmado en site.ts lleva al formulario.
+// de cada fila es un enlace real que no cambia al hacer clic: WhatsApp abre
+// el chat, «Llamar ahora» marca y el correo abre el cliente de correo. Un canal
+// sin dato confirmado en site.ts lleva al formulario.
 defineProps<{ index: string }>()
 
-const targets: Record<string, { href: string; value?: string }> = {
-  whatsapp: site.whatsapp ? { href: whatsappLink(), value: site.phone } : { href: contactForm },
-  email: site.email ? { href: `mailto:${site.email}`, value: site.email } : { href: contactForm },
-  phone: site.phone ? { href: site.phoneHref, value: site.phone } : { href: contactForm },
+const targets: Record<string, { href: string }> = {
+  whatsapp: { href: site.whatsapp ? whatsappLink() : contactForm },
+  email: { href: site.email ? `mailto:${site.email}` : contactForm },
+  phone: { href: site.phone ? site.phoneHref : contactForm },
 }
 
 const channels = copy.contact.channels.map((c) => {
@@ -26,15 +25,6 @@ const channels = copy.contact.channels.map((c) => {
   return { ...c, ...target, cta: pending ? copy.contact.formCta : c.cta }
 })
 const root = ref<HTMLElement | null>(null)
-
-// El número se descubre en el propio botón. En escritorio el primer clic solo
-// lo muestra (un tel: ahí no suele abrir nada); con él visible, llama.
-const revealed = ref<Record<string, boolean>>({})
-function onCta(event: MouseEvent, key: string, value?: string) {
-  if (!value || revealed.value[key]) return
-  revealed.value = { ...revealed.value, [key]: true }
-  if (key !== 'whatsapp' && hasFinePointer()) event.preventDefault()
-}
 
 useGsapContext(root, ({ reduced }) => {
   if (reduced) return
@@ -61,10 +51,9 @@ useGsapContext(root, ({ reduced }) => {
             <h3 class="chan__title">{{ c.title }}</h3>
             <p class="chan__text">{{ c.text }}</p>
           </div>
-          <SmartLink :to="c.href" class="chan__cta" @click="onCta($event, c.key, c.value)">
-            <span v-if="revealed[c.key] && c.value" class="chan__revealed">{{ c.value }}</span>
-            <template v-else>{{ c.cta }}</template>
-            <i :class="revealed[c.key] ? 'fa-solid fa-check' : 'fa-solid fa-arrow-right'" aria-hidden="true"></i>
+          <SmartLink :to="c.href" class="chan__cta">
+            {{ c.cta }}
+            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
           </SmartLink>
         </li>
       </ul>
@@ -188,11 +177,6 @@ useGsapContext(root, ({ reduced }) => {
     i {
       transition: transform 0.4s $ease;
     }
-  }
-
-  &__revealed {
-    font-family: $font-mono;
-    letter-spacing: 0.04em;
   }
 
   // Estado entintado: todo pasa a negro sobre naranja (AA).

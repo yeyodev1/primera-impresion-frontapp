@@ -4,9 +4,17 @@ import { useLeadForm } from '@/composables/useLeadForm'
 import LeadFormShell from './LeadFormShell.vue'
 import FormField from './FormField.vue'
 import FormSuccess from './FormSuccess.vue'
+import { COUNTRIES, sanitizePhoneInput } from '@/utils/phone'
 
 const { form, errors, loading, sent, submit, reset } = useLeadForm('access', site.autogestion.success)
 const f = copy.forms
+
+// Solo caracteres de teléfono; se corrige también el campo si se colaron otros.
+function onPhone(event: Event) {
+  const input = event.target as HTMLInputElement
+  form.phone = sanitizePhoneInput(input.value)
+  if (input.value !== form.phone) input.value = form.phone
+}
 </script>
 
 <template>
@@ -34,7 +42,12 @@ const f = copy.forms
       <input id="access-email" v-model="form.email" type="email" autocomplete="email" inputmode="email" :placeholder="f.placeholders.email" :aria-describedby="describedby" :aria-invalid="invalid" required />
     </FormField>
     <FormField id="access-phone" :label="f.whatsapp" required :error="errors.phone" v-slot="{ describedby, invalid }">
-      <input id="access-phone" v-model="form.phone" type="tel" autocomplete="tel" inputmode="tel" :placeholder="f.placeholders.phone" :aria-describedby="describedby" :aria-invalid="invalid" required />
+      <div class="phone">
+        <select v-model="form.phoneCountry" class="phone__country" :aria-label="f.phoneCountry">
+          <option v-for="c in COUNTRIES" :key="c.code" :value="c.code" :title="c.name">{{ c.code }} +{{ c.dial }}</option>
+        </select>
+        <input id="access-phone" :value="form.phone" type="tel" autocomplete="tel-national" inputmode="tel" :placeholder="f.placeholders.phone" :aria-describedby="describedby" :aria-invalid="invalid" required @input="onPhone" />
+      </div>
     </FormField>
     <FormField id="access-frequency" :label="f.frequency" required :error="errors.frequency" v-slot="{ describedby, invalid }">
       <select id="access-frequency" v-model="form.frequency" :aria-describedby="describedby" :aria-invalid="invalid" required>
@@ -49,6 +62,23 @@ const f = copy.forms
 </template>
 
 <style scoped lang="scss">
+// Prefijo del país pegado al número, sobre el mismo renglón del campo.
+.phone {
+  display: flex;
+  align-items: stretch;
+  gap: 0.75rem;
+
+  &__country {
+    flex: 0 0 auto;
+    width: auto !important;
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
 :deep(.field--wide) {
   flex-basis: 100% !important;
 }

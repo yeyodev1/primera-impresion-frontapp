@@ -4,6 +4,7 @@ import { leadService } from '@/services/lead.service'
 import { useToastStore } from '@/stores/toast'
 import { site, copy } from '@/config/site'
 import type { ApiError, LeadType } from '@/types'
+import { DEFAULT_COUNTRY, isValidPhone, toInternational } from '@/utils/phone'
 
 type Field = 'name' | 'company' | 'email' | 'phone' | 'role' | 'products' | 'frequency' | 'message' | 'consent'
 
@@ -13,6 +14,8 @@ const REQUIRED: Record<LeadType, Field[]> = {
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+// El de acceso pide WhatsApp: en Ecuador tiene que ser celular.
+const MOBILE_ONLY: Record<LeadType, boolean> = { contact: false, access: true }
 
 /**
  * Estado y envío de los formularios de contacto y de solicitud de acceso.
@@ -29,6 +32,7 @@ export function useLeadForm(type: LeadType, successMessage: string) {
     company: '',
     email: '',
     phone: '',
+    phoneCountry: DEFAULT_COUNTRY,
     role: '',
     products: '',
     frequency: '',
@@ -59,6 +63,9 @@ export function useLeadForm(type: LeadType, successMessage: string) {
       }
     }
     if (form.email.trim() && !EMAIL_RE.test(form.email.trim())) errors.email = copy.forms.invalidEmail
+    if (form.phone.trim() && !isValidPhone(form.phoneCountry, form.phone, MOBILE_ONLY[type])) {
+      errors.phone = MOBILE_ONLY[type] && form.phoneCountry === DEFAULT_COUNTRY ? copy.forms.invalidMobile : copy.forms.invalidPhone
+    }
 
     return Object.keys(errors).length === 0
   }
@@ -77,7 +84,8 @@ export function useLeadForm(type: LeadType, successMessage: string) {
         name: form.name.trim(),
         company: form.company.trim(),
         email: form.email.trim(),
-        phone: form.phone.trim(),
+        // Siempre internacional (+593…): así llega listo para la API de WhatsApp.
+        phone: toInternational(form.phoneCountry, form.phone),
         ...(type === 'access'
           ? { role: form.role.trim(), products: form.products.trim(), frequency: form.frequency }
           : { message: form.message.trim() }),
@@ -96,7 +104,7 @@ export function useLeadForm(type: LeadType, successMessage: string) {
   }
 
   function reset() {
-    Object.assign(form, { name: '', company: '', email: '', phone: '', role: '', products: '', frequency: '', message: '', consent: false, website: '' })
+    Object.assign(form, { name: '', company: '', email: '', phone: '', phoneCountry: DEFAULT_COUNTRY, role: '', products: '', frequency: '', message: '', consent: false, website: '' })
     mountedAt = Date.now()
     sent.value = false
   }
