@@ -38,20 +38,38 @@ const gsapCtx = useGsapContext(root, ({ reduced, el }) => {
   )
   if (!items.length) return
   gsap.set(items, { autoAlpha: 0, y: 70 })
-  ScrollTrigger.batch(items, {
-    start: 'top 92%',
-    once: true,
-    onEnter: (batch) =>
-      gsap.to(batch, {
-        autoAlpha: 1,
-        y: 0,
-        duration: 0.9,
-        ease: 'expo.out',
-        stagger: 0.08,
-        overwrite: true,
-        clearProps: 'opacity,visibility,transform',
-      }),
-  })
+  const pending = new Set(items)
+  const enter = (batch: Element[]) => {
+    batch.forEach((i) => pending.delete(i as HTMLElement))
+    gsap.to(batch, {
+      autoAlpha: 1,
+      y: 0,
+      duration: 0.9,
+      ease: 'expo.out',
+      stagger: 0.08,
+      overwrite: true,
+      clearProps: 'opacity,visibility,transform',
+    })
+  }
+  ScrollTrigger.batch(items, { start: 'top 92%', once: true, onEnter: enter })
+
+  // Chequeo: si los disparadores se calcularon con un layout viejo (datos o
+  // cortina que llegaron tarde), las láminas que ya están en pantalla nunca
+  // "entran" y el pliego queda vacío hasta un F5. Tras cada recálculo, al
+  // parar el scroll y por tiempo, las que ya se ven y siguen ocultas entran.
+  const check = () => {
+    const limit = window.innerHeight * 0.92
+    const late = [...pending].filter((i) => i.getBoundingClientRect().top < limit)
+    if (late.length) enter(late)
+  }
+  ScrollTrigger.addEventListener('refresh', check)
+  ScrollTrigger.addEventListener('scrollEnd', check)
+  const timers = [600, 1500].map((ms) => window.setTimeout(check, ms))
+  return () => {
+    ScrollTrigger.removeEventListener('refresh', check)
+    ScrollTrigger.removeEventListener('scrollEnd', check)
+    timers.forEach((t) => window.clearTimeout(t))
+  }
 })
 
 // Llegan los datos: se reconstruyen las entradas y se recalcula el scroll.

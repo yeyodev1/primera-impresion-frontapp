@@ -1,5 +1,5 @@
 import type { Ref } from 'vue'
-import { gsap, MQ, useGsapMedia } from './useGsap'
+import { gsap, MQ, ScrollTrigger, useGsapMedia } from './useGsap'
 
 /**
  * Coreografía de PinnedSteps («la prensa»).
@@ -84,7 +84,28 @@ export function usePressScroll(root: Ref<HTMLElement | null>) {
         }
       })
 
-      return () => el.classList.remove('press--pinned')
+      // Chequeo: si el pin se calculó con un layout viejo (vista lazy que
+      // pintó tarde, cortina, fuentes), la sección pasa de largo sin fijarse y
+      // los pliegos quedan quietos hasta un F5. Al terminar cada scroll se
+      // compara dónde cree ScrollTrigger que empieza el pin con dónde está de
+      // verdad (y su largo con el recorrido real de la pista); si no cuadran,
+      // se recalcula todo.
+      const st = tween.scrollTrigger
+      const verify = () => {
+        const spacer = pin.parentElement
+        if (!st || !spacer) return
+        const realStart = spacer.getBoundingClientRect().top + window.scrollY
+        const realLength = distance()
+        if (Math.abs(st.start - realStart) > 2 || Math.abs(st.end - st.start - realLength) > 2) ScrollTrigger.refresh()
+      }
+      ScrollTrigger.addEventListener('scrollEnd', verify)
+      const timer = window.setTimeout(verify, 1200)
+
+      return () => {
+        ScrollTrigger.removeEventListener('scrollEnd', verify)
+        window.clearTimeout(timer)
+        el.classList.remove('press--pinned')
+      }
     })
 
     mm.add(`(max-width: 1023px) and ${MQ.motion}`, () => {

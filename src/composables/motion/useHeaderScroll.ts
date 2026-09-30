@@ -1,5 +1,5 @@
 import { nextTick, onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 /**
  * Estado del header según el scroll:
@@ -23,11 +23,13 @@ function isDarkColor(color: string): boolean | null {
 
 export function useHeaderScroll(header: Ref<HTMLElement | null>, bar: Ref<HTMLElement | null>, locked: Ref<boolean>) {
   const route = useRoute()
+  const router = useRouter()
   const scrolled = ref(false)
   const hidden = ref(false)
   const onDark = ref(true)
   let lastY = 0
   let ticking = false
+  let resizeObs: ResizeObserver | null = null
 
   function detectTone() {
     const el = header.value
@@ -76,13 +78,25 @@ export function useHeaderScroll(header: Ref<HTMLElement | null>, bar: Ref<HTMLEl
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onScroll, { passive: true })
     update()
-    // La vista llega después del header: medir cuando ya pintó.
-    setTimeout(detectTone, 60)
+    // La vista (lazy) llega después del header y, con red lenta, mucho después
+    // de cualquier timeout fijo: si se mide antes, el header queda con texto
+    // oscuro sobre el hero oscuro hasta que el usuario hace scroll. Se vuelve
+    // a medir cada vez que cambia el alto del contenido (la vista montó, cargó
+    // una imagen o una fuente), cuando el router resolvió y al terminar la carga.
+    resizeObs = new ResizeObserver(onScroll)
+    resizeObs.observe(document.body)
+    router.isReady().then(() => nextTick(onScroll))
+    window.addEventListener('load', onScroll, { once: true })
+    document.fonts?.ready.then(onScroll)
+    setTimeout(onScroll, 60)
+    setTimeout(onScroll, 600)
   })
 
   onBeforeUnmount(() => {
     window.removeEventListener('scroll', onScroll)
     window.removeEventListener('resize', onScroll)
+    window.removeEventListener('load', onScroll)
+    resizeObs?.disconnect()
   })
 
   // Tras cambiar de página, la cortina tapa ~0.3 s: medir el fondo nuevo después.
