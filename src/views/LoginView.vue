@@ -7,6 +7,8 @@ import { useToastStore } from '@/stores/toast'
 import { site, portalLink } from '@/config/site'
 import SmartLink from '@/components/site/SmartLink.vue'
 import type { ApiError } from '@/types'
+// La iguana es la imagen de marca de la tienda: el ingreso lleva el mismo «skin».
+import iguana from '@/assets/brand/iguana.webp'
 
 const route = useRoute()
 const router = useRouter()
@@ -46,63 +48,105 @@ async function submit() {
 </script>
 
 <template>
-  <section class="login">
-    <BrandMark class="login__brand" />
+  <div class="skin">
+    <div class="skin__art" aria-hidden="true">
+      <img :src="iguana" alt="" width="1100" height="912" />
+    </div>
+    <div class="skin__panel">
+      <section class="login">
+        <BrandMark class="login__brand" />
 
-    <form class="login__card" @submit.prevent="submit">
-      <p class="login__eyebrow">Panel interno</p>
-      <h1 class="login__title">Ingresar al panel</h1>
-      <p class="login__lead">Blog, soluciones del sitio y solicitudes de clientes.</p>
+        <form class="login__card" @submit.prevent="submit">
+          <p class="login__eyebrow">Panel interno</p>
+          <h1 class="login__title">Ingresar al panel</h1>
+          <p class="login__lead">Blog, soluciones del sitio y solicitudes de clientes.</p>
 
-      <div>
-        <label for="email">Correo</label>
-        <input id="email" v-model="email" type="email" autocomplete="username" required />
-      </div>
+          <div>
+            <label for="email">Correo</label>
+            <input id="email" v-model="email" type="email" autocomplete="username" required />
+          </div>
 
-      <div>
-        <label for="password">Contraseña</label>
-        <div class="login__password">
-          <input
-            id="password"
-            v-model="password"
-            :type="showPassword ? 'text' : 'password'"
-            autocomplete="current-password"
-            required
-          />
-          <button
-            type="button"
-            class="login__eye"
-            :aria-label="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
-            @click="showPassword = !showPassword"
-          >
-            <i :class="showPassword ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye'"></i>
+          <div>
+            <label for="password">Contraseña</label>
+            <div class="login__password">
+              <input
+                id="password"
+                v-model="password"
+                :type="showPassword ? 'text' : 'password'"
+                autocomplete="current-password"
+                required
+              />
+              <button
+                type="button"
+                class="login__eye"
+                :aria-label="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                @click="showPassword = !showPassword"
+              >
+                <i :class="showPassword ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye'"></i>
+              </button>
+            </div>
+          </div>
+
+          <Transition name="rise">
+            <p v-if="error" class="login__error" role="alert">
+              <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
+            </p>
+          </Transition>
+
+          <button class="btn btn--primary login__submit" type="submit" :disabled="loading">
+            <i v-if="loading" class="fa-solid fa-spinner fa-spin"></i>
+            {{ loading ? 'Ingresando…' : 'Ingresar' }}
           </button>
-        </div>
-      </div>
+        </form>
 
-      <Transition name="rise">
-        <p v-if="error" class="login__error" role="alert">
-          <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
+        <p class="login__note">
+          Este acceso es solo para el equipo de {{ site.name }}. ¿Eres cliente?
+          <SmartLink :to="portalLink()">Ingresa al Portal de Clientes</SmartLink>.
         </p>
-      </Transition>
-
-      <button class="btn btn--primary login__submit" type="submit" :disabled="loading">
-        <i v-if="loading" class="fa-solid fa-spinner fa-spin"></i>
-        {{ loading ? 'Ingresando…' : 'Ingresar' }}
-      </button>
-    </form>
-
-    <p class="login__note">
-      Este acceso es solo para el equipo de {{ site.name }}. ¿Eres cliente?
-      <SmartLink :to="portalLink()">Ingresa al Portal de Clientes</SmartLink>.
-    </p>
-    <RouterLink to="/" class="login__back"
-      ><i class="fa-solid fa-arrow-left"></i> Volver al sitio</RouterLink
-    >
-  </section>
+        <RouterLink to="/" class="login__back"
+          ><i class="fa-solid fa-arrow-left"></i> Volver al sitio</RouterLink
+        >
+      </section>
+    </div>
+  </div>
 </template>
 
 <style scoped lang="scss">
+// Como la tienda: iguana a la izquierda sobre blanco, formulario a la derecha.
+// En pantallas chicas la iguana se oculta y queda solo el formulario.
+.skin {
+  @include flex(row, stretch, center);
+  width: 100%;
+  min-height: 100vh;
+  background: $surface;
+
+  &__art {
+    display: none;
+
+    @include from('lg') {
+      @include flex(row, flex-end, flex-start);
+      flex: 1 1 58%;
+      overflow: hidden;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: 1100px;
+      height: auto;
+      max-height: 100vh;
+      object-fit: contain;
+      object-position: left bottom;
+    }
+  }
+
+  &__panel {
+    @include flex(column, center, center);
+    flex: 1 1 42%;
+    padding: 1.5rem 1rem;
+  }
+}
+
 .login {
   @include flex(column, stretch, flex-start, 1.25rem);
   width: 100%;

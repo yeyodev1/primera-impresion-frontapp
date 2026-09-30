@@ -111,8 +111,7 @@ $sidebar: 248px;
 .auth {
   @include flex(column, center, center);
   min-height: 100vh;
-  padding: 1.5rem 1rem;
-  background: $paper;
+  background: $surface;
 }
 
 .admin {
