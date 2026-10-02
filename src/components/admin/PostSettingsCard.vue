@@ -40,7 +40,7 @@ const coverImage = defineModel<MediaImage | null>('coverImage', { required: true
       <input id="post-author" v-model="author" type="text" maxlength="120" />
     </div>
 
-    <ImageUploader v-model="coverImage" label="Portada" wide />
+    <ImageUploader v-model="coverImage" label="Portada" />
   </section>
 </template>
 

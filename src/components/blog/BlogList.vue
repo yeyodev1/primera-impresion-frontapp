@@ -47,7 +47,7 @@ useGsapContext(root, ({ reduced, el }) => {
       </li>
     </ol>
     <div ref="follower" class="blist__follower" aria-hidden="true">
-      <ImageSlot v-if="hovered" :image="hovered.coverImage" icon="fa-solid fa-newspaper" ratio="4 / 3" compact />
+      <ImageSlot v-if="hovered" :image="hovered.coverImage" icon="fa-solid fa-newspaper" compact />
     </div>
   </div>
 </template>

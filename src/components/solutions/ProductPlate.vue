@@ -52,7 +52,7 @@ useGsapMedia(root, (mm, el) => {
     <RegMark class="plate__reg plate__reg--b" size="1.1rem" tone="ink" />
     <div class="plate__frame">
       <div class="plate__inner">
-        <ImageSlot :image="image" :alt="name" :icon="icon" ratio="4 / 3" />
+        <ImageSlot :image="image" :alt="name" :icon="icon" />
       </div>
     </div>
     <figcaption class="plate__caption">
@@ -102,7 +102,7 @@ useGsapMedia(root, (mm, el) => {
   &__inner {
     :deep(.slot) {
       border-radius: 0;
-      aspect-ratio: 4 / 3.5 !important;
+      aspect-ratio: 1 / 1 !important;
     }
 
     :deep(.slot__icon) {

@@ -35,7 +35,7 @@ useGsapContext(root, ({ reduced }) => {
   <section ref="root" class="part">
     <div class="part__inner">
       <div class="part__cover">
-        <ImageSlot :image="post.coverImage" :alt="post.title" icon="fa-solid fa-newspaper" ratio="21 / 9" :label="copy.imagePending" />
+        <ImageSlot :image="post.coverImage" :alt="post.title" icon="fa-solid fa-newspaper" :label="copy.imagePending" />
       </div>
 
       <div class="part__row">
@@ -79,6 +79,8 @@ useGsapContext(root, ({ reduced }) => {
   }
 
   &__cover {
+    // Portada cuadrada: a todo el ancho sería más alta que la pantalla.
+    width: min(100%, 30rem);
     padding: 0.5rem;
     background: $surface;
     border-radius: 4px;

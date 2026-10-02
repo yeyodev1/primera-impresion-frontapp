@@ -53,7 +53,7 @@ useGsapContext(root, ({ reduced }) => {
       />
       <ul class="acap__cards">
         <TiltCard v-for="(item, i) in items" :key="item.title" as="li" tone="night" class="acap__card">
-          <ImageSlot :icon="item.icon" ratio="4 / 5" tone="night" :label="copy.imagePending" />
+          <ImageSlot :icon="item.icon" tone="night" :label="copy.imagePending" />
           <div class="acap__body">
             <p class="acap__spec">{{ fxPages.about.capacity.process(i + 1, items.length) }}</p>
             <h3 class="acap__title">

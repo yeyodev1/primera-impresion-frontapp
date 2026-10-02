@@ -39,7 +39,6 @@ defineProps<{
           v-for="(icon, index) in icons ?? ['fa-solid fa-print', 'fa-solid fa-tags', 'fa-solid fa-box-open']"
           :key="index"
           :icon="icon"
-          ratio="1 / 1"
           :label="copy.imagePending"
           compact
         />

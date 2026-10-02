@@ -9,7 +9,7 @@ import ColorBar from '@/components/fx/ColorBar.vue'
 // Espacio de foto que no salta al llegar la imagen: el mismo aspect-ratio con
 // o sin foto. Mientras el cliente diseña sus fotografías se ve como una hoja
 // de prueba: trama de semitono, marcas de corte y registro, rótulo técnico
-// ("FOTO · 4:3") y el icono de la familia impreso con un leve desregistro.
+// ("FOTO · 1:1") y el icono de la familia impreso con un leve desregistro.
 const props = withDefaults(
   defineProps<{
     image?: MediaImage | null
@@ -24,7 +24,9 @@ const props = withDefaults(
     image: null,
     alt: '',
     icon: 'fa-solid fa-image',
-    ratio: '4 / 3',
+    // Las fotos del cliente son cuadradas; otro formato solo para lo que no es
+    // foto de producto (el mapa de la visita).
+    ratio: '1 / 1',
     label: site.solutions.detail.imagePending,
     compact: false,
     tone: 'paper',

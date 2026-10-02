@@ -66,7 +66,7 @@ watch(() => props.categories.length, rebuild)
 
     <div class="hlist__preview" aria-hidden="true">
       <div v-for="(category, index) in categories" :key="category._id" class="hlist__card" :class="{ 'hlist__card--on': index === active }">
-        <ImageSlot :icon="category.icon || undefined" :image="category.image" ratio="4 / 5" tone="night" compact />
+        <ImageSlot :icon="category.icon || undefined" :image="category.image" tone="night" compact />
         <p class="hlist__cardmeta">
           <span>{{ fx.solutions.preview }}</span>
           <span v-if="category.solutionsCount">{{ copy.solutions.count(category.solutionsCount) }}</span>
@@ -204,7 +204,8 @@ watch(() => props.categories.length, rebuild)
     z-index: 5;
     width: clamp(13rem, 18vw, 17rem);
     // Alto explícito: sin él xPercent/yPercent no centran la ficha en el cursor.
-    aspect-ratio: 5 / 7;
+    // Foto cuadrada más la línea de datos de abajo.
+    aspect-ratio: 6 / 7;
     pointer-events: none;
     visibility: hidden;
   }

@@ -14,7 +14,7 @@ defineProps<{ post: Post }>()
 <template>
   <article class="feat">
     <div class="feat__media">
-      <ImageSlot :image="post.coverImage" :alt="post.title" icon="fa-solid fa-newspaper" ratio="16 / 10" :label="copy.imagePending" />
+      <ImageSlot :image="post.coverImage" :alt="post.title" icon="fa-solid fa-newspaper" :label="copy.imagePending" />
     </div>
     <div class="feat__body">
       <CropMarks inset="0" />

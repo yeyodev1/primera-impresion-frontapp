@@ -34,7 +34,6 @@ const category = computed(() => categoryOf(props.solution))
         :alt="solution.name"
         :icon="icon"
         :tone="tone"
-        :ratio="wide ? '16 / 10' : '4 / 3'"
         compact
       />
     </TiltCard>
@@ -216,27 +215,16 @@ const category = computed(() => categoryOf(props.solution))
     color: $surface;
   }
 
-  // Destacada: foto grande al lado del texto (a todo el alto), titular mayor.
+  // Destacada: foto cuadrada grande al lado del texto, titular mayor.
   @include from('md') {
     &--wide {
       flex-direction: row;
-      align-items: stretch;
+      align-items: flex-start;
       gap: 1.75rem;
     }
 
     &--wide &__media {
       flex: 0 0 50%;
-
-      :deep(.slot) {
-        height: 100%;
-        min-height: 17rem;
-        aspect-ratio: auto !important;
-      }
-
-      // Estirada al alto de la fila ya no mide 16:10: sin rótulo de formato.
-      :deep(.slot__spec) {
-        display: none;
-      }
     }
 
     &--wide &__body {

@@ -72,7 +72,7 @@ useGsapMedia(root, (mm, el) => {
     <ul class="agal__stage">
       <li v-for="(sheet, i) in sheets" :key="sheet.label" class="agal__sheet" :style="{ '--fan': `${FAN[i]}deg` }">
         <div class="agal__paper">
-          <ImageSlot :icon="sheet.icon" ratio="4 / 5" :label="copy.imagePending" />
+          <ImageSlot :icon="sheet.icon" :label="copy.imagePending" />
           <p class="agal__caption">
             <span>{{ sheet.label }}</span>
             <RegMark size="0.9rem" tone="ink" />

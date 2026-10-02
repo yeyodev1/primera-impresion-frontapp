@@ -11,7 +11,7 @@ defineProps<{ post: Post }>()
 
 <template>
   <article class="pcard">
-    <ImageSlot :image="post.coverImage" :alt="post.title" icon="fa-solid fa-newspaper" ratio="16 / 10" compact />
+    <ImageSlot :image="post.coverImage" :alt="post.title" icon="fa-solid fa-newspaper" compact />
     <div class="pcard__body">
       <p class="pcard__meta">
         <span class="pcard__cat">{{ post.category }}</span>

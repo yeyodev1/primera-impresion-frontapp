@@ -11,7 +11,7 @@ withDefaults(defineProps<{ category: Category; index?: number; tone?: 'paper' | 
 
 <template>
   <TiltCard class="ccard" :class="`ccard--${tone}`" :tone="tone" :max="4">
-    <ImageSlot :image="category.image" :alt="category.name" :icon="category.icon || undefined" ratio="4 / 3" :tone="tone" compact />
+    <ImageSlot :image="category.image" :alt="category.name" :icon="category.icon || undefined" :tone="tone" compact />
     <div class="ccard__body">
       <p class="ccard__meta">
         <span v-if="index">{{ fx.index(index) }}</span>

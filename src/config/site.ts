@@ -140,7 +140,7 @@ export const site = {
   autogestion: {
     eyebrow: 'Plataforma para clientes recurrentes',
     title: 'Tus compras gráficas, más simples.',
-    lead: 'Compra desde nuestro catálogo general o desde «Mis productos», tu catálogo privado con soluciones que desarrollamos especialmente para tu empresa. Gestiona tus pedidos con el acompañamiento de tu asesor.',
+    lead: 'Una sola plataforma para comprar, repetir pedidos y seguir cada orden, con el acompañamiento de tu asesor.',
     ctas: { request: 'Solicitar reunión de acceso', benefits: 'Conocer los beneficios' },
     heroCard: {
       pill: 'Portal de Clientes',
@@ -150,16 +150,16 @@ export const site = {
     benefitsEyebrow: 'Beneficio principal',
     benefitsTitle: 'Un catálogo exclusivo para tu empresa.',
     benefitsText:
-      'Primera Impresión desarrolla y configura productos a medida de tu organización y los incorpora a «Mis productos», un catálogo privado que otras empresas no pueden ver. Así puedes repetir tus compras con mayor facilidad.',
+      'Primera Impresión desarrolla y configura productos a medida de tu organización y los incorpora a «Mis productos», un catálogo que otras empresas no pueden ver.',
     benefits: [
-      { icon: 'fa-solid fa-lock', title: 'Mis productos', text: 'Tu catálogo privado con productos previamente desarrollados para tu empresa.' },
-      { icon: 'fa-solid fa-book-open', title: 'Dos catálogos', text: 'Acceso al catálogo general y al catálogo exclusivo de tu organización.' },
-      { icon: 'fa-solid fa-rotate', title: 'Repite pedidos', text: 'Vuelve a solicitar productos que ya utilizas, sin empezar de cero.' },
-      { icon: 'fa-solid fa-box', title: 'Seguimiento de pedidos', text: 'Consulta el estado actualizado de tus órdenes dentro de la plataforma.' },
-      { icon: 'fa-solid fa-file-invoice', title: 'Gestión administrativa', text: 'Consulta facturas, órdenes y pagos realizados a Primera Impresión.' },
-      { icon: 'fa-solid fa-truck', title: 'Envíos nacionales', text: 'Gestiona pedidos con opciones de entrega a nivel nacional.' },
-      { icon: 'fa-solid fa-tag', title: 'Descuentos exclusivos', text: 'Accede a beneficios comerciales disponibles para tu cuenta, según condiciones aplicables.' },
-      { icon: 'fa-solid fa-user-tie', title: 'Tu asesor te acompaña', text: 'Recibe capacitación y apoyo de un asesor asignado, incluso si compras directamente.' },
+      { icon: 'fa-solid fa-lock', title: 'Mis productos', text: 'Lo que ya desarrollamos para tu empresa queda guardado y listo para usar.' },
+      { icon: 'fa-solid fa-book-open', title: 'Dos catálogos', text: 'Compra también del catálogo general, desde la misma cuenta.' },
+      { icon: 'fa-solid fa-rotate', title: 'Repite pedidos', text: 'Vuelve a pedir lo que ya usas, sin empezar de cero.' },
+      { icon: 'fa-solid fa-box', title: 'Seguimiento de pedidos', text: 'Mira en qué etapa está cada orden.' },
+      { icon: 'fa-solid fa-file-invoice', title: 'Gestión administrativa', text: 'Tus facturas y pagos, en un solo lugar.' },
+      { icon: 'fa-solid fa-truck', title: 'Envíos nacionales', text: 'Recibe tus pedidos con entrega a nivel nacional.' },
+      { icon: 'fa-solid fa-tag', title: 'Descuentos exclusivos', text: 'Beneficios comerciales para tu cuenta, según condiciones aplicables.' },
+      { icon: 'fa-solid fa-user-tie', title: 'Tu asesor te acompaña', text: 'Un asesor asignado te capacita y te apoya, incluso si compras directamente.' },
     ],
     processTitle: 'Una plataforma para empresas que compran con frecuencia.',
     processText:

@@ -4,11 +4,12 @@ import { useImageUpload } from '@/composables/admin/useImageUpload'
 import type { MediaImage } from '@/types'
 
 // La imagen es opcional: hoy el cliente está diseñando sus fotos y el sitio
-// muestra un espacio en blanco digno mientras tanto.
-withDefaults(
-  defineProps<{ modelValue: MediaImage | null; label?: string; hint?: string; wide?: boolean }>(),
-  { label: 'Imagen', hint: 'Opcional. JPG, PNG o WebP de hasta 10 MB.', wide: false },
-)
+// muestra un espacio en blanco digno mientras tanto. Todas son cuadradas: el
+// marco ya muestra el recorte que se va a subir.
+withDefaults(defineProps<{ modelValue: MediaImage | null; label?: string; hint?: string }>(), {
+  label: 'Imagen',
+  hint: 'Opcional. Cuadrada (1:1); si no lo es, se recorta al centro. JPG, PNG o WebP.',
+})
 const emit = defineEmits<{ 'update:modelValue': [value: MediaImage | null] }>()
 
 const input = ref<HTMLInputElement | null>(null)
@@ -27,7 +28,7 @@ async function onPick(event: Event) {
 <template>
   <div class="uploader">
     <span class="uploader__label">{{ label }}</span>
-    <div class="uploader__frame" :class="{ 'uploader__frame--wide': wide }">
+    <div class="uploader__frame">
       <img v-if="modelValue?.url" :src="modelValue.url" alt="" class="uploader__img" />
       <button
         v-else
@@ -86,16 +87,11 @@ async function onPick(event: Event) {
 
   &__frame {
     position: relative;
-    aspect-ratio: 4 / 3;
-    max-width: 280px;
+    aspect-ratio: 1 / 1;
+    max-width: 240px;
     border-radius: $radius-sm;
     overflow: hidden;
     background: $sand;
-
-    &--wide {
-      aspect-ratio: 16 / 9;
-      max-width: 100%;
-    }
   }
 
   &__img {
