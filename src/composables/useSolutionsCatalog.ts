@@ -3,7 +3,7 @@ import { useRoute } from 'vue-router'
 import { catalogService } from '@/services/catalog.service'
 import { site } from '@/config/site'
 import type { Solution } from '@/types'
-import { categoryOf, useCatalog } from './useCatalog'
+import { categoriesOf, useCatalog } from './useCatalog'
 import { useResource } from './useResource'
 
 export interface InkOption {
@@ -53,7 +53,7 @@ export function useSolutionsCatalog() {
     },
   })
 
-  const slugOf = (s: Solution) => categoryOf(s)?.slug ?? ''
+  const slugsOf = (s: Solution) => categoriesOf(s).map((c) => c.slug)
   const solutions = computed(() => all.data.value ?? [])
 
   const options = computed<InkOption[]>(() => [
@@ -62,7 +62,7 @@ export function useSolutionsCatalog() {
       label: c.name,
       value: c.slug,
       icon: c.icon,
-      count: solutions.value.filter((s) => slugOf(s) === c.slug).length,
+      count: solutions.value.filter((s) => slugsOf(s).includes(c.slug)).length,
     })),
   ])
 
@@ -75,13 +75,18 @@ export function useSolutionsCatalog() {
         count: 0,
       },
   )
-  const isVisible = (s: Solution) => !active.value || slugOf(s) === active.value
+  const isVisible = (s: Solution) => !active.value || slugsOf(s).includes(active.value)
   const visibleCount = computed(() => solutions.value.filter(isVisible).length)
 
   const iconBySlug = computed(() =>
     Object.fromEntries(categories.value.map((c) => [c.slug, c.icon])),
   )
-  const iconFor = (s: Solution): string | undefined => iconBySlug.value[slugOf(s)] || undefined
+  // Con una familia activa, el ícono es el de esa familia; si no, el de la principal.
+  const iconFor = (s: Solution): string | undefined => {
+    const slugs = slugsOf(s)
+    const slug = active.value && slugs.includes(active.value) ? active.value : slugs[0]
+    return (slug && iconBySlug.value[slug]) || undefined
+  }
 
   function load() {
     loadCategories()

@@ -10,7 +10,6 @@ import type { Category, MediaImage } from '@/types'
 const props = defineProps<{
   open: boolean
   category: Category | null
-  nextOrder: number
   save: (body: CategoryInput) => Promise<boolean>
 }>()
 const emit = defineEmits<{ close: [] }>()
@@ -23,7 +22,6 @@ const { form, saving, error } = useEntityForm(
     description: '',
     icon: 'fa-solid fa-tag',
     image: null as MediaImage | null,
-    order: props.nextOrder,
     isPublished: true,
   }),
   (c) => ({
@@ -31,7 +29,6 @@ const { form, saving, error } = useEntityForm(
     description: c.description ?? '',
     icon: c.icon || '',
     image: c.image ?? null,
-    order: c.order ?? 0,
     isPublished: c.isPublished,
   }),
 )
@@ -42,7 +39,7 @@ async function submit() {
     return
   }
   saving.value = true
-  const ok = await props.save({ ...form, name: form.name.trim(), order: Number(form.order) || 0 })
+  const ok = await props.save({ ...form, name: form.name.trim() })
   saving.value = false
   if (ok) emit('close')
 }
@@ -97,14 +94,8 @@ async function submit() {
         </div>
       </div>
 
-      <div class="form__row">
-        <div>
-          <label for="cat-order">Orden en el sitio</label>
-          <input id="cat-order" v-model.number="form.order" type="number" min="0" />
-        </div>
-        <div class="form__switch">
-          <ToggleSwitch v-model="form.isPublished" label="Visible en el sitio" show-label />
-        </div>
+      <div class="form__switch">
+        <ToggleSwitch v-model="form.isPublished" label="Visible en el sitio" show-label />
       </div>
 
       <ImageUploader v-model="form.image" label="Imagen de la categoría" />

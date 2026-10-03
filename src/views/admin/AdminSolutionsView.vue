@@ -9,14 +9,14 @@ import ToggleSwitch from '@/components/admin/ToggleSwitch.vue'
 import { useAdminCategories } from '@/composables/admin/useAdminCategories'
 import { useAdminSolutions } from '@/composables/admin/useAdminSolutions'
 import { useConfirm } from '@/composables/admin/useConfirm'
-import { categoryName, type AdminColumn } from '@/composables/admin/adminCopy'
+import { categoryNames, type AdminColumn } from '@/composables/admin/adminCopy'
 import type { Solution } from '@/types'
 
 const route = useRoute()
 const router = useRouter()
 const { categories, load: loadCategories } = useAdminCategories()
 // El filtro vive en la URL (?categoria=<id>) para poder enlazarlo desde Categorías.
-const { solutions, loading, categoryFilter, load, save, toggle, remove } = useAdminSolutions(
+const { solutions, loading, categoryFilter, load, save, toggle, remove, reorder } = useAdminSolutions(
   typeof route.query.categoria === 'string' ? route.query.categoria : '',
 )
 const confirm = useConfirm()
@@ -26,7 +26,7 @@ const formOpen = ref(false)
 
 const columns: AdminColumn[] = [
   { key: 'name', label: 'Solución', primary: true },
-  { key: 'category', label: 'Categoría', width: '170px' },
+  { key: 'category', label: 'Categorías', width: '200px' },
   { key: 'published', label: 'Visible', width: '80px' },
   { key: 'featured', label: 'Destacada', width: '90px' },
   { key: 'actions', label: '', width: '100px', align: 'end' },
@@ -67,7 +67,7 @@ onMounted(() => {
   <div>
     <AdminPageHead
       title="Soluciones"
-      description="Los productos del escaparate. No se venden en línea: cada uno lleva a una consulta con un asesor."
+      description="Los productos del escaparate. No se venden en línea: cada uno lleva a una consulta con un asesor. Arrastra las filas para ordenarlos en el sitio."
     >
       <button
         class="btn btn--primary btn--sm"
@@ -94,6 +94,8 @@ onMounted(() => {
       :rows="solutions"
       :loading="loading"
       empty="No hay soluciones en esta categoría"
+      sortable
+      @reorder="reorder"
     >
       <template #name="{ row }">
         <span class="sol__thumb" aria-hidden="true">
@@ -105,7 +107,7 @@ onMounted(() => {
           <small>{{ row.summary || `${row.options?.length ?? 0} opciones` }}</small>
         </span>
       </template>
-      <template #category="{ row }">{{ categoryName(row.category, categories) }}</template>
+      <template #category="{ row }">{{ categoryNames(row.categories, categories) }}</template>
       <template #published="{ row }">
         <ToggleSwitch
           :model-value="row.isPublished"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import AdminPageHead from '@/components/admin/AdminPageHead.vue'
 import AdminTable from '@/components/admin/AdminTable.vue'
 import CategoryFormModal from '@/components/admin/CategoryFormModal.vue'
@@ -10,7 +10,7 @@ import { useConfirm } from '@/composables/admin/useConfirm'
 import type { AdminColumn } from '@/composables/admin/adminCopy'
 import type { Category } from '@/types'
 
-const { categories, loading, load, save, togglePublished, remove } = useAdminCategories()
+const { categories, loading, load, save, togglePublished, remove, reorder } = useAdminCategories()
 const confirm = useConfirm()
 
 const editing = ref<Category | null>(null)
@@ -18,13 +18,10 @@ const formOpen = ref(false)
 
 const columns: AdminColumn[] = [
   { key: 'name', label: 'Categoría', primary: true },
-  { key: 'order', label: 'Orden', width: '80px' },
   { key: 'count', label: 'Soluciones', width: '110px' },
   { key: 'published', label: 'Visible', width: '90px' },
   { key: 'actions', label: '', width: '100px', align: 'end' },
 ]
-
-const nextOrder = computed(() => Math.max(0, ...categories.value.map((c) => c.order ?? 0)) + 1)
 
 function openForm(category: Category | null) {
   editing.value = category
@@ -36,7 +33,7 @@ async function askRemove(category: Category) {
   const ok = await confirm.ask({
     title: `¿Eliminar "${category.name}"?`,
     message: count
-      ? `Tiene ${count} ${count === 1 ? 'solución' : 'soluciones'}: primero muévelas a otra categoría o elimínalas.`
+      ? `Tiene ${count} ${count === 1 ? 'solución' : 'soluciones'}. Las que también estén en otra categoría solo la pierden; si alguna está únicamente aquí, primero muévela o elimínala.`
       : 'Dejará de verse en el sitio. Esta acción no se puede deshacer.',
     danger: true,
   })
@@ -50,7 +47,7 @@ onMounted(() => load())
   <div>
     <AdminPageHead
       title="Categorías"
-      description="Las familias de soluciones del escaparate. El orden define cómo aparecen en el sitio."
+      description="Las familias de soluciones del escaparate. Arrastra las filas para definir el orden en que aparecen en el sitio."
     >
       <button class="btn btn--primary btn--sm" type="button" @click="openForm(null)">
         <i class="fa-solid fa-plus"></i> Nueva categoría
@@ -62,6 +59,8 @@ onMounted(() => load())
       :rows="categories"
       :loading="loading"
       empty="Aún no hay categorías"
+      sortable
+      @reorder="reorder"
     >
       <template #name="{ row }">
         <span class="cat__icon" aria-hidden="true"
@@ -72,7 +71,6 @@ onMounted(() => load())
           <small>{{ row.description || row.slug }}</small>
         </span>
       </template>
-      <template #order="{ row }">{{ row.order }}</template>
       <template #count="{ row }">
         <RouterLink
           :to="{ path: '/admin/soluciones', query: { categoria: row._id } }"
@@ -111,7 +109,6 @@ onMounted(() => load())
     <CategoryFormModal
       :open="formOpen"
       :category="editing"
-      :next-order="nextOrder"
       :save="(body) => save(body, editing?._id)"
       @close="formOpen = false"
     />

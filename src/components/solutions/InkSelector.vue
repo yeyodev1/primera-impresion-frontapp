@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { fxCatalog } from '@/config/site'
 import type { InkOption } from '@/composables/useSolutionsCatalog'
 import { gsap, prefersReducedMotion } from '@/composables/motion/useGsap'
 
@@ -51,10 +50,6 @@ onBeforeUnmount(() => {
 <template>
   <div class="inks">
     <div class="inks__inner">
-      <p class="inks__label" aria-hidden="true">
-        <span class="inks__well"></span>
-        {{ fxCatalog.solutions.selector }}
-      </p>
       <div ref="track" class="inks__track" role="group" :aria-label="label">
         <span ref="pill" class="inks__pill" aria-hidden="true"></span>
         <button
@@ -96,26 +91,6 @@ onBeforeUnmount(() => {
     @include container(1320px);
     @include flex(row, center, flex-start, 1rem);
     min-height: 3.75rem;
-  }
-
-  &__label {
-    display: none;
-    @include mono-label(0.62rem, 0.2em);
-    color: rgba($surface, 0.55);
-    flex-shrink: 0;
-
-    @include from('lg') {
-      @include flex(row, center, flex-start, 0.55rem);
-      padding-right: 1rem;
-      border-right: 1px solid rgba($surface, 0.14);
-    }
-  }
-
-  &__well {
-    width: 0.7rem;
-    height: 0.7rem;
-    border-radius: 50%;
-    background: conic-gradient($cmyk-c 0 25%, $cmyk-m 0 50%, $cmyk-y 0 75%, $surface 0);
   }
 
   &__track {

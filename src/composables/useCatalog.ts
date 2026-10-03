@@ -32,13 +32,18 @@ async function loadCategories(force = false): Promise<void> {
   return categoriesRequest
 }
 
-/** La categoría de una solución puede venir poblada o como id. */
+/** Las categorías de una solución pueden venir pobladas o como ids. */
+export function categoriesOf(solution: Solution): { name: string; slug: string }[] {
+  return (solution.categories ?? []).flatMap((value) => {
+    if (typeof value !== 'string') return [value]
+    const found = categories.value.find((c) => c._id === value)
+    return found ? [{ name: found.name, slug: found.slug }] : []
+  })
+}
+
+/** La familia principal (la primera) para tarjetas, migas y relacionadas. */
 export function categoryOf(solution: Solution): { name: string; slug: string } | null {
-  if (typeof solution.category === 'string') {
-    const found = categories.value.find((c) => c._id === solution.category)
-    return found ? { name: found.name, slug: found.slug } : null
-  }
-  return solution.category
+  return categoriesOf(solution)[0] ?? null
 }
 
 export function useCatalog() {

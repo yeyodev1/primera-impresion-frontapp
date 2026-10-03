@@ -63,5 +63,17 @@ export function useAdminSolutions(initialCategory = '') {
     }
   }
 
-  return { solutions, loading, categoryFilter, load, save, toggle, remove }
+  /** Orden optimista: la lista ya se ve reordenada; si el API falla se recarga. */
+  async function reorder(ids: string[]) {
+    const byId = new Map(solutions.value.map((s) => [s._id, s]))
+    solutions.value = ids.map((id) => byId.get(id)).filter((s): s is Solution => Boolean(s))
+    try {
+      await adminService.reorderSolutions(ids)
+    } catch (error) {
+      toast.error(apiMessage(error, 'No se pudo guardar el orden'))
+      await load()
+    }
+  }
+
+  return { solutions, loading, categoryFilter, load, save, toggle, remove, reorder }
 }

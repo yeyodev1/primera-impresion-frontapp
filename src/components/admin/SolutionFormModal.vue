@@ -23,34 +23,32 @@ const { form, saving, error } = useEntityForm(
   toRef(props, 'solution'),
   () => ({
     name: '',
-    category: props.defaultCategory || props.categories[0]?._id || '',
+    categories: props.defaultCategory ? [props.defaultCategory] : ([] as string[]),
     summary: '',
     description: '',
     options: [] as string[],
     image: null as MediaImage | null,
     isFeatured: false,
     isPublished: true,
-    order: 0,
   }),
   (s) => ({
     name: s.name,
-    category: refId(s.category),
+    categories: (s.categories ?? []).map(refId).filter(Boolean),
     summary: s.summary ?? '',
     description: s.description ?? '',
     options: [...(s.options ?? [])],
     image: s.image ?? null,
     isFeatured: s.isFeatured,
     isPublished: s.isPublished,
-    order: s.order ?? 0,
   }),
 )
 
 async function submit() {
   if (!form.name.trim()) return (error.value = 'La solución necesita un nombre')
-  if (!form.category) return (error.value = 'Elige a qué categoría pertenece')
+  if (!form.categories.length) return (error.value = 'Elige al menos una categoría')
   error.value = ''
   saving.value = true
-  const ok = await props.save({ ...form, name: form.name.trim(), order: Number(form.order) || 0 })
+  const ok = await props.save({ ...form, name: form.name.trim() })
   saving.value = false
   if (ok) emit('close')
 }
@@ -64,27 +62,31 @@ async function submit() {
     @close="emit('close')"
   >
     <form id="solution-form" class="form" @submit.prevent="submit">
-      <div class="form__row">
-        <div>
-          <label for="sol-name">Nombre</label>
-          <input
-            id="sol-name"
-            v-model="form.name"
-            type="text"
-            maxlength="120"
-            placeholder="Ej: Etiquetas de papel"
-          />
-        </div>
-        <div>
-          <label for="sol-category">Categoría</label>
-          <select id="sol-category" v-model="form.category">
-            <option value="" disabled>Elige una categoría</option>
-            <option v-for="cat in categories" :key="cat._id" :value="cat._id">
-              {{ cat.name }}
-            </option>
-          </select>
-        </div>
+      <div>
+        <label for="sol-name">Nombre</label>
+        <input
+          id="sol-name"
+          v-model="form.name"
+          type="text"
+          maxlength="120"
+          placeholder="Ej: Etiquetas de papel"
+        />
       </div>
+
+      <fieldset class="form__cats">
+        <legend>Categorías <small>(puede estar en varias; la primera marcada es la principal)</small></legend>
+        <div class="form__cats-list">
+          <label
+            v-for="cat in categories"
+            :key="cat._id"
+            class="form__cat"
+            :class="{ 'form__cat--on': form.categories.includes(cat._id) }"
+          >
+            <input v-model="form.categories" type="checkbox" :value="cat._id" />
+            {{ cat.name }}
+          </label>
+        </div>
+      </fieldset>
 
       <div>
         <label for="sol-summary">Resumen</label>
@@ -114,15 +116,9 @@ async function submit() {
         placeholder="Ej: Papel couché, Troquelado…"
       />
 
-      <div class="form__row">
-        <div>
-          <label for="sol-order">Orden</label>
-          <input id="sol-order" v-model.number="form.order" type="number" min="0" />
-        </div>
-        <div class="form__switches">
-          <ToggleSwitch v-model="form.isPublished" label="Visible en el sitio" show-label />
-          <ToggleSwitch v-model="form.isFeatured" label="Destacada en el inicio" show-label />
-        </div>
+      <div class="form__switches">
+        <ToggleSwitch v-model="form.isPublished" label="Visible en el sitio" show-label />
+        <ToggleSwitch v-model="form.isFeatured" label="Destacada en el inicio" show-label />
       </div>
 
       <ImageUploader v-model="form.image" label="Imagen de la solución" />
@@ -153,6 +149,58 @@ async function submit() {
 
   &__row {
     @include flex-cards(220px, 1rem);
+  }
+
+  &__cats {
+    border: none;
+    padding: 0;
+    margin: 0;
+
+    legend {
+      padding: 0;
+      margin-bottom: 0.45rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: $ink-soft;
+
+      small {
+        font-weight: 400;
+        color: $ink-muted;
+      }
+    }
+  }
+
+  &__cats-list {
+    @include flex(row, center, flex-start, 0.45rem);
+    flex-wrap: wrap;
+  }
+
+  &__cat {
+    @include flex(row, center, flex-start, 0.4rem);
+    margin: 0;
+    padding: 0.4rem 0.75rem;
+    white-space: nowrap;
+    color: $ink;
+    border: 1px solid $line;
+    border-radius: 999px;
+    font-size: $text-sm;
+    cursor: pointer;
+    @include transition(border-color, background);
+
+    // Anula el estilo global de los inputs de texto (ancho completo, padding).
+    input {
+      width: auto;
+      padding: 0;
+      margin: 0;
+      border: none;
+      box-shadow: none;
+      accent-color: $accent;
+    }
+
+    &--on {
+      border-color: $accent;
+      background: rgba($accent, 0.08);
+    }
   }
 
   &__switches {

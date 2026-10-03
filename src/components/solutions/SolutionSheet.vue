@@ -2,13 +2,15 @@
 import { copy, fxCatalog } from '@/config/site'
 import { computed } from 'vue'
 import type { Solution } from '@/types'
-import { categoryOf } from '@/composables/useCatalog'
+import { categoriesOf } from '@/composables/useCatalog'
 import TiltCard from '@/components/fx/TiltCard.vue'
 import ImageSlot from '@/components/site/ImageSlot.vue'
 
 // Lámina de catálogo sin caja: foto con tilt, número y familia en mono, nombre
 // que se desregistra en CMYK al pasar el cursor. `wide`: destacada apaisada
 // desde md. `rowOnMobile`: apaisada bajo 480 px. `tone="night"` sobre oscuro.
+// `family`: slug de la familia filtrada; si el producto está en varias, se
+// rotula con esa y no con la principal.
 const props = withDefaults(
   defineProps<{
     solution: Solution
@@ -17,10 +19,14 @@ const props = withDefaults(
     tone?: 'paper' | 'night'
     wide?: boolean
     rowOnMobile?: boolean
+    family?: string
   }>(),
   { tone: 'paper' },
 )
-const category = computed(() => categoryOf(props.solution))
+const category = computed(() => {
+  const all = categoriesOf(props.solution)
+  return all.find((c) => c.slug === props.family) ?? all[0] ?? null
+})
 </script>
 
 <template>

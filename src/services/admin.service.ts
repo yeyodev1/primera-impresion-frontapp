@@ -17,20 +17,18 @@ export interface CategoryInput {
   description?: string
   icon?: string
   image?: MediaImage | null
-  order?: number
   isPublished?: boolean
 }
 
 export interface SolutionInput {
   name: string
-  category: string
+  categories: string[]
   summary?: string
   description?: string
   options?: string[]
   image?: MediaImage | null
   isFeatured?: boolean
   isPublished?: boolean
-  order?: number
 }
 
 export interface PostInput {
@@ -90,6 +88,10 @@ class AdminService extends APIBase {
     await this.delete(`admin/categories/${id}`)
   }
 
+  async reorderCategories(ids: string[]): Promise<void> {
+    await this.put('admin/categories/reorder', { ids })
+  }
+
   // Soluciones
   async listSolutions(categoryId = ''): Promise<Solution[]> {
     const { data } = await this.get<Solution[]>(`admin/solutions${query({ category: categoryId })}`)
@@ -108,6 +110,11 @@ class AdminService extends APIBase {
 
   async deleteSolution(id: string): Promise<void> {
     await this.delete(`admin/solutions/${id}`)
+  }
+
+  /** Puede ser solo la categoría filtrada: el API reacomoda dentro de sus puestos. */
+  async reorderSolutions(ids: string[]): Promise<void> {
+    await this.put('admin/solutions/reorder', { ids })
   }
 
   // Blog

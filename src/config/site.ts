@@ -518,7 +518,6 @@ export const fxCatalog = {
   solutions: {
     // Contadores bajo el titular del hero (datos reales del API).
     stats: { solutions: 'Soluciones publicadas', families: 'Familias de productos' },
-    selector: 'Tintas',
     selectorHint: 'Elige una familia',
     all: 'Todas las familias',
     results: 'En el pliego',

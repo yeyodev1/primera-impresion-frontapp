@@ -50,13 +50,16 @@ export function whatsappLink(phone: string): string {
   return `https://wa.me/${digits}`
 }
 
-export function categoryName(
-  value: Solution['category'] | null | undefined,
+export function categoryNames(
+  values: Solution['categories'] | null | undefined,
   all: Category[] = [],
 ): string {
-  if (!value) return ''
-  if (typeof value === 'string') return all.find((c) => c._id === value)?.name ?? ''
-  return value.name
+  return (values ?? [])
+    .map((value) =>
+      typeof value === 'string' ? (all.find((c) => c._id === value)?.name ?? '') : value.name,
+    )
+    .filter(Boolean)
+    .join(', ')
 }
 
 export function refId(value: { _id: string } | string | null | undefined): string {

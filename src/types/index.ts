@@ -45,7 +45,8 @@ export interface Solution {
   _id: string
   name: string
   slug: string
-  category: Pick<Category, '_id' | 'name' | 'slug'> | string
+  // Un producto puede estar en varias familias; la primera es la principal.
+  categories: (Pick<Category, '_id' | 'name' | 'slug'> | string)[]
   summary: string
   description: string
   options: string[]

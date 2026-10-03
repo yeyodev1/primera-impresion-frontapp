@@ -1,7 +1,14 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import type { Solution } from '@/types'
-import { gsap, ScrollTrigger, refreshAfterData, useGsapContext } from '@/composables/motion/useGsap'
+import {
+  gsap,
+  ScrollTrigger,
+  prefersReducedMotion,
+  refreshAfterData,
+  refreshScroll,
+  useGsapContext,
+} from '@/composables/motion/useGsap'
 import { useFlipFilter } from '@/composables/motion/useFlipFilter'
 import SolutionSheet from './SolutionSheet.vue'
 
@@ -16,6 +23,68 @@ const props = defineProps<{
 }>()
 
 const root = ref<HTMLElement | null>(null)
+const sentinel = ref<HTMLElement | null>(null)
+
+// Con más de cien productos se muestran de a PAGE: al acercarse al final del
+// pliego entra la siguiente tanda. Los datos ya están en memoria (el filtro
+// por familia sigue siendo instantáneo); lo que se dosifica es el render y
+// las fotos, que con `loading="lazy"` no se piden mientras estén ocultas.
+const PAGE = 10
+const limit = ref(PAGE)
+
+const shown = computed(() => {
+  const ids = new Set<string>()
+  for (const s of props.solutions) {
+    if (ids.size >= limit.value) break
+    if (props.visible(s)) ids.add(s._id)
+  }
+  return ids
+})
+const hasMore = computed(
+  () => props.solutions.filter((s) => props.visible(s)).length > shown.value.size,
+)
+
+async function showMore() {
+  if (!hasMore.value) return
+  const before = new Set(shown.value)
+  limit.value += PAGE
+  await nextTick()
+  refreshScroll()
+  if (prefersReducedMotion() || !root.value) return
+  const fresh = Array.from(root.value.querySelectorAll<HTMLElement>('.grid__item')).filter(
+    (el) => el.dataset.id && shown.value.has(el.dataset.id) && !before.has(el.dataset.id),
+  )
+  gsap.from(fresh, {
+    autoAlpha: 0,
+    y: 50,
+    duration: 0.8,
+    ease: 'expo.out',
+    stagger: 0.06,
+    clearProps: 'opacity,visibility,transform',
+  })
+}
+
+let io: IntersectionObserver | null = null
+onMounted(() => {
+  // El margen superior enorme cuenta como "alcanzado" también al centinela que
+  // quedó por encima de la pantalla: un scroll de un salto (tecla Fin, gesto
+  // rápido) lo pasa de largo sin cruzar nunca el viewport.
+  io = new IntersectionObserver((entries) => entries.some((e) => e.isIntersecting) && showMore(), {
+    rootMargin: '100000px 0px 600px 0px',
+  })
+  if (sentinel.value) io.observe(sentinel.value)
+})
+onBeforeUnmount(() => io?.disconnect())
+
+// Si tras sumar una tanda el centinela sigue a la vista (pantallas altas),
+// se vuelve a observar para que dispare de nuevo.
+watch(limit, () =>
+  nextTick(() => {
+    if (!io || !sentinel.value) return
+    io.unobserve(sentinel.value)
+    io.observe(sentinel.value)
+  }),
+)
 
 // Ritmo editorial: en cada tanda de 14 láminas visibles, la 1.ª y la 10.ª
 // van destacadas (dobles), así cierran filas completas a 4 columnas. Se calcula sobre las visibles para que el ritmo se
@@ -24,7 +93,7 @@ const wide = computed(() => {
   const ids = new Set<string>()
   let n = 0
   for (const s of props.solutions) {
-    if (!props.visible(s)) continue
+    if (!shown.value.has(s._id)) continue
     if (n % 14 === 0 || n % 14 === 9) ids.add(s._id)
     n += 1
   }
@@ -85,7 +154,11 @@ watch(
 // invisibles: se deshace la entrada (antes de la foto de FLIP) y listo.
 watch(
   () => props.filterKey,
-  () => gsapCtx.context?.revert(),
+  () => {
+    gsapCtx.context?.revert()
+    // Cada familia arranca de nuevo con la primera tanda.
+    limit.value = PAGE
+  },
   { flush: 'pre' },
 )
 
@@ -96,8 +169,9 @@ useFlipFilter(root, () => props.filterKey, '.grid__item')
   <ul ref="root" class="grid">
     <li
       v-for="(solution, i) in solutions"
-      v-show="visible(solution)"
+      v-show="shown.has(solution._id)"
       :key="solution._id"
+      :data-id="solution._id"
       class="grid__item"
       :class="{ 'grid__item--wide': wide.has(solution._id) }"
     >
@@ -106,10 +180,14 @@ useFlipFilter(root, () => props.filterKey, '.grid__item')
         :icon="iconFor(solution)"
         :number="i + 1"
         :wide="wide.has(solution._id)"
+        :family="filterKey"
         row-on-mobile
       />
     </li>
   </ul>
+  <div ref="sentinel" class="grid-more" :class="{ 'grid-more--on': hasMore }" aria-hidden="true">
+    <i class="fa-solid fa-spinner fa-spin"></i>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -160,6 +238,19 @@ useFlipFilter(root, () => props.filterKey, '.grid__item')
         flex-basis: calc(50% - 0.8rem);
       }
     }
+  }
+}
+
+.grid-more {
+  @include flex(row, center, center);
+  height: 1px;
+  visibility: hidden;
+
+  &--on {
+    height: auto;
+    padding: 2.5rem 0 0.5rem;
+    visibility: visible;
+    color: $ink-muted;
   }
 }
 </style>

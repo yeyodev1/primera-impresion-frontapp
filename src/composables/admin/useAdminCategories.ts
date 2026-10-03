@@ -62,5 +62,17 @@ export function useAdminCategories() {
     }
   }
 
-  return { categories, loading, load, save, togglePublished, remove }
+  /** Orden optimista: la lista ya se ve reordenada; si el API falla se recarga. */
+  async function reorder(ids: string[]) {
+    const byId = new Map(categories.value.map((c) => [c._id, c]))
+    categories.value = ids.map((id) => byId.get(id)).filter((c): c is Category => Boolean(c))
+    try {
+      await adminService.reorderCategories(ids)
+    } catch (error) {
+      toast.error(apiMessage(error, 'No se pudo guardar el orden'))
+      await load()
+    }
+  }
+
+  return { categories, loading, load, save, togglePublished, remove, reorder }
 }
