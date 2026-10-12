@@ -1,24 +1,44 @@
 <script setup lang="ts">
-import { watch } from 'vue'
+import { ref, watch } from 'vue'
 import { site, fx } from '@/config/site'
 import { useCatalog } from '@/composables/useCatalog'
-import { refreshAfterData } from '@/composables/motion/useGsap'
+import { gsap, refreshAfterData, useGsapContext } from '@/composables/motion/useGsap'
 import SectionHead from '@/components/site/SectionHead.vue'
-import CategoryHoverList from '@/components/site/CategoryHoverList.vue'
 import CategoryCard from '@/components/site/CategoryCard.vue'
 import LoadState from '@/components/site/LoadState.vue'
 import MagneticButton from '@/components/fx/MagneticButton.vue'
 import ColorBar from '@/components/fx/ColorBar.vue'
 
-// Soluciones: índice editorial de las familias del API con previsualización
-// que sigue al cursor (lg+) y, en pantallas chicas, carrusel con scroll-snap.
+// Soluciones: en escritorio (lg+) todas las familias de una vez en grilla,
+// con foto y descripción (4 por fila, 5 desde xl); en pantallas chicas,
+// carrusel con scroll-snap.
 defineProps<{ index: string }>()
 
 const { categories, categoriesLoading, categoriesError, loadCategories } = useCatalog()
 
+const grid = ref<HTMLElement | null>(null)
+
+const { rebuild } = useGsapContext(grid, ({ reduced, el }) => {
+  if (reduced) return
+  gsap.from(el.querySelectorAll('.hsol__cell'), {
+    y: 40,
+    opacity: 0,
+    duration: 0.9,
+    ease: 'expo.out',
+    stagger: 0.04,
+    scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+  })
+})
+
 // La lista cambia la altura de la página: las secciones de abajo (el pin)
 // necesitan recalcular sus posiciones.
-watch(() => categories.value.length, refreshAfterData)
+watch(
+  () => categories.value.length,
+  () => {
+    rebuild()
+    refreshAfterData()
+  },
+)
 </script>
 
 <template>
@@ -44,7 +64,17 @@ watch(() => categories.value.length, refreshAfterData)
         @retry="loadCategories(true)"
       />
       <template v-else>
-        <CategoryHoverList :categories="categories" class="hsol__list" />
+        <div ref="grid" class="hsol__grid">
+          <p class="hsol__label" aria-hidden="true">
+            <span>{{ fx.solutions.listLabel }}</span>
+            <span>{{ fx.index(categories.length) }}</span>
+          </p>
+          <ul class="hsol__cells">
+            <li v-for="(category, i) in categories" :key="category._id" class="hsol__cell">
+              <CategoryCard :category="category" :index="i + 1" tone="night" />
+            </li>
+          </ul>
+        </div>
         <div class="hsol__rail">
           <ul class="hsol__track">
             <li v-for="(category, i) in categories" :key="category._id" class="hsol__slide">
@@ -100,11 +130,45 @@ watch(() => categories.value.length, refreshAfterData)
     color: $surface;
   }
 
-  &__list {
+  &__grid {
     display: none;
 
     @include from('lg') {
       display: block;
+    }
+  }
+
+  &__label {
+    @include flex(row, center, space-between, 1rem);
+    padding-bottom: 0.85rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba($surface, 0.16);
+    @include mono-label(0.66rem, 0.18em);
+    color: rgba($surface, 0.55);
+  }
+
+  // Ancho fijo por columna (no flex-grow): la última fila incompleta no se
+  // estira y las fotos quedan todas del mismo tamaño.
+  &__cells {
+    --cols: 4;
+    --gap: 1.1rem;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap);
+
+    @include from('xl') {
+      --cols: 5;
+    }
+  }
+
+  &__cell {
+    flex: 0 0 calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols));
+    min-width: 0;
+    display: flex;
+
+    > * {
+      flex: 1;
     }
   }
 

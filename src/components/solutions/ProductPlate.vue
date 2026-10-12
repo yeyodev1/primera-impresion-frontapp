@@ -9,15 +9,16 @@ import RegMark from '@/components/fx/RegMark.vue'
 // Lámina grande de la ficha: la foto (o su prueba de semitono) enmarcada con
 // marcas de registro por fuera del área útil, como una hoja en la mesa de
 // luz, y un pie técnico. Entra destapándose de abajo arriba y, desde md, la
-// foto (o la trama) y el icono se deslizan a distinta velocidad con el
-// scroll: parallax con profundidad dentro del marco.
+// trama y el icono del placeholder se deslizan a distinta velocidad con el
+// scroll. La foto real no se mueve ni se amplía: el cliente quiere verla
+// completa, sin recortes.
 defineProps<{ image: MediaImage | null; name: string; icon: string; family?: string }>()
 
 const root = ref<HTMLElement | null>(null)
 
 useGsapMedia(root, (mm, el) => {
   const frame = el.querySelector('.plate__frame')
-  const ink = el.querySelectorAll('.slot__img, .slot__screen')
+  const ink = el.querySelectorAll('.slot__screen')
   const icon = el.querySelectorAll('.slot__icon, .slot__label')
   mm.add(MQ.motion, () => {
     gsap.fromTo(
@@ -34,11 +35,8 @@ useGsapMedia(root, (mm, el) => {
   })
   mm.add(`${MQ.md} and ${MQ.motion}`, () => {
     const scrollTrigger = { trigger: el, start: 'top bottom', end: 'bottom top', scrub: 0.6 }
-    gsap.fromTo(
-      ink,
-      { yPercent: -5, scale: 1.12 },
-      { yPercent: 5, scale: 1.12, ease: 'none', scrollTrigger },
-    )
+    if (ink.length)
+      gsap.fromTo(ink, { yPercent: -5, scale: 1.12 }, { yPercent: 5, scale: 1.12, ease: 'none', scrollTrigger })
     if (icon.length)
       gsap.fromTo(icon, { y: -50 }, { y: 50, ease: 'none', scrollTrigger: { ...scrollTrigger } })
   })
@@ -103,6 +101,11 @@ useGsapMedia(root, (mm, el) => {
     :deep(.slot) {
       border-radius: 0;
       aspect-ratio: 1 / 1 !important;
+    }
+
+    // contain: si alguna foto vieja no es 1:1, se ve entera en vez de recortarse.
+    :deep(.slot__img) {
+      object-fit: contain;
     }
 
     :deep(.slot__icon) {
