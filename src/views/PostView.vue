@@ -41,7 +41,7 @@ watch(data, () => refreshAfterData())
           <MagneticButton>
             <RouterLink
               v-if="related"
-              :to="{ path: '/soluciones', query: { categoria: related.slug } }"
+              :to="{ path: '/soluciones', query: { categoria: related.slug }, hash: '#catalogo' }"
               class="btn btn--ink btn--press"
             >
               {{ copy.blog.relatedCta(related.name) }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>

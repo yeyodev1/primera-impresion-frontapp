@@ -137,7 +137,10 @@ const router = createRouter({
       const find = () => {
         // Salto instantáneo: la cortina aún tapa y un scroll suave lo cortaría
         // el recálculo de ScrollTrigger al retirarse.
-        if (document.querySelector(to.hash)) return resolve({ el: to.hash, top: 90 })
+        // Si la sección declara su scroll-margin-top (p. ej. el catálogo, que
+        // debe quedar bajo la tira de tintas) se respeta; si no, 90 px.
+        const el = document.querySelector<HTMLElement>(to.hash)
+        if (el) return resolve({ el, top: parseFloat(getComputedStyle(el).scrollMarginTop) || 90 })
         if (Date.now() - started > 4000) return resolve({ left: 0, top: 0 })
         window.setTimeout(find, 60)
       }

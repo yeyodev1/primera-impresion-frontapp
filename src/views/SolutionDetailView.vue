@@ -23,7 +23,7 @@ const familyLink = computed(() =>
   category.value
     ? {
         name: category.value.name,
-        to: { path: '/soluciones', query: { categoria: category.value.slug } },
+        to: { path: '/soluciones', query: { categoria: category.value.slug }, hash: '#catalogo' },
       }
     : null,
 )

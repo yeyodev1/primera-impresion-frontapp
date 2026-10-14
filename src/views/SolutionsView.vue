@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { site, copy, fx, fxCatalog } from '@/config/site'
-import { onMounted, ref, watch } from 'vue'
+import { nextTick, onMounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { useSolutionsCatalog } from '@/composables/useSolutionsCatalog'
 import PageIntro from '@/components/site/PageIntro.vue'
 import SectionHead from '@/components/site/SectionHead.vue'
@@ -42,6 +43,19 @@ watch(active, () => {
     behavior: 'smooth',
   })
 })
+
+// Las familias (Home, blog, ficha) llegan con #catalogo: el router baja al
+// pliego al entrar, pero las cifras del intro aparecen recién al cargar y lo
+// empujan hacia abajo. Con los datos ya pintados se vuelve a acomodar.
+const route = useRoute()
+watch(
+  () => solutions.value.length > 0,
+  async (ready) => {
+    if (!ready || route.hash !== '#catalogo') return
+    await nextTick()
+    catalog.value?.scrollIntoView({ block: 'start' })
+  },
+)
 </script>
 
 <template>

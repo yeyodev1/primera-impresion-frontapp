@@ -19,7 +19,7 @@ withDefaults(defineProps<{ category: Category; index?: number; tone?: 'paper' | 
       </p>
       <h3 class="ccard__title">{{ category.name }}</h3>
       <p v-if="category.description" class="ccard__text">{{ category.description }}</p>
-      <RouterLink :to="{ path: '/soluciones', query: { categoria: category.slug } }" class="ccard__link">
+      <RouterLink :to="{ path: '/soluciones', query: { categoria: category.slug }, hash: '#catalogo' }" class="ccard__link">
         {{ copy.solutions.categoryCta }}
         <span class="visually-hidden">: {{ category.name }}</span>
         <span class="ccard__arrow" aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></span>
