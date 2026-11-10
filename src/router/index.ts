@@ -69,6 +69,12 @@ const adminRoutes: Array<RouteRecordRaw> = [
     meta: { title: 'Panel', requiresAdmin: true, layout: 'admin' },
   },
   {
+    path: '/admin/metricas',
+    name: 'AdminMetrics',
+    component: () => import('@/views/admin/AdminMetricsView.vue'),
+    meta: { title: 'Métricas', requiresAdmin: true, layout: 'admin' },
+  },
+  {
     path: '/admin/solicitudes',
     name: 'AdminLeads',
     component: () => import('@/views/admin/AdminLeadsView.vue'),

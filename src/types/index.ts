@@ -113,6 +113,32 @@ export interface Lead extends Omit<LeadPayload, 'website' | 'elapsedMs'> {
   updatedAt: string
 }
 
+export interface MetricsRow {
+  value: string
+  pageviews: number
+  visits: number
+}
+
+export interface MetricsFilters {
+  path?: string
+  country?: string
+  device?: string
+}
+
+export interface Metrics {
+  from: string
+  to: string
+  hourly: boolean
+  filters: MetricsFilters
+  totals: { pageviews: number; visits: number }
+  series: MetricsRow[]
+  paths: MetricsRow[]
+  countries: MetricsRow[]
+  devices: MetricsRow[]
+  referers: MetricsRow[]
+  browsers: MetricsRow[]
+}
+
 export interface AdminStats {
   leads: { total: number; new: number; access: number; contact: number }
   solutions: number

@@ -4,6 +4,8 @@ import type {
   Category,
   Lead,
   LeadStatus,
+  Metrics,
+  MetricsFilters,
   LeadType,
   MediaImage,
   Paginated,
@@ -65,6 +67,12 @@ function query(params: Record<string, string | number | undefined>): string {
 class AdminService extends APIBase {
   async stats(): Promise<AdminStats> {
     const { data } = await this.get<AdminStats>('admin/stats')
+    return data
+  }
+
+  /** Visitas desde Cloudflare Web Analytics. 503 si aún no está conectado. */
+  async metrics(params: { from: string; to: string } & MetricsFilters): Promise<Metrics> {
+    const { data } = await this.get<Metrics>(`admin/metrics${query({ ...params })}`)
     return data
   }
 

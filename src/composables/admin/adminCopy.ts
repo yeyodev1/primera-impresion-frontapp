@@ -24,11 +24,28 @@ export const LEAD_STATUS_TONE: Record<LeadStatus, 'accent' | 'info' | 'muted'> =
 
 export const ADMIN_NAV = [
   { label: 'Panel', to: '/admin', icon: 'fa-solid fa-gauge', exact: true },
+  { label: 'Métricas', to: '/admin/metricas', icon: 'fa-solid fa-chart-column' },
   { label: 'Solicitudes', to: '/admin/solicitudes', icon: 'fa-solid fa-inbox', badge: true },
   { label: 'Categorías', to: '/admin/categorias', icon: 'fa-solid fa-layer-group' },
   { label: 'Soluciones', to: '/admin/soluciones', icon: 'fa-solid fa-boxes-stacked' },
   { label: 'Blog', to: '/admin/blog', icon: 'fa-solid fa-newspaper' },
 ] as const
+
+export const METRICS_PRESETS = [
+  { label: 'Hoy', days: 1 },
+  { label: '7 días', days: 7 },
+  { label: '30 días', days: 30 },
+  { label: '90 días', days: 90 },
+] as const
+
+// Cloudflare manda el tipo de dispositivo en inglés.
+export const METRICS_DEVICE: Record<string, string> = {
+  desktop: 'Computadora',
+  mobile: 'Celular',
+  tablet: 'Tablet',
+}
+
+export const METRICS_FILTER_LABEL = { path: 'Página', country: 'País', device: 'Dispositivo' } as const
 
 // Límites que Google suele mostrar completos en el resultado de búsqueda.
 export const SEO_TITLE_MAX = 60
