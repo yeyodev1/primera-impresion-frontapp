@@ -86,20 +86,6 @@ watch(limit, () =>
   }),
 )
 
-// Ritmo editorial: en cada tanda de 14 láminas visibles, la 1.ª y la 10.ª
-// van destacadas (dobles), así cierran filas completas a 4 columnas. Se calcula sobre las visibles para que el ritmo se
-// mantenga en cualquier familia; FLIP anima también el cambio de tamaño.
-const wide = computed(() => {
-  const ids = new Set<string>()
-  let n = 0
-  for (const s of props.solutions) {
-    if (!shown.value.has(s._id)) continue
-    if (n % 14 === 0 || n % 14 === 9) ids.add(s._id)
-    n += 1
-  }
-  return ids
-})
-
 const gsapCtx = useGsapContext(root, ({ reduced, el }) => {
   if (reduced) return
   const items = Array.from(el.querySelectorAll<HTMLElement>('.grid__item')).filter(
@@ -173,13 +159,11 @@ useFlipFilter(root, () => props.filterKey, '.grid__item')
       :key="solution._id"
       :data-id="solution._id"
       class="grid__item"
-      :class="{ 'grid__item--wide': wide.has(solution._id) }"
     >
       <SolutionSheet
         :solution="solution"
         :icon="iconFor(solution)"
         :number="i + 1"
-        :wide="wide.has(solution._id)"
         :family="filterKey"
         row-on-mobile
       />
@@ -204,9 +188,9 @@ useFlipFilter(root, () => props.filterKey, '.grid__item')
     gap: 3.5rem 1.5rem;
   }
 
-  // Si una fila queda corta, sus láminas crecen para cerrarla.
+  // Todas del mismo ancho: una fila corta no estira sus láminas.
   &__item {
-    flex: 1 1 100%;
+    flex: 0 1 100%;
     min-width: 0;
 
     @include from('sm') {
@@ -223,20 +207,6 @@ useFlipFilter(root, () => props.filterKey, '.grid__item')
 
     @include from('xl') {
       flex-basis: calc(25% - 1.2rem);
-    }
-
-    &--wide {
-      @include from('md') {
-        flex-basis: 100%;
-      }
-
-      @include from('lg') {
-        flex-basis: calc(66.666% - 0.55rem);
-      }
-
-      @include from('xl') {
-        flex-basis: calc(50% - 0.8rem);
-      }
     }
   }
 }

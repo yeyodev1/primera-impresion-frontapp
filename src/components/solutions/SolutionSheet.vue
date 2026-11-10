@@ -7,8 +7,7 @@ import TiltCard from '@/components/fx/TiltCard.vue'
 import ImageSlot from '@/components/site/ImageSlot.vue'
 
 // Lámina de catálogo sin caja: foto con tilt, número y familia en mono, nombre
-// que se desregistra en CMYK al pasar el cursor. `wide`: destacada apaisada
-// desde md. `rowOnMobile`: apaisada bajo 480 px. `tone="night"` sobre oscuro.
+// que se desregistra en CMYK al pasar el cursor. `rowOnMobile`: apaisada bajo 480 px. `tone="night"` sobre oscuro.
 // `family`: slug de la familia filtrada; si el producto está en varias, se
 // rotula con esa y no con la principal.
 const props = withDefaults(
@@ -17,7 +16,6 @@ const props = withDefaults(
     icon?: string
     number?: number
     tone?: 'paper' | 'night'
-    wide?: boolean
     rowOnMobile?: boolean
     family?: string
   }>(),
@@ -32,7 +30,7 @@ const category = computed(() => {
 <template>
   <article
     class="sheet"
-    :class="[`sheet--${tone}`, { 'sheet--wide': wide, 'sheet--row': rowOnMobile }]"
+    :class="[`sheet--${tone}`, { 'sheet--row': rowOnMobile }]"
   >
     <TiltCard as="div" class="sheet__media" :tone="tone" :max="7">
       <ImageSlot
@@ -219,34 +217,6 @@ const category = computed(() => {
     background: $accent-deep;
     border-color: $accent-deep;
     color: $surface;
-  }
-
-  // Destacada: foto cuadrada grande al lado del texto, titular mayor.
-  @include from('md') {
-    &--wide {
-      flex-direction: row;
-      align-items: flex-start;
-      gap: 1.75rem;
-    }
-
-    &--wide &__media {
-      flex: 0 0 50%;
-    }
-
-    &--wide &__body {
-      min-width: 0;
-      padding-top: 0.25rem;
-    }
-
-    &--wide &__title {
-      font-size: clamp(1.8rem, 1.2rem + 1vw, 2.3rem);
-      line-height: 0.95;
-      overflow-wrap: break-word;
-    }
-
-    &--wide &__text {
-      font-size: $text-base;
-    }
   }
 
   // Apaisada en móvil: foto cuadrada a la izquierda, texto a la derecha.
