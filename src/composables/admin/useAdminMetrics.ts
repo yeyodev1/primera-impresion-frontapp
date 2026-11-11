@@ -14,11 +14,11 @@ export function ecuadorDay(daysAgo = 0): string {
 }
 
 /**
- * Cloudflare solo devuelve los días (u horas) con visitas: se rellenan los
+ * Vercel solo devuelve los días (u horas) con visitas: se rellenan los
  * huecos con cero para que el eje del tiempo no mienta.
  */
 export function fillSeries(data: Metrics): MetricsRow[] {
-  const empty = (value: string) => ({ value, pageviews: 0, visits: 0 })
+  const empty = (value: string) => ({ value, pageviews: 0, visitors: 0 })
   if (data.hourly) {
     const byHour = new Map(data.series.map((r) => [new Date(r.value).getTime(), r]))
     const start = new Date(`${data.from}T00:00:00-05:00`).getTime()

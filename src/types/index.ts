@@ -116,7 +116,7 @@ export interface Lead extends Omit<LeadPayload, 'website' | 'elapsedMs'> {
 export interface MetricsRow {
   value: string
   pageviews: number
-  visits: number
+  visitors: number
 }
 
 export interface MetricsFilters {
@@ -130,7 +130,7 @@ export interface Metrics {
   to: string
   hourly: boolean
   filters: MetricsFilters
-  totals: { pageviews: number; visits: number }
+  totals: { pageviews: number; visitors: number }
   series: MetricsRow[]
   paths: MetricsRow[]
   countries: MetricsRow[]

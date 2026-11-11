@@ -70,7 +70,7 @@ class AdminService extends APIBase {
     return data
   }
 
-  /** Visitas desde Cloudflare Web Analytics. 503 si aún no está conectado. */
+  /** Visitas desde Vercel Web Analytics. 503 si aún no está conectado. */
   async metrics(params: { from: string; to: string } & MetricsFilters): Promise<Metrics> {
     const { data } = await this.get<Metrics>(`admin/metrics${query({ ...params })}`)
     return data

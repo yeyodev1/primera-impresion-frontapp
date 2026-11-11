@@ -13,16 +13,19 @@ const { preset, filters, data, series, active, loading, error, notConnected, set
 const today = ecuadorDay(0)
 const device = (value: string) => METRICS_DEVICE[value] ?? value
 const referer = (value: string) => value || 'Directo o sin origen'
+// Vercel manda el país como código ISO (EC, US…).
+const countryNames = new Intl.DisplayNames(['es'], { type: 'region' })
+const country = (code: string) => (code ? (countryNames.of(code) ?? code) : '')
 
 const cards = computed(() => {
   const t = data.value?.totals
   const n = (v?: number) => (v === undefined ? '–' : v.toLocaleString('es-EC'))
   return [
     { label: 'Páginas vistas', value: n(t?.pageviews), icon: 'fa-solid fa-eye' },
-    { label: 'Visitas', value: n(t?.visits), icon: 'fa-solid fa-user-group' },
+    { label: 'Visitantes', value: n(t?.visitors), icon: 'fa-solid fa-user-group' },
     {
-      label: 'Páginas por visita',
-      value: t?.visits ? (t.pageviews / t.visits).toFixed(1) : '–',
+      label: 'Páginas por visitante',
+      value: t?.visitors ? (t.pageviews / t.visitors).toFixed(1) : '–',
       icon: 'fa-solid fa-layer-group',
     },
   ]
@@ -33,7 +36,7 @@ const cards = computed(() => {
   <div class="metrics">
     <AdminPageHead
       title="Métricas"
-      description="Visitas al sitio público según Cloudflare Web Analytics, sin cookies. Fechas en hora de Ecuador."
+      description="Visitas al sitio público según Vercel Web Analytics, sin cookies. Fechas en hora de Ecuador."
     />
 
     <div class="metrics__filters">
@@ -72,14 +75,15 @@ const cards = computed(() => {
         :aria-label="`Quitar filtro ${METRICS_FILTER_LABEL[f.key]}`"
         @click="setFilter(f.key, f.value)"
       >
-        {{ METRICS_FILTER_LABEL[f.key] }}: {{ f.key === 'device' ? device(f.value) : f.value }}
+        {{ METRICS_FILTER_LABEL[f.key] }}:
+        {{ f.key === 'device' ? device(f.value) : f.key === 'country' ? country(f.value) : f.value }}
         <i class="fa-solid fa-xmark" aria-hidden="true"></i>
       </button>
     </div>
 
     <p v-if="notConnected" class="metrics__notice">
       <i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i>
-      Las métricas todavía no están conectadas a Cloudflare. Apenas se conecten, aquí verás las visitas del sitio.
+      Las métricas todavía no están conectadas a Vercel. Apenas se conecten, aquí verás las visitas del sitio.
     </p>
     <p v-else-if="error" class="metrics__notice metrics__notice--error">
       <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> {{ error }}
@@ -106,6 +110,7 @@ const cards = computed(() => {
           title="Países"
           :rows="data.countries"
           :active="filters.country"
+          :format="country"
           pickable
           @pick="setFilter('country', $event)"
         />

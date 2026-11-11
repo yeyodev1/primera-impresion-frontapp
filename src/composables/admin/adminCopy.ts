@@ -38,7 +38,7 @@ export const METRICS_PRESETS = [
   { label: '90 días', days: 90 },
 ] as const
 
-// Cloudflare manda el tipo de dispositivo en inglés.
+// Vercel manda el tipo de dispositivo en inglés.
 export const METRICS_DEVICE: Record<string, string> = {
   desktop: 'Computadora',
   mobile: 'Celular',

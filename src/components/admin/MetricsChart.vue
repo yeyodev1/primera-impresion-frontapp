@@ -40,7 +40,7 @@ const tip = computed(() => (hover.value === null ? null : props.series[hover.val
         :key="row.value"
         class="chart__slot"
         tabindex="0"
-        :aria-label="`${label(row)}: ${row.pageviews} páginas vistas, ${row.visits} visitas`"
+        :aria-label="`${label(row)}: ${row.pageviews} páginas vistas, ${row.visitors} visitantes`"
         @mouseenter="hover = i"
         @focus="hover = i"
         @blur="hover = null"
@@ -59,7 +59,7 @@ const tip = computed(() => (hover.value === null ? null : props.series[hover.val
       >
         <strong>{{ label(tip) }}</strong>
         <span>{{ tip.pageviews.toLocaleString('es-EC') }} páginas vistas</span>
-        <span>{{ tip.visits.toLocaleString('es-EC') }} visitas</span>
+        <span>{{ tip.visitors.toLocaleString('es-EC') }} visitantes</span>
       </div>
     </div>
     <div class="chart__axis" aria-hidden="true">
